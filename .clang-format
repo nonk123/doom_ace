@@ -1,0 +1,6 @@
+BasedOnStyle: WebKit
+IndentWidth: 4
+UseTab: Never
+DerivePointerAlignment: false
+PointerAlignment: Left  
+SortIncludes: Never

@@ -1,0 +1,6 @@
+[submodule "engine/ribbit"]
+	path = engine/ribbit
+	url = https://github.com/udem-dlteam/ribbit.git
+	branch = dev
+[submodule "ribbit"]
+	branch = main

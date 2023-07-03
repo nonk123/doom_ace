@@ -1,3 +1,10 @@
 *.o
 *.zip
 code_dev/
+
+\#*\#
+.\#*
+*~
+
+compile_commands.json
+.cache/

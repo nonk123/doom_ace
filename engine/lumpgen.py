@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 import sys
 import subprocess
 from struct import unpack_from
@@ -73,4 +74,3 @@ with open(sys.argv[3], "wb") as f:
 	f.write(code)
 
 print("lump size", len(code))
-
