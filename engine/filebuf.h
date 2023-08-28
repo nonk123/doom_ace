@@ -28,4 +28,3 @@ uint32_t reader_get(void *ptr, uint32_t size);
 uint32_t reader_get_u32(uint32_t *ptr);
 uint32_t reader_get_u16(uint16_t *ptr);
 uint32_t reader_get_wame(uint64_t *ptr);
-

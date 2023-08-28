@@ -1,0 +1,11 @@
+BasedOnStyle: LLVM
+AlignAfterOpenBracket: BlockIndent
+BreakBeforeBraces: Allman
+IndentWidth: 8
+UseTab: AlignWithSpaces
+DerivePointerAlignment: false
+SpaceAroundPointerQualifiers: Default
+PointerAlignment: Right
+IndentCaseLabels: true
+SortIncludes: Never
+ColumnLimit: 120

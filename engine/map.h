@@ -1,55 +1,55 @@
 // kgsws' ACE Engine
 ////
 
-#define LOCKDEFS_DEF_SIZE	1024
+#define LOCKDEFS_DEF_SIZE 1024
 
-#define MAX_EPISODES	5
+#define MAX_EPISODES 5
 
-#define MAP_FORMAT_DOOM	1
-#define MAP_FORMAT_HEXEN	2
+#define MAP_FORMAT_DOOM 1
+#define MAP_FORMAT_HEXEN 2
 
-#define MTF_EASY	0x0001
-#define MTF_MEDIUM	0x0002
-#define MTF_HARD	0x0004
-#define MTF_AMBUSH	0x0008
-#define MTF_INACTIVE	0x0010
-#define MTF_CLASS0	0x0020
-#define MTF_CLASS1	0x0040
-#define MTF_CLASS2	0x0080
-#define MTF_SINGLE	0x0100
-#define MTF_COOPERATIVE	0x0200
-#define MTF_DEATHMATCH	0x0400
-#define MTF_SHADOW	0x0800
-#define MTF_ALTSHADOW	0x1000
-#define MTF_FRIENDLY	0x2000
-#define MTF_STANDSTILL	0x4000
+#define MTF_EASY 0x0001
+#define MTF_MEDIUM 0x0002
+#define MTF_HARD 0x0004
+#define MTF_AMBUSH 0x0008
+#define MTF_INACTIVE 0x0010
+#define MTF_CLASS0 0x0020
+#define MTF_CLASS1 0x0040
+#define MTF_CLASS2 0x0080
+#define MTF_SINGLE 0x0100
+#define MTF_COOPERATIVE 0x0200
+#define MTF_DEATHMATCH 0x0400
+#define MTF_SHADOW 0x0800
+#define MTF_ALTSHADOW 0x1000
+#define MTF_FRIENDLY 0x2000
+#define MTF_STANDSTILL 0x4000
 
-#define MAP_END_UNDEFINED	0xFFFA // must be first
-#define MAP_END_TO_TITLE	0xFFFB // must be second
-#define MAP_END_BUNNY_SCROLL	0xFFFC
-#define MAP_END_DOOM_CAST	0xFFFD
-#define MAP_END_CUSTOM_PIC_N	0xFFFE
-#define MAP_END_CUSTOM_PIC_S	0xFFFF
+#define MAP_END_UNDEFINED 0xFFFA // must be first
+#define MAP_END_TO_TITLE 0xFFFB  // must be second
+#define MAP_END_BUNNY_SCROLL 0xFFFC
+#define MAP_END_DOOM_CAST 0xFFFD
+#define MAP_END_CUSTOM_PIC_N 0xFFFE
+#define MAP_END_CUSTOM_PIC_S 0xFFFF
 
-#define EPI_FLAG_NO_SKILL_MENU	1
+#define EPI_FLAG_NO_SKILL_MENU 1
 
-#define MAP_FLAG_NO_INTERMISSION	0x0001
-#define MAP_FLAG_FALLING_DAMAGE	0x0002
-#define MAP_FLAG_MONSTER_FALL_DMG_KILL	0x0004
-#define MAP_FLAG_MONSTER_FALL_DMG	0x0008
-#define MAP_FLAG_NO_FREELOOK	0x0010
-#define MAP_FLAG_FILTER_STARTS	0x0020
-#define MAP_FLAG_USE_PLAYER_START_Z	0x0040
-#define MAP_FLAG_ALLOW_RESPAWN	0x0080
-#define MAP_FLAG_NO_INFIGHTING	0x0100
-#define MAP_FLAG_TOTAL_INFIGHTING	0x0200
-#define MAP_FLAG_CHECK_SWITCH_RANGE	0x0400
-#define MAP_FLAG_RESET_INVENTORY	0x0800
-#define MAP_FLAG_FORGET_STATE	0x1000
-#define MAP_FLAG_SPAWN_WITH_WEAPON_RAISED	0x2000
-#define MAP_FLAG_NO_MONSTER_ACTIVATION	0x4000
+#define MAP_FLAG_NO_INTERMISSION 0x0001
+#define MAP_FLAG_FALLING_DAMAGE 0x0002
+#define MAP_FLAG_MONSTER_FALL_DMG_KILL 0x0004
+#define MAP_FLAG_MONSTER_FALL_DMG 0x0008
+#define MAP_FLAG_NO_FREELOOK 0x0010
+#define MAP_FLAG_FILTER_STARTS 0x0020
+#define MAP_FLAG_USE_PLAYER_START_Z 0x0040
+#define MAP_FLAG_ALLOW_RESPAWN 0x0080
+#define MAP_FLAG_NO_INFIGHTING 0x0100
+#define MAP_FLAG_TOTAL_INFIGHTING 0x0200
+#define MAP_FLAG_CHECK_SWITCH_RANGE 0x0400
+#define MAP_FLAG_RESET_INVENTORY 0x0800
+#define MAP_FLAG_FORGET_STATE 0x1000
+#define MAP_FLAG_SPAWN_WITH_WEAPON_RAISED 0x2000
+#define MAP_FLAG_NO_MONSTER_ACTIVATION 0x4000
 
-#define CLST_FLAG_HUB	0x0001
+#define CLST_FLAG_HUB 0x0001
 
 enum
 {
@@ -255,7 +255,7 @@ typedef struct
 	uint8_t *text_enter;
 	uint8_t *text_leave;
 	int32_t lump_music;
-//	int32_t lump_patch; // TODO: make it work
+	//	int32_t lump_patch; // TODO: make it work
 	int32_t lump_flat;
 	uint16_t flags;
 	uint8_t idx;
@@ -292,7 +292,7 @@ typedef struct
 
 //
 
-typedef uint32_t (*line_func_t)(line_t*) __attribute((regparm(2),no_caller_saved_registers));
+typedef uint32_t (*line_func_t)(line_t *) __attribute((regparm(2), no_caller_saved_registers));
 
 //
 
@@ -341,8 +341,8 @@ void map_setup_old(uint32_t skill, uint32_t episode, uint32_t level);
 map_cluster_t *map_find_cluster(uint32_t num);
 
 // thinker
-void think_line_scroll(line_scroll_t *ls) __attribute((regparm(2),no_caller_saved_registers));
+void think_line_scroll(line_scroll_t *ls) __attribute((regparm(2), no_caller_saved_registers));
 
 // blockmap
-uint32_t P_BlockLinesIterator(int32_t x, int32_t y, line_func_t func) __attribute((regparm(3),no_caller_saved_registers)); // three!
-
+uint32_t P_BlockLinesIterator(int32_t x, int32_t y, line_func_t func)
+    __attribute((regparm(3), no_caller_saved_registers)); // three!

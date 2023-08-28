@@ -15,4 +15,3 @@ enum
 };
 
 extern uint8_t *wipe_name[];
-

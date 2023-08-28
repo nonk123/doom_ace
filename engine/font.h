@@ -1,8 +1,8 @@
 // kgsws' ACE Engine
 ////
 
-#define FONT_MAGIC_ID	0x1AD5E6E1
-#define FONT_VERSION	0x11
+#define FONT_MAGIC_ID 0x1AD5E6E1
+#define FONT_VERSION 0x11
 
 enum
 {
@@ -53,5 +53,5 @@ uint32_t font_message_to_print();
 
 uint32_t font_draw_text(int32_t x, int32_t y, const uint8_t *text, void *font);
 void font_center_text(int32_t x, int32_t y, const uint8_t *text, void *font, uint32_t linecount);
-void font_menu_text(int32_t x, int32_t y, const uint8_t *text) __attribute((regparm(3),no_caller_saved_registers)); // three!
-
+void font_menu_text(int32_t x, int32_t y, const uint8_t *text)
+    __attribute((regparm(3), no_caller_saved_registers)); // three!

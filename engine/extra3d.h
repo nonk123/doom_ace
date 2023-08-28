@@ -1,14 +1,14 @@
 // kgsws' ACE Engine
 ////
 
-#define E3D_SOLID	1
-#define E3D_BLOCK_HITSCAN	2
-#define E3D_BLOCK_SIGHT	4
-#define E3D_ADDITIVE	8
-#define E3D_DRAW_INISIDE	16
-#define E3D_WATER	32
+#define E3D_SOLID 1
+#define E3D_BLOCK_HITSCAN 2
+#define E3D_BLOCK_SIGHT 4
+#define E3D_ADDITIVE 8
+#define E3D_DRAW_INISIDE 16
+#define E3D_WATER 32
 
-#define E3D_SWAP_PLANES	0x8000
+#define E3D_SWAP_PLANES 0x8000
 
 typedef struct extraplane_s
 {
@@ -74,4 +74,3 @@ visplane_t *e3d_check_plane(visplane_t *pl, int32_t start, int32_t stop);
 //
 
 void e3d_add_height(fixed_t height);
-

@@ -1,9 +1,9 @@
 // kgsws' ACE Engine
 ////
 
-#define MAX_BUTTONS	32
-#define BUTTON_TIME	35
-#define BUTTON_SNDTICK	350
+#define MAX_BUTTONS 32
+#define BUTTON_TIME 35
+#define BUTTON_SNDTICK 350
 
 //
 
@@ -35,7 +35,7 @@ void animate_step();
 void clear_buttons();
 
 // buttons
-void do_line_switch(line_t *ln, uint32_t repeat) __attribute((regparm(2),no_caller_saved_registers));
+void do_line_switch(line_t *ln, uint32_t repeat) __attribute((regparm(2), no_caller_saved_registers));
 
 // save
 uint16_t anim_switch_type(switch_t *slot);
@@ -43,4 +43,3 @@ uint64_t anim_switch_texture(switch_t *slot);
 
 // load
 switch_t *anim_switch_make(uint16_t type, line_t *line, uint64_t wame);
-

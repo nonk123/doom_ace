@@ -325,8 +325,8 @@ extern fixed_t pspriteiscale;
 extern fixed_t skytexturemid;
 extern int16_t *mfloorclip;
 extern int16_t *mceilingclip;
-extern void (*colfunc)() __attribute((regparm(2),no_caller_saved_registers));
-extern void (*spanfunc)() __attribute((regparm(2),no_caller_saved_registers));
+extern void (*colfunc)() __attribute((regparm(2), no_caller_saved_registers));
+extern void (*spanfunc)() __attribute((regparm(2), no_caller_saved_registers));
 
 // render, location
 extern uint32_t columnofs[SCREENWIDTH];
@@ -407,7 +407,7 @@ extern uint32_t snd_SfxVolume;
 // random
 extern uint8_t rndtable[256];
 extern uint32_t prndindex;
-extern uint8_t rng_table[128*16*4]; // was zlight
+extern uint8_t rng_table[128 * 16 * 4]; // was zlight
 
 // fi, wi
 extern wbstartstruct_t wminfo;
@@ -493,4 +493,3 @@ extern uint8_t dtxt_STSTR_NCON[];
 extern uint8_t dtxt_STSTR_NCOFF[];
 extern uint8_t dtxt_m_loadg[];
 extern uint8_t dtxt_m_saveg[];
-

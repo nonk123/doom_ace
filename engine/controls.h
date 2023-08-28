@@ -1,8 +1,8 @@
 // kgsws' ACE Engine
 ////
 
-#define NUM_MOUSE_BTNS	3
-#define NUM_MOUSE_CTRL	5
+#define NUM_MOUSE_BTNS 3
+#define NUM_MOUSE_CTRL 5
 
 enum
 {
@@ -73,4 +73,3 @@ void control_setup();
 void control_clear_key(uint8_t id);
 uint8_t *control_key_name(uint8_t id);
 uint8_t *control_btn_name(uint8_t id);
-

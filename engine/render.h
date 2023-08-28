@@ -1,15 +1,15 @@
 // kgsws' ACE Engine
 ////
 
-#define RENDER_TABLE_PROGRESS	(3 * 128)
+#define RENDER_TABLE_PROGRESS (3 * 128)
 
-#define FONT_COLOR_WHITE	4
-#define ICE_CMAP_IDX	5
+#define FONT_COLOR_WHITE 4
+#define ICE_CMAP_IDX 5
 
-#define MAX_SECTOR_COLORS	32
+#define MAX_SECTOR_COLORS 32
 
-#define FONT_TRANSLATION_COUNT	25
-#define FONT_COLOR_COUNT	32 // techically its one less, first color is transparent
+#define FONT_TRANSLATION_COUNT 25
+#define FONT_COLOR_COUNT 32 // techically its one less, first color is transparent
 
 enum
 {
@@ -55,10 +55,11 @@ typedef struct
 
 typedef struct
 {
-	uint8_t cmap[256*4]; // gold, red, green, blue; used for extra colormap and translation
-	uint8_t trn0[256*256];
-	uint8_t trn1[256*256];
-	uint8_t addt[256*256];
+	uint8_t cmap[256 * 4]; // gold, red, green, blue; used for extra
+	                       // colormap and translation
+	uint8_t trn0[256 * 256];
+	uint8_t trn1[256 * 256];
+	uint8_t addt[256 * 256];
 	uint8_t fmap[FONT_TRANSLATION_COUNT * FONT_COLOR_COUNT]; // ZDoom font colors
 } render_tables_t;
 
@@ -94,7 +95,7 @@ extern sector_light_t sector_light[MAX_SECTOR_COLORS];
 //
 
 void init_render();
-void render_preinit(uint8_t*);
+void render_preinit(uint8_t *);
 void render_generate_blood();
 uint32_t render_setup_light_color(uint32_t);
 
@@ -113,4 +114,3 @@ void r_fixed_palette(uint16_t fade);
 void *r_generate_player_color(uint32_t idx);
 
 void render_player_view(player_t *pl);
-

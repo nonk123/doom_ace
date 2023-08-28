@@ -1,16 +1,16 @@
 // kgsws' ACE Engine
 ////
 
-#define MAX_SPRITE_NAMES	1024
-#define MAX_PLAYER_CLASSES	200
+#define MAX_SPRITE_NAMES 1024
+#define MAX_PLAYER_CLASSES 200
 
-#define EXTRA_STORAGE_PTR	((void*)ptr_visplanes)
-#define EXTRA_STORAGE_SIZE	(mod_config.visplane_count * sizeof(visplane_t))
-#define EXTRA_STORAGE_END	(EXTRA_STORAGE_PTR + EXTRA_STORAGE_SIZE)
+#define EXTRA_STORAGE_PTR ((void *)ptr_visplanes)
+#define EXTRA_STORAGE_SIZE (mod_config.visplane_count * sizeof(visplane_t))
+#define EXTRA_STORAGE_END (EXTRA_STORAGE_PTR + EXTRA_STORAGE_SIZE)
 
-#define NUM_ACE_MOBJTYPES	(MOBJ_IDXSTOP_ACE - MOBJ_IDX_UNKNOWN)
-#define NUM_MOBJTYPE_POWERS	(MOBJ_IDXSTOP_POWER - MOBJ_IDX_POWER_INVULN)
-#define NEW_NUM_MOBJTYPES	MOBJ_IDXSTOP_POWER
+#define NUM_ACE_MOBJTYPES (MOBJ_IDXSTOP_ACE - MOBJ_IDX_UNKNOWN)
+#define NUM_MOBJTYPE_POWERS (MOBJ_IDXSTOP_POWER - MOBJ_IDX_POWER_INVULN)
+#define NEW_NUM_MOBJTYPES MOBJ_IDXSTOP_POWER
 
 enum
 {
@@ -26,10 +26,10 @@ enum
 enum
 {
 	MOBJ_IDX_POWER_INVULN = MOBJ_IDXSTOP_ACE,
-//	MOBJ_IDX_POWER_STRENGTH, // not implemented
+	//	MOBJ_IDX_POWER_STRENGTH, // not implemented
 	MOBJ_IDX_POWER_INVIS,
 	MOBJ_IDX_POWER_IRONFEET,
-//	MOBJ_IDX_POWER_ALLMAP, // this is not a power
+	//	MOBJ_IDX_POWER_ALLMAP, // this is not a power
 	MOBJ_IDX_POWER_INFRARED,
 	MOBJ_IDX_POWER_BUDDHA,
 	MOBJ_IDX_POWER_ATTACK_SPEED,
@@ -133,4 +133,3 @@ uint32_t dec_mobj_custom_state(mobjinfo_t *info, uint32_t alias);
 uint32_t dec_reslove_state(mobjinfo_t *info, uint32_t current, uint32_t next, uint32_t extra);
 
 const dec_anim_t *dec_find_animation(const uint8_t *name);
-

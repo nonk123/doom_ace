@@ -1,10 +1,10 @@
 // kgsws' ACE Engine
 ////
 
-#define SKULLXOFF	-32
-#define LINEHEIGHT	16
-#define CURSORX_SMALL	-10
-#define LINEHEIGHT_SMALL	9
+#define SKULLXOFF -32
+#define LINEHEIGHT 16
+#define CURSORX_SMALL -10
+#define LINEHEIGHT_SMALL 9
 
 //
 

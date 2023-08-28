@@ -1,3 +1,8 @@
 *.o
 *.zip
 code_dev/
+
+.cache/
+compile_commands.json
+
+*~

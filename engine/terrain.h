@@ -1,10 +1,10 @@
 
-#define TRN_FLAG_LIQUID	1
-#define TRN_FLAG_PROTECT	2
+#define TRN_FLAG_LIQUID 1
+#define TRN_FLAG_PROTECT 2
 
-#define TRN_SPLASH_NOALERT	1
+#define TRN_SPLASH_NOALERT 1
 
-#define TERRAIN_LOW_MASS	10
+#define TERRAIN_LOW_MASS 10
 
 typedef struct
 {
@@ -43,4 +43,3 @@ uint32_t terrain_hit_splash(mobj_t *mo, fixed_t x, fixed_t y, fixed_t z, int32_t
 void terrain_explosion_splash(mobj_t *mo, fixed_t dist);
 void terrain_sound();
 void terrain_reset();
-
