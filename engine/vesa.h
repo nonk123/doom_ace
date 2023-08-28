@@ -1,6 +1,6 @@
 
-extern uint8_t *framebuffer;
-extern uint8_t *wipebuffer;
+extern uint8_t* framebuffer;
+extern uint8_t* wipebuffer;
 extern int32_t vesa_offset;
 
 //

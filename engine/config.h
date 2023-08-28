@@ -77,4 +77,3 @@ extern mod_config_t mod_config;
 
 void init_config();
 void config_postinit();
-

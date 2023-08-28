@@ -1,18 +1,20 @@
 // kgsws' ACE Engine
 ////
 
-#define PLAYER_SOUND_CLASS_LEN	64
-#define PLAYER_SOUND_SLOT_LEN	12
+#define PLAYER_SOUND_CLASS_LEN 64
+#define PLAYER_SOUND_SLOT_LEN 12
 
 // SOUND_CHAN_VOICE is the default
-#define SOUND_CHAN_BODY(mo)	((void*)(mo) + offsetof(mobj_t,sound_body) - sizeof(thinker_t))
-#define SOUND_CHAN_WEAPON(mo)	((void*)(mo) + offsetof(mobj_t,sound_weapon) - sizeof(thinker_t))
-#define SOUND_CONSOLEPLAYER(pl)	((void*)(((pl)-players)+1))
+#define SOUND_CHAN_BODY(mo)                                                    \
+	((void*)(mo) + offsetof(mobj_t, sound_body) - sizeof(thinker_t))
+#define SOUND_CHAN_WEAPON(mo)                                                  \
+	((void*)(mo) + offsetof(mobj_t, sound_weapon) - sizeof(thinker_t))
+#define SOUND_CONSOLEPLAYER(pl) ((void*)(((pl)-players) + 1))
 
 // SNDSEQ
-#define	SEQ_IS_DOOR	0x8000
-#define SSQ_NO_STOP	0x8000
-#define SSQ_REP_MASK	0x0FFF
+#define SEQ_IS_DOOR 0x8000
+#define SSQ_NO_STOP 0x8000
+#define SSQ_REP_MASK 0x0FFF
 
 enum
 {
@@ -40,16 +42,15 @@ void init_sound();
 
 void start_music(int32_t lump, uint32_t loop);
 
-void sfx_rng_fix(uint16_t *idx, uint32_t pmatch);
+void sfx_rng_fix(uint16_t* idx, uint32_t pmatch);
 
 uint64_t sfx_alias(uint8_t*);
 
 uint16_t sfx_by_alias(uint64_t);
 uint16_t sfx_by_name(uint8_t*);
 
-sound_seq_t *snd_seq_by_sector(sector_t*, uint32_t);
-sound_seq_t *snd_seq_by_id(uint32_t id);
-sound_seq_t *snd_seq_by_name(const uint8_t *name);
+sound_seq_t* snd_seq_by_sector(sector_t*, uint32_t);
+sound_seq_t* snd_seq_by_id(uint32_t id);
+sound_seq_t* snd_seq_by_name(const uint8_t* name);
 
 void S_StopSound(mobj_t*);
-

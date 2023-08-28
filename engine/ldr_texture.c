@@ -9,7 +9,7 @@
 #include "wadfile.h"
 #include "ldr_texture.h"
 
-#define EXTRA_TEXTURES	1	// this is 'missing texture'
+#define EXTRA_TEXTURES 1 // this is 'missing texture'
 
 typedef struct
 {
@@ -21,8 +21,8 @@ typedef struct
 	};
 	uint16_t width;
 	uint16_t height;
-	uint16_t *columnofs;
-	uint8_t *composite;
+	uint16_t* columnofs;
+	uint8_t* composite;
 } internal_texture_t;
 
 typedef struct
@@ -61,55 +61,48 @@ typedef struct maptexure_s
 
 uint_fast8_t tex_was_composite;
 
-uint8_t *textureheightpow;
+uint8_t* textureheightpow;
 
-static uint16_t *patch_lump;
+static uint16_t* patch_lump;
 static uint32_t tmp_count;
 
 static uint_fast8_t have_doomtex;
 
 // internal textures
 
-static uint8_t tex_unknown_data[] =
-{
-	96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-	96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-	96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-	96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-	96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-	96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-	96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-	96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-	96, 96, 96, 96, 96, 96, 96, 96
-};
+static uint8_t tex_unknown_data[] = {
+    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
+    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
+    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
+    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
+    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
+    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
+    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
+    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
+    96, 96, 96, 96, 96, 96, 96, 96};
 
-static uint16_t tex_unknown_offs[] =
-{
-	0, 0, 0, 0, 0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8
-};
+static uint16_t tex_unknown_offs[] = {0, 0, 0, 0, 0, 0, 0, 0,
+                                      8, 8, 8, 8, 8, 8, 8, 8};
 
-static internal_texture_t internal_texture[EXTRA_TEXTURES] =
-{
-	{
-		// this is 'missing texture' and must be last
-		.width = 16,
-		.height = 128,
-		.columnofs = tex_unknown_offs,
-		.composite = tex_unknown_data,
-	}
-};
+static internal_texture_t internal_texture[EXTRA_TEXTURES] = {{
+    // this is 'missing texture' and must be last
+    .width = 16,
+    .height = 128,
+    .columnofs = tex_unknown_offs,
+    .composite = tex_unknown_data,
+}};
 
 //
 // hooks
 
-__attribute((regparm(2),no_caller_saved_registers))
-int32_t texture_num_get(const uint8_t *name)
+__attribute((regparm(2), no_caller_saved_registers)) int32_t
+texture_num_get(const uint8_t* name)
 {
 	uint64_t wame;
 	uint32_t idx;
 
 	// check for 'no texture'
-	if(name[0] == '-')
+	if (name[0] == '-')
 		return 0;
 
 	// search as 64bit number
@@ -120,34 +113,35 @@ int32_t texture_num_get(const uint8_t *name)
 	do
 	{
 		idx--;
-		if(textures[idx]->wame == wame)
+		if (textures[idx]->wame == wame)
 			return idx;
-	} while(idx);
+	} while (idx);
 
 	// last texture is 'unknown texture'
 	return numtextures - 1;
 }
 
-__attribute((regparm(2),no_caller_saved_registers))
-int32_t texture_num_check(const uint8_t *name)
+__attribute((regparm(2), no_caller_saved_registers)) int32_t
+texture_num_check(const uint8_t* name)
 {
-	// 'texture_num_get' is used more often, but this is sometines required too
+	// 'texture_num_get' is used more often, but this is sometines required
+	// too
 	int32_t idx;
 
 	idx = texture_num_get(name);
-	if(idx == numtextures - 1)
+	if (idx == numtextures - 1)
 		return -1;
 
 	return idx;
 }
 
-__attribute((regparm(2),no_caller_saved_registers))
-uint64_t texture_get_name(uint32_t idx)
+__attribute((regparm(2), no_caller_saved_registers)) uint64_t
+texture_get_name(uint32_t idx)
 {
-	if(!idx)
+	if (!idx)
 		return '-';
 
-	if(idx >= numtextures)
+	if (idx >= numtextures)
 		return 0;
 
 	return textures[idx]->wame;
@@ -160,12 +154,12 @@ static uint32_t get_height_pow(uint32_t height)
 {
 	uint32_t i = 0;
 
-	while(1)
+	while (1)
 	{
 		uint32_t res = 1 << i;
-		if(res >= 1024)
+		if (res >= 1024)
 			break;
-		if(res >= height)
+		if (res >= height)
 			break;
 		i++;
 	}
@@ -173,17 +167,17 @@ static uint32_t get_height_pow(uint32_t height)
 	return i;
 }
 
-static uint32_t texture_size_check(uint8_t *name, uint32_t idx)
+static uint32_t texture_size_check(uint8_t* name, uint32_t idx)
 {
-	texturedef_t *td;
+	texturedef_t* td;
 
 	td = wad_cache_optional(name, NULL);
-	if(td)
+	if (td)
 	{
-		for(uint32_t i = 0; i < td->count; i++, idx++)
+		for (uint32_t i = 0; i < td->count; i++, idx++)
 		{
-			maptexure_t *mt = (void*)td + td->offset[i];
-			uint32_t *dst = texturecompositesize + idx;
+			maptexure_t* mt = (void*)td + td->offset[i];
+			uint32_t* dst = texturecompositesize + idx;
 			uint32_t size;
 
 			// header
@@ -205,17 +199,17 @@ static uint32_t texture_size_check(uint8_t *name, uint32_t idx)
 	return idx;
 }
 
-static uint32_t texture_load(uint8_t *name, uint32_t idx)
+static uint32_t texture_load(uint8_t* name, uint32_t idx)
 {
-	texturedef_t *td;
+	texturedef_t* td;
 
 	td = wad_cache_optional(name, NULL);
-	if(td)
+	if (td)
 	{
-		for(uint32_t i = 0; i < td->count; i++, idx++)
+		for (uint32_t i = 0; i < td->count; i++, idx++)
 		{
-			maptexure_t *mt = (void*)td + td->offset[i];
-			texture_t *tex = textures[idx];
+			maptexure_t* mt = (void*)td + td->offset[i];
+			texture_t* tex = textures[idx];
 
 			// copy texture info
 			tex->wame = mt->wame;
@@ -224,13 +218,17 @@ static uint32_t texture_load(uint8_t *name, uint32_t idx)
 			tex->patchcount = mt->patchcount;
 
 			// copy patches
-			for(uint32_t j = 0; j < mt->patchcount; j++)
+			for (uint32_t j = 0; j < mt->patchcount; j++)
 			{
-				mappatch_t *mp = mt->patch + j;
-				texpatch_t *tp = tex->patch + j;
+				mappatch_t* mp = mt->patch + j;
+				texpatch_t* tp = tex->patch + j;
 
-				if(mp->patch >= tmp_count || patch_lump[mp->patch] == 0xFFFF)
-					engine_error("TEXTURE", "Texture %.8s is missing patch!", mt->name);
+				if (mp->patch >= tmp_count ||
+				    patch_lump[mp->patch] == 0xFFFF)
+					engine_error(
+					    "TEXTURE",
+					    "Texture %.8s is missing patch!",
+					    mt->name);
 
 				tp->originx = mp->originx;
 				tp->originy = mp->originy;
@@ -241,7 +239,8 @@ static uint32_t texture_load(uint8_t *name, uint32_t idx)
 			{
 				uint32_t size;
 
-				size = sizeof(texture_t) + tex->patchcount * sizeof(texpatch_t);
+				size = sizeof(texture_t) +
+				       tex->patchcount * sizeof(texpatch_t);
 				texturecolumnlump[idx] = (void*)tex + size;
 
 				size += tex->width * sizeof(uint16_t);
@@ -253,7 +252,7 @@ static uint32_t texture_load(uint8_t *name, uint32_t idx)
 
 			{
 				uint32_t size = 1;
-				while(size * 2 <= tex->width)
+				while (size * 2 <= tex->width)
 					size <<= 1;
 				texturewidthmask[idx] = size - 1;
 			}
@@ -269,7 +268,7 @@ static uint32_t texture_load(uint8_t *name, uint32_t idx)
 
 static uint32_t load_pnames()
 {
-	uint8_t *ptr;
+	uint8_t* ptr;
 	uint32_t size, count;
 
 	// load PNAMES
@@ -281,7 +280,7 @@ static uint32_t load_pnames()
 
 	// check patch count
 	count = *((uint32_t*)ptr);
-	if(count > size)
+	if (count > size)
 		engine_error("TEXTURE", "Invalid %s!", dtxt_pnames);
 
 	// prepare patch table
@@ -290,14 +289,14 @@ static uint32_t load_pnames()
 
 	// check every patch
 	tmp_count = count;
-	for(uint32_t i = 0; i < count; i++, ptr += 8)
+	for (uint32_t i = 0; i < count; i++, ptr += 8)
 		patch_lump[i] = wad_check_lump(ptr);
 }
 
 //
 // callbacks
 
-static void cb_tx_count(lumpinfo_t *li)
+static void cb_tx_count(lumpinfo_t* li)
 {
 	uint32_t size;
 	patch_t patch;
@@ -317,9 +316,9 @@ static void cb_tx_count(lumpinfo_t *li)
 	tmp_count++;
 }
 
-static void cb_tx_load(lumpinfo_t *li)
+static void cb_tx_load(lumpinfo_t* li)
 {
-	texture_t *tex;
+	texture_t* tex;
 	uint32_t size;
 	uint32_t lump;
 
@@ -339,7 +338,7 @@ static void cb_tx_load(lumpinfo_t *li)
 	textureheight[tmp_count] <<= FRACBITS;
 
 	size = 1;
-	while(size * 2 <= tex->width)
+	while (size * 2 <= tex->width)
 		size <<= 1;
 	texturewidthmask[tmp_count] = size - 1;
 
@@ -368,18 +367,25 @@ uint32_t count_textures()
 	wad_hide_lump("TEXTURE1");
 	wad_hide_lump("TEXTURE2");
 
-	if(!mod_config.texture_workaround)
+	if (!mod_config.texture_workaround)
 	{
-		if(mod_config.enable_dehacked)
+		if (mod_config.enable_dehacked)
 		{
 			// DEHACKED must provide alternative names
-			if(!strcmp(dtxt_pnames, "PNAMES"))
-				engine_error("TEXTURE", "Rename %s using DEHACKED!", dtxt_pnames);
-			if(!strcmp(dtxt_texture1, "TEXTURE1"))
-				engine_error("TEXTURE", "Rename %s using DEHACKED!", dtxt_texture1);
-			if(!strcmp(dtxt_texture2, "TEXTURE2"))
-				engine_error("TEXTURE", "Rename %s using DEHACKED!", dtxt_texture2);
-		} else
+			if (!strcmp(dtxt_pnames, "PNAMES"))
+				engine_error("TEXTURE",
+				             "Rename %s using DEHACKED!",
+				             dtxt_pnames);
+			if (!strcmp(dtxt_texture1, "TEXTURE1"))
+				engine_error("TEXTURE",
+				             "Rename %s using DEHACKED!",
+				             dtxt_texture1);
+			if (!strcmp(dtxt_texture2, "TEXTURE2"))
+				engine_error("TEXTURE",
+				             "Rename %s using DEHACKED!",
+				             dtxt_texture2);
+		}
+		else
 		{
 			// use hardcoded names when DEHACKED is disabled
 			strcpy(dtxt_pnames, "PATCHES");
@@ -391,11 +397,11 @@ uint32_t count_textures()
 	//
 	// count textures
 
-	if(wad_check_lump(dtxt_pnames) < 0)
+	if (wad_check_lump(dtxt_pnames) < 0)
 		return 0;
 
 	idx = wad_check_lump(dtxt_texture1);
-	if(idx >= 0)
+	if (idx >= 0)
 	{
 		wad_read_lump(&temp, idx, 4);
 		count += temp;
@@ -403,7 +409,7 @@ uint32_t count_textures()
 	}
 
 	idx = wad_check_lump(dtxt_texture2);
-	if(idx >= 0)
+	if (idx >= 0)
 	{
 		wad_read_lump(&temp, idx, 4);
 		count += temp;
@@ -415,7 +421,8 @@ uint32_t count_textures()
 
 void init_textures(uint32_t count)
 {
-	// To avoid unnecessary memory fragmentation, this function does multiple passes.
+	// To avoid unnecessary memory fragmentation, this function does
+	// multiple passes.
 	uint32_t idx;
 
 	doom_printf("[ACE] preparing %u textures\n", count);
@@ -436,13 +443,13 @@ void init_textures(uint32_t count)
 	texturetranslation = ldr_malloc(count * sizeof(uint32_t));
 	textureheightpow = ldr_malloc(count);
 
-	for(uint32_t i = 0; i < count; i++)
+	for (uint32_t i = 0; i < count; i++)
 		texturetranslation[i] = i;
 
 	//
 	// PASS 2
 
-	if(have_doomtex)
+	if (have_doomtex)
 	{
 		// get size of each texture[x]
 		idx = texture_size_check(dtxt_texture1, 0);
@@ -456,24 +463,25 @@ void init_textures(uint32_t count)
 	// PASS 3
 
 	// allocate memory for each texture[x]
-	for(idx = 0 ; idx < count - EXTRA_TEXTURES; idx++)
+	for (idx = 0; idx < count - EXTRA_TEXTURES; idx++)
 		textures[idx] = ldr_malloc(texturecompositesize[idx]);
 
 	//
 	// PASS 4
 
-	if(have_doomtex)
+	if (have_doomtex)
 		load_pnames();
 
 	//
 	// PASS 5
 
-	if(have_doomtex)
+	if (have_doomtex)
 	{
 		// load TEXTUREx info
 		idx = texture_load(dtxt_texture1, 0);
 		tmp_count = texture_load(dtxt_texture2, idx);
-	} else
+	}
+	else
 		tmp_count = 0;
 
 	// load TX_* info
@@ -482,15 +490,15 @@ void init_textures(uint32_t count)
 	//
 	// PASS 6
 
-	if(patch_lump)
+	if (patch_lump)
 		doom_free(patch_lump);
 
 	// add internal textures
-	for(uint32_t i = 0; i < EXTRA_TEXTURES; i++, tmp_count++)
+	for (uint32_t i = 0; i < EXTRA_TEXTURES; i++, tmp_count++)
 	{
 		uint32_t size;
-		texture_t *tex;
-		internal_texture_t *it = internal_texture + i;
+		texture_t* tex;
+		internal_texture_t* it = internal_texture + i;
 
 		size = sizeof(texture_t);
 		size += it->width * sizeof(uint16_t);
@@ -502,7 +510,7 @@ void init_textures(uint32_t count)
 		tex->patchcount = 0;
 
 		size = 1;
-		while(size * 2 <= tex->width)
+		while (size * 2 <= tex->width)
 			size <<= 1;
 
 		texturewidthmask[tmp_count] = size - 1;
@@ -513,7 +521,8 @@ void init_textures(uint32_t count)
 		textureheightpow[tmp_count] = get_height_pow(tex->height);
 		textures[tmp_count] = tex;
 
-		memset((void*)tex->patch, 0xFF, (uint32_t)tex->width * sizeof(uint16_t));
+		memset((void*)tex->patch, 0xFF,
+		       (uint32_t)tex->width * sizeof(uint16_t));
 	}
 
 	//
@@ -525,17 +534,16 @@ void init_textures(uint32_t count)
 	return;
 }
 
-__attribute((regparm(2),no_caller_saved_registers))
-void tex_init_data()
+__attribute((regparm(2), no_caller_saved_registers)) void tex_init_data()
 {
-	for(uint32_t i; i < tmp_count; i++)
+	for (uint32_t i; i < tmp_count; i++)
 	{
 		R_GenerateLookup(i);
 		gfx_progress(1);
 	}
 }
 
-uint8_t *texture_get_column(uint32_t tex, uint32_t col)
+uint8_t* texture_get_column(uint32_t tex, uint32_t col)
 {
 	int32_t lump;
 	uint32_t offs;
@@ -544,13 +552,13 @@ uint8_t *texture_get_column(uint32_t tex, uint32_t col)
 	lump = texturecolumnlump[tex][col];
 	offs = texturecolumnofs[tex][col];
 
-	if(lump != 0xFFFF)
+	if (lump != 0xFFFF)
 	{
 		tex_was_composite = 0;
 		return W_CacheLumpNum(lump, PU_CACHE) + offs;
 	}
 
-	if(!texturecomposite[tex])
+	if (!texturecomposite[tex])
 		R_GenerateComposite(tex);
 
 	tex_was_composite = 1;
@@ -560,9 +568,8 @@ uint8_t *texture_get_column(uint32_t tex, uint32_t col)
 //
 // hooks
 
-static const hook_t hooks[] __attribute__((used,section(".hooks"),aligned(4))) =
-{
+static const hook_t hooks[]
+    __attribute__((used, section(".hooks"), aligned(4))) = {
 	// replace 'R_TextureNumForName'
 	{0x00034750, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)texture_num_get},
 };
-

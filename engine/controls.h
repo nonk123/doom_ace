@@ -1,8 +1,8 @@
 // kgsws' ACE Engine
 ////
 
-#define NUM_MOUSE_BTNS	3
-#define NUM_MOUSE_CTRL	5
+#define NUM_MOUSE_BTNS 3
+#define NUM_MOUSE_CTRL 5
 
 enum
 {
@@ -43,15 +43,15 @@ enum
 typedef struct
 {
 	uint32_t group;
-	const uint8_t *name;
-	uint8_t *ptr;
+	const uint8_t* name;
+	uint8_t* ptr;
 } key_ctrl_t;
 
 //
 
-extern int32_t *const ctrl_mouse_ptr[NUM_MOUSE_CTRL];
+extern int32_t* const ctrl_mouse_ptr[NUM_MOUSE_CTRL];
 extern key_ctrl_t control_list[NUM_CONTROLS];
-extern const uint8_t *ctrl_group[NUM_CTRL_GROUPS];
+extern const uint8_t* ctrl_group[NUM_CTRL_GROUPS];
 
 extern uint8_t key_jump;
 extern uint8_t key_fire_alt;
@@ -71,6 +71,5 @@ extern int32_t mouseb_inv_use;
 
 void control_setup();
 void control_clear_key(uint8_t id);
-uint8_t *control_key_name(uint8_t id);
-uint8_t *control_btn_name(uint8_t id);
-
+uint8_t* control_key_name(uint8_t id);
+uint8_t* control_btn_name(uint8_t id);

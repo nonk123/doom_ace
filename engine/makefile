@@ -1,6 +1,6 @@
 RSC = gsi ribbit/src/rsc.scm
 
-SCM_FILES = main.scm
+SCM_FILES = lib.scm engine_main.scm
 SCM_FILES := $(SCM_FILES:%=../scm/%)
 SCM_OUTPUT = ../scm/_output_.scm
 

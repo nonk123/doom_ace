@@ -1,6 +1,7 @@
-BasedOnStyle: WebKit
-IndentWidth: 4
-UseTab: Never
+BasedOnStyle: LLVM
+BreakBeforeBraces: Allman
+IndentWidth: 8
+UseTab: AlignWithSpaces
 DerivePointerAlignment: false
 PointerAlignment: Left  
 SortIncludes: Never

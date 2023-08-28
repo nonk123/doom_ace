@@ -28,7 +28,7 @@ typedef struct
 {
 	int16_t direction;
 	uint16_t repeatable;
-	void (*start)(mobj_t*,mobjinfo_t*);
+	void (*start)(mobj_t*, mobjinfo_t*);
 	void (*stop)(mobj_t*);
 } powerup_t;
 
@@ -43,41 +43,40 @@ player_info_t player_info[MAXPLAYERS];
 static uint32_t netgame_check[MAXPLAYERS][4];
 
 // powerups
-static void invul_start(mobj_t*,mobjinfo_t*);
+static void invul_start(mobj_t*, mobjinfo_t*);
 static void invul_stop(mobj_t*);
-static void invis_start(mobj_t*,mobjinfo_t*);
+static void invis_start(mobj_t*, mobjinfo_t*);
 static void invis_stop(mobj_t*);
-static void buddha_start(mobj_t*,mobjinfo_t*);
+static void buddha_start(mobj_t*, mobjinfo_t*);
 static void buddha_stop(mobj_t*);
-static void flight_start(mobj_t*,mobjinfo_t*);
+static void flight_start(mobj_t*, mobjinfo_t*);
 static void flight_stop(mobj_t*);
-static const powerup_t powerup[] =
-{
-	[pw_invulnerability] = {-1, 0, invul_start, invul_stop},
-	[pw_strength] = {1},
-	[pw_invisibility] = {-1, 1, invis_start, invis_stop},
-	[pw_ironfeet] = {-1},
-//	[pw_allmap] = {},
-	[pw_infrared] = {-1},
-	[pw_buddha] = {-1, 0, buddha_start, buddha_stop},
-	[pw_attack_speed] = {-1, 0},
-	[pw_flight] = {-1, 0, flight_start, flight_stop},
-//	[pw_reserved0] = {},
-//	[pw_reserved1] = {},
-//	[pw_reserved2] = {},
+static const powerup_t powerup[] = {
+    [pw_invulnerability] = {-1, 0, invul_start, invul_stop},
+    [pw_strength] = {1},
+    [pw_invisibility] = {-1, 1, invis_start, invis_stop},
+    [pw_ironfeet] = {-1},
+    //	[pw_allmap] = {},
+    [pw_infrared] = {-1},
+    [pw_buddha] = {-1, 0, buddha_start, buddha_stop},
+    [pw_attack_speed] = {-1, 0},
+    [pw_flight] = {-1, 0, flight_start, flight_stop},
+    //	[pw_reserved0] = {},
+    //	[pw_reserved1] = {},
+    //	[pw_reserved2] = {},
 };
 
 //
 // POWER: invulnerability
 
-static void invul_start(mobj_t *mo, mobjinfo_t *info)
+static void invul_start(mobj_t* mo, mobjinfo_t* info)
 {
 	mo->flags1 |= MF1_INVULNERABLE;
-	if(info->powerup.mode)
+	if (info->powerup.mode)
 		mo->flags1 |= MF1_REFLECTIVE;
 }
 
-static void invul_stop(mobj_t *mo)
+static void invul_stop(mobj_t* mo)
 {
 	mo->flags1 &= ~(MF1_INVULNERABLE | MF1_REFLECTIVE);
 	mo->flags1 |= mo->info->flags1 & (MF1_INVULNERABLE | MF1_REFLECTIVE);
@@ -86,35 +85,37 @@ static void invul_stop(mobj_t *mo)
 //
 // POWER: invisibility
 
-static void invis_start(mobj_t *mo, mobjinfo_t *info)
+static void invis_start(mobj_t* mo, mobjinfo_t* info)
 {
 	mo->flags |= MF_SHADOW;
 
-	if(!info->powerup.mode)
+	if (!info->powerup.mode)
 	{
 		mo->render_style = RS_FUZZ;
 		mo->render_alpha = 255;
 		return;
 	}
 
-	if(info->powerup.mode > 1 && mo->player->powers[pw_invisibility])
+	if (info->powerup.mode > 1 && mo->player->powers[pw_invisibility])
 	{
 		int32_t alpha = mo->render_alpha;
 		alpha -= 255 - ((uint32_t)info->powerup.strength * 255) / 100;
-		if(alpha < 0)
+		if (alpha < 0)
 			mo->render_alpha = 0;
 		else
 			mo->render_alpha = alpha;
-	} else
-		mo->render_alpha = 255 - ((uint32_t)info->powerup.strength * 255) / 100;
+	}
+	else
+		mo->render_alpha =
+		    255 - ((uint32_t)info->powerup.strength * 255) / 100;
 
-	if(!mo->render_alpha)
+	if (!mo->render_alpha)
 		mo->render_style = RS_INVISIBLE;
 	else
 		mo->render_style = RS_TRANSLUCENT;
 }
 
-static void invis_stop(mobj_t *mo)
+static void invis_stop(mobj_t* mo)
 {
 	mo->flags &= ~MF_SHADOW;
 	mo->flags |= mo->info->flags & MF_SHADOW;
@@ -125,12 +126,12 @@ static void invis_stop(mobj_t *mo)
 //
 // POWER: buddha
 
-static void buddha_start(mobj_t *mo, mobjinfo_t *info)
+static void buddha_start(mobj_t* mo, mobjinfo_t* info)
 {
 	mo->flags1 |= MF1_BUDDHA;
 }
 
-static void buddha_stop(mobj_t *mo)
+static void buddha_stop(mobj_t* mo)
 {
 	mo->flags1 &= ~MF1_BUDDHA;
 	mo->flags1 |= mo->info->flags1 & MF1_BUDDHA;
@@ -139,12 +140,12 @@ static void buddha_stop(mobj_t *mo)
 //
 // POWER: flight
 
-static void flight_start(mobj_t *mo, mobjinfo_t *info)
+static void flight_start(mobj_t* mo, mobjinfo_t* info)
 {
 	mo->flags |= MF_NOGRAVITY;
 }
 
-static void flight_stop(mobj_t *mo)
+static void flight_stop(mobj_t* mo)
 {
 	mo->flags &= ~MF_NOGRAVITY;
 	mo->flags |= mo->info->flags & MF_NOGRAVITY;
@@ -153,34 +154,35 @@ static void flight_stop(mobj_t *mo)
 //
 // powerup giver
 
-void powerup_give(player_t *pl, mobjinfo_t *info)
+void powerup_give(player_t* pl, mobjinfo_t* info)
 {
-	const powerup_t *pw = powerup + info->powerup.type;
+	const powerup_t* pw = powerup + info->powerup.type;
 
-	if(pl->powers[info->powerup.type])
+	if (pl->powers[info->powerup.type])
 	{
-		if(!pw->repeatable)
+		if (!pw->repeatable)
 			return;
-	} else
+	}
+	else
 		pl->power_mobj[info->powerup.type] = info - mobjinfo;
 
-	if(!pw->start)
+	if (!pw->start)
 		return;
 
 	pw->start(pl->mo, info);
 }
 
-void powerup_take(player_t *pl, mobjinfo_t *info)
+void powerup_take(player_t* pl, mobjinfo_t* info)
 {
-	const powerup_t *pw;
+	const powerup_t* pw;
 
-	if(!pl->powers[info->powerup.type])
+	if (!pl->powers[info->powerup.type])
 		return;
 
 	pl->powers[info->powerup.type] = 0;
 
 	pw = powerup + info->powerup.type;
-	if(!pw->stop)
+	if (!pw->stop)
 		return;
 
 	pw->stop(pl->mo);
@@ -189,49 +191,51 @@ void powerup_take(player_t *pl, mobjinfo_t *info)
 //
 // buttons in ticcmd
 
-static inline void check_buttons(player_t *pl, ticcmd_t *cmd)
+static inline void check_buttons(player_t* pl, ticcmd_t* cmd)
 {
 	uint32_t slot;
-	uint16_t *ptr;
+	uint16_t* ptr;
 	uint16_t pick, last;
 	uint16_t now;
-	mobjinfo_t *select;
+	mobjinfo_t* select;
 
 	slot = (cmd->buttons & BT_ACTIONMASK) >> BT_ACTIONSHIFT;
 
-	if(!slot)
+	if (!slot)
 		return;
 
-	if(slot == BT_ACT_INV_PREV)
+	if (slot == BT_ACT_INV_PREV)
 	{
 		pl->inv_tick = PLAYER_INVBAR_TICS;
 		inv_player_prev(pl->mo);
 		return;
 	}
 
-	if(slot == BT_ACT_INV_NEXT)
+	if (slot == BT_ACT_INV_NEXT)
 	{
 		pl->inv_tick = PLAYER_INVBAR_TICS;
 		inv_player_next(pl->mo);
 		return;
 	}
 
-	if(slot == BT_ACT_INV_USE)
+	if (slot == BT_ACT_INV_USE)
 	{
-		if(pl->inv_sel >= 0)
-			mobj_use_item(pl->mo, pl->mo->inventory->slot + pl->inv_sel);
+		if (pl->inv_sel >= 0)
+			mobj_use_item(pl->mo,
+			              pl->mo->inventory->slot + pl->inv_sel);
 		return;
 	}
 
-	if(slot == BT_ACT_INV_QUICK)
+	if (slot == BT_ACT_INV_QUICK)
 	{
-		invitem_t *item;
+		invitem_t* item;
 
-		item = inventory_find(pl->mo, player_info[pl - players].quick_inv);
-		if(!item)
+		item =
+		    inventory_find(pl->mo, player_info[pl - players].quick_inv);
+		if (!item)
 			return;
 
-		if(!item->count)
+		if (!item->count)
 			return;
 
 		mobj_use_item(pl->mo, item);
@@ -239,39 +243,44 @@ static inline void check_buttons(player_t *pl, ticcmd_t *cmd)
 		return;
 	}
 
-	if(slot == BT_ACT_JUMP)
+	if (slot == BT_ACT_JUMP)
 	{
-		if(pl->mo->flags & MF_NOGRAVITY)
+		if (pl->mo->flags & MF_NOGRAVITY)
 		{
 			// i don't have a good solution for this
-		} else
-		if(pl->mo->info->player.jump_z)
+		}
+		else if (pl->mo->info->player.jump_z)
 		{
-			if(pl->mo->waterlevel)
+			if (pl->mo->waterlevel)
 			{
-				if(pl->mo->momz < pl->mo->info->player.jump_z / 2)
-					pl->mo->momz += pl->mo->info->player.jump_z / 2;
-			} else
-			if(pl->mo->momz < pl->mo->info->player.jump_z)
+				if (pl->mo->momz <
+				    pl->mo->info->player.jump_z / 2)
+					pl->mo->momz +=
+					    pl->mo->info->player.jump_z / 2;
+			}
+			else if (pl->mo->momz < pl->mo->info->player.jump_z)
 			{
-				if(pl->mo->z <= pl->mo->floorz)
+				if (pl->mo->z <= pl->mo->floorz)
 				{
-					pl->mo->momz += pl->mo->info->player.jump_z;
-					S_StartSound(pl->mo, pl->mo->info->player.sound.jump);
+					pl->mo->momz +=
+					    pl->mo->info->player.jump_z;
+					S_StartSound(
+					    pl->mo,
+					    pl->mo->info->player.sound.jump);
 				}
 			}
 		}
 	}
 
 	slot--;
-	if(slot >= NUM_WPN_SLOTS)
+	if (slot >= NUM_WPN_SLOTS)
 		return;
 
 	ptr = pl->mo->info->player.wpn_slot[slot];
-	if(!ptr)
+	if (!ptr)
 		return;
 
-	if(pl->readyweapon)
+	if (pl->readyweapon)
 		now = pl->readyweapon - mobjinfo;
 	else
 		now = 0;
@@ -279,27 +288,27 @@ static inline void check_buttons(player_t *pl, ticcmd_t *cmd)
 	// 3rd, 2nd, 1st
 	pick = 0;
 	last = 0;
-	while(*ptr)
+	while (*ptr)
 	{
-		if(now == *ptr)
+		if (now == *ptr)
 			now = 0;
-		if(inventory_check(pl->mo, *ptr))
+		if (inventory_check(pl->mo, *ptr))
 		{
-			if(now)
+			if (now)
 				pick = *ptr;
 			last = *ptr;
 		}
 		ptr++;
 	}
 
-	if(!pick)
+	if (!pick)
 		pick = last;
 
-	if(!pick)
+	if (!pick)
 		return;
 
 	select = mobjinfo + pick;
-	if(select == pl->readyweapon)
+	if (select == pl->readyweapon)
 		return;
 
 	pl->pendingweapon = select;
@@ -310,60 +319,61 @@ static inline void check_buttons(player_t *pl, ticcmd_t *cmd)
 
 void player_chat_char(uint32_t pidx)
 {
-	cheat_buf_t *cb = cheat_buf + pidx;
+	cheat_buf_t* cb = cheat_buf + pidx;
 	uint8_t cc = players[pidx].cmd.chatchar;
 
 	// data transfers have priority
-	if(cb->dpos >= 0)
+	if (cb->dpos >= 0)
 	{
 		cb->data[cb->dpos++] = cc;
-		if(cb->dpos == cb->dlen)
+		if (cb->dpos == cb->dlen)
 		{
-			switch(cb->data[0])
+			switch (cb->data[0])
 			{
-				case TIC_DATA_CHECK0:
-				case TIC_DATA_CHECK1:
-				case TIC_DATA_CHECK2:
-				case TIC_DATA_CHECK3:
-					if(is_net_desync)
-						break;
-					if(cb->dlen != sizeof(uint32_t) + 1)
-						break;
-					if(netgame || demoplayback)
-					{
-						uint32_t slot = cb->data[0] & 3;
-						uint32_t magic = *((uint32_t*)(cb->data + 1));
-
-						if(magic != netgame_check[pidx][slot])
-							is_net_desync = 2;
-					}
-				break;
-				case TIC_DATA_PLAYER_INFO:
+			case TIC_DATA_CHECK0:
+			case TIC_DATA_CHECK1:
+			case TIC_DATA_CHECK2:
+			case TIC_DATA_CHECK3:
+				if (is_net_desync)
+					break;
+				if (cb->dlen != sizeof(uint32_t) + 1)
+					break;
+				if (netgame || demoplayback)
 				{
-					player_info_t *info;
-					uint32_t update_color = 0;
+					uint32_t slot = cb->data[0] & 3;
+					uint32_t magic =
+					    *((uint32_t*)(cb->data + 1));
 
-					if(cb->dlen != sizeof(player_info_t) + 1)
-						break;
-
-					info = (player_info_t*)(cb->data + 1);
-
-					player_check_info(info);
-
-					if(info->color != player_info[pidx].color)
-						update_color = 1;
-
-					player_info[pidx] = *info;
-					if(update_color)
-						r_generate_player_color(pidx);
+					if (magic != netgame_check[pidx][slot])
+						is_net_desync = 2;
 				}
 				break;
+			case TIC_DATA_PLAYER_INFO:
+			{
+				player_info_t* info;
+				uint32_t update_color = 0;
+
+				if (cb->dlen != sizeof(player_info_t) + 1)
+					break;
+
+				info = (player_info_t*)(cb->data + 1);
+
+				player_check_info(info);
+
+				if (info->color != player_info[pidx].color)
+					update_color = 1;
+
+				player_info[pidx] = *info;
+				if (update_color)
+					r_generate_player_color(pidx);
+			}
+			break;
 			}
 			cb->dpos = -1;
 		}
 		return;
-	} else
-	if((cc & TIC_CMD_DATA) == TIC_CMD_DATA)
+	}
+	else if ((cc & TIC_CMD_DATA) == TIC_CMD_DATA)
 	{
 		// enter data transfer mode
 		cb->dlen = cc & ~TIC_CMD_DATA;
@@ -371,33 +381,33 @@ void player_chat_char(uint32_t pidx)
 		return;
 	}
 
-	if(!cc)
+	if (!cc)
 		return;
 
-	if(cc == TIC_CMD_CHEAT)
+	if (cc == TIC_CMD_CHEAT)
 	{
 		cb->tpos = 0;
 		return;
 	}
 
-	if(cb->tpos < 0)
+	if (cb->tpos < 0)
 		return;
 
-	if(cc == 0x0D)
+	if (cc == 0x0D)
 	{
 		cheat_check(pidx);
 		cb->tpos = -1;
 		return;
 	}
 
-	if(cc == 0x7F)
+	if (cc == 0x7F)
 	{
-		if(cb->tpos)
+		if (cb->tpos)
 			cb->tpos--;
 		return;
 	}
 
-	if(cb->tpos >= TIC_CMD_CHEAT_BUFFER)
+	if (cb->tpos >= TIC_CMD_CHEAT_BUFFER)
 		return;
 
 	cb->text[cb->tpos++] = cc;
@@ -406,62 +416,63 @@ void player_chat_char(uint32_t pidx)
 //
 // player think
 
-static __attribute((regparm(2),no_caller_saved_registers))
-void P_CalcHeight(player_t *player)
+static __attribute((regparm(2), no_caller_saved_registers)) void
+P_CalcHeight(player_t* player)
 {
 	uint32_t angle;
 	fixed_t bob, limit;
 	fixed_t viewheight = player->mo->info->player.view_height;
 
-	if(	!onground &&
-		(player->mo->flags & MF_NOGRAVITY || player->mo->waterlevel > 2)
-	){
+	if (!onground &&
+	    (player->mo->flags & MF_NOGRAVITY || player->mo->waterlevel > 2))
+	{
 		player->viewheight = viewheight;
 		player->deltaviewheight = 0;
 		player->bob = 0;
 
 		player->viewz = player->mo->z + viewheight;
 
-		if(player->viewz > player->mo->ceilingz - limit)
+		if (player->viewz > player->mo->ceilingz - limit)
 			player->viewz = player->mo->ceilingz - limit;
 
 		return;
 	}
 
-	player->bob = FixedMul(player->mo->momx, player->mo->momx) + FixedMul(player->mo->momy,player->mo->momy);
+	player->bob = FixedMul(player->mo->momx, player->mo->momx) +
+	              FixedMul(player->mo->momy, player->mo->momy);
 	player->bob >>= 2;
 
-	if(player->bob > MAXBOB)
+	if (player->bob > MAXBOB)
 		player->bob = MAXBOB;
 
-	if(!think_freeze_mode)
+	if (!think_freeze_mode)
 		angle = (FINEANGLES / 20 * leveltime) & FINEMASK;
 	else
 		angle = 0;
 	bob = FixedMul(player->bob / 2, finesine[angle]);
-	if(player->mo->info->player.view_bob != FRACUNIT)
+	if (player->mo->info->player.view_bob != FRACUNIT)
 		bob = FixedMul(bob, player->mo->info->player.view_bob);
 
-	if(player->state != PST_DEAD)
+	if (player->state != PST_DEAD)
 	{
 		player->viewheight += player->deltaviewheight;
 
-		if(player->viewheight > viewheight)
+		if (player->viewheight > viewheight)
 		{
 			player->viewheight = viewheight;
 			player->deltaviewheight = 0;
-		} else
-		if(player->viewheight < viewheight / 2)
+		}
+		else if (player->viewheight < viewheight / 2)
 		{
 			player->viewheight = viewheight / 2;
-			if(player->deltaviewheight <= 0)
+			if (player->deltaviewheight <= 0)
 				player->deltaviewheight = 1;
 		}
 
-		if(player->deltaviewheight)
+		if (player->deltaviewheight)
 		{
 			player->deltaviewheight += FRACUNIT / 4;
-			if(!player->deltaviewheight)
+			if (!player->deltaviewheight)
 				player->deltaviewheight = 1;
 		}
 	}
@@ -469,35 +480,33 @@ void P_CalcHeight(player_t *player)
 	limit = player->viewheight / 10;
 	player->viewz = player->mo->z + player->viewheight + bob;
 
-	if(player->viewz > player->mo->ceilingz - limit)
+	if (player->viewz > player->mo->ceilingz - limit)
 		player->viewz = player->mo->ceilingz - limit;
 }
 
-static void player_sector_damage(player_t *pl, sector_extra_t *se)
+static void player_sector_damage(player_t* pl, sector_extra_t* se)
 {
 	uint32_t damage;
 
-	if(se->damage.tics > 1 && leveltime % se->damage.tics)
+	if (se->damage.tics > 1 && leveltime % se->damage.tics)
 		return;
 
-	if(se->damage.amount < 0)
+	if (se->damage.amount < 0)
 	{
 		uint32_t health = pl->mo->health;
 		health -= se->damage.amount;
-		if(health > pl->mo->info->spawnhealth)
+		if (health > pl->mo->info->spawnhealth)
 			health = pl->mo->info->spawnhealth;
 		pl->mo->health = health;
 		pl->health = health;
 		return;
 	}
 
-	if(	!(se->damage.type & 0x80) &&
-		pl->powers[pw_ironfeet] &&
-		(!se->damage.leak || P_Random() >= se->damage.leak)
-	)
+	if (!(se->damage.type & 0x80) && pl->powers[pw_ironfeet] &&
+	    (!se->damage.leak || P_Random() >= se->damage.leak))
 		return;
 
-	if((se->damage.type & 0x7F) == DAMAGE_INSTANT)
+	if ((se->damage.type & 0x7F) == DAMAGE_INSTANT)
 		damage = 1000000;
 	else
 		damage = se->damage.amount;
@@ -506,59 +515,60 @@ static void player_sector_damage(player_t *pl, sector_extra_t *se)
 	mobj_damage(pl->mo, NULL, NULL, damage, NULL);
 }
 
-static void player_terrain_damage(player_t *pl, int32_t flat, uint32_t is3d)
+static void player_terrain_damage(player_t* pl, int32_t flat, uint32_t is3d)
 {
-	terrain_terrain_t *trn;
+	terrain_terrain_t* trn;
 	uint32_t tics;
 	uint32_t damage;
 
-	if(!flatterrain)
+	if (!flatterrain)
 		return;
 
-	if(flat >= numflats + num_texture_flats)
+	if (flat >= numflats + num_texture_flats)
 		return;
 
-	if(flatterrain[flat] == 255)
+	if (flatterrain[flat] == 255)
 		return;
 
 	trn = terrain + flatterrain[flat];
 
-	if(!trn->damageamount)
+	if (!trn->damageamount)
 		return;
 
-	if(trn->flags & TRN_FLAG_PROTECT && pl->powers[pw_ironfeet])
+	if (trn->flags & TRN_FLAG_PROTECT && pl->powers[pw_ironfeet])
 		return;
 
 	tics = trn->damagetimemask;
 	tics++;
 
-	if(leveltime % tics)
+	if (leveltime % tics)
 		return;
 
 	damage = DAMAGE_WITH_TYPE(trn->damageamount, trn->damagetype);
 	mobj_damage(pl->mo, NULL, NULL, damage, NULL);
 
-	if(is3d)
+	if (is3d)
 		// this is technically wrong
 		// in ZDoom, damage sound is played without splash
 		return;
 
-	if(pl->mo->info->mass < TERRAIN_LOW_MASS)
+	if (pl->mo->info->mass < TERRAIN_LOW_MASS)
 		flat = -flat;
 
 	terrain_hit_splash(NULL, pl->mo->x, pl->mo->y, pl->mo->z, flat);
 }
 
-static void handle_sector_special(player_t *pl, sector_t *sec, uint32_t texture, uint32_t is3d)
+static void handle_sector_special(player_t* pl, sector_t* sec, uint32_t texture,
+                                  uint32_t is3d)
 {
-	if(sec->special & 1024)
+	if (sec->special & 1024)
 	{
 		pl->message = "Secret!";
 		S_StartSound(SOUND_CONSOLEPLAYER(pl), SFX_SECRET);
 		sec->special &= ~1024;
 	}
 
-	if(sec->extra->damage.amount)
+	if (sec->extra->damage.amount)
 		player_sector_damage(pl, sec->extra);
 
 	player_terrain_damage(pl, texture, is3d);
@@ -566,24 +576,24 @@ static void handle_sector_special(player_t *pl, sector_t *sec, uint32_t texture,
 
 void player_think(uint32_t idx)
 {
-	player_t *pl = players + idx;
-	ticcmd_t *cmd = &pl->cmd;
+	player_t* pl = players + idx;
+	ticcmd_t* cmd = &pl->cmd;
 
-	if(pl->text.text)
+	if (pl->text.text)
 	{
-		if(leveltime >= pl->text.tic)
+		if (leveltime >= pl->text.tic)
 			pl->text.text = NULL;
 	}
 
-	if(pl->stbar_update)
+	if (pl->stbar_update)
 	{
-		if(idx == consoleplayer)
+		if (idx == consoleplayer)
 			stbar_update(pl);
 		else
 			pl->stbar_update = 0;
 	}
 
-	if(pl->mo->flags & MF_JUSTATTACKED)
+	if (pl->mo->flags & MF_JUSTATTACKED)
 	{
 		// chainsaw
 		cmd->angleturn = 0;
@@ -593,7 +603,7 @@ void player_think(uint32_t idx)
 	}
 
 	// network or demo consistency
-	if(!(leveltime & 63))
+	if (!(leveltime & 63))
 	{
 		uint32_t magic;
 		uint32_t slot;
@@ -610,54 +620,57 @@ void player_think(uint32_t idx)
 		netgame_check[idx][slot] = magic;
 	}
 
-	if(pl->prop & ((1 << PROP_FROZEN) | (1 << PROP_TOTALLYFROZEN)))
+	if (pl->prop & ((1 << PROP_FROZEN) | (1 << PROP_TOTALLYFROZEN)))
 	{
 		cmd->forwardmove = 0;
 		cmd->sidemove = 0;
 	}
-	if(pl->prop & (1 << PROP_TOTALLYFROZEN))
+	if (pl->prop & (1 << PROP_TOTALLYFROZEN))
 	{
 		cmd->angleturn = 0;
 		cmd->pitchturn = 0;
-		if(!(cmd->buttons & BT_SPECIAL))
-			cmd->buttons &= ~(BT_ATTACK|BT_ALTACK|BT_ACTIONMASK);
+		if (!(cmd->buttons & BT_SPECIAL))
+			cmd->buttons &=
+			    ~(BT_ATTACK | BT_ALTACK | BT_ACTIONMASK);
 	}
 
-	if(pl->camera != pl->mo && pl->prop & (1 << PROP_CAMERA_MOVE) && (cmd->forwardmove || cmd->sidemove))
+	if (pl->camera != pl->mo && pl->prop & (1 << PROP_CAMERA_MOVE) &&
+	    (cmd->forwardmove || cmd->sidemove))
 	{
 		pl->prop &= ~(1 << PROP_CAMERA_MOVE);
 		pl->camera = pl->mo;
 	}
 
-	if(pl->damagecount < 0)
+	if (pl->damagecount < 0)
 		pl->damagecount = 0;
-	if(pl->bonuscount < 0)
+	if (pl->bonuscount < 0)
 		pl->bonuscount = 0;
 
-	if(pl->bonuscount) // this is NOT done in 'P_DeathThink'
+	if (pl->bonuscount) // this is NOT done in 'P_DeathThink'
 		pl->bonuscount--;
 
-	if(pl->state == PST_DEAD)
+	if (pl->state == PST_DEAD)
 	{
-		if(	player_info[idx].flags & PLF_MOUSE_LOOK &&
-			!(map_level_info->flags & MAP_FLAG_NO_FREELOOK) &&
-			!(pl->flags & PF_IS_FROZEN)
-		){
+		if (player_info[idx].flags & PLF_MOUSE_LOOK &&
+		    !(map_level_info->flags & MAP_FLAG_NO_FREELOOK) &&
+		    !(pl->flags & PF_IS_FROZEN))
+		{
 			int32_t pitch = pl->mo->pitch;
-			if(pitch > PLAYER_LOOK_DEAD)
+			if (pitch > PLAYER_LOOK_DEAD)
 			{
 				pitch -= PLAYER_LOOK_STEP;
-				if(pitch < PLAYER_LOOK_DEAD)
+				if (pitch < PLAYER_LOOK_DEAD)
 					pitch = PLAYER_LOOK_DEAD;
-			} else
-			if(pitch < PLAYER_LOOK_DEAD)
+			}
+			else if (pitch < PLAYER_LOOK_DEAD)
 			{
 				pitch += PLAYER_LOOK_STEP;
-				if(pitch > PLAYER_LOOK_DEAD)
+				if (pitch > PLAYER_LOOK_DEAD)
 					pitch = PLAYER_LOOK_DEAD;
 			}
 			pl->mo->pitch = (angle_t)pitch;
-		} else
+		}
+		else
 			pl->mo->pitch = 0;
 		pl->weapon_ready = 0;
 		pl->inv_tick = 0;
@@ -665,20 +678,21 @@ void player_think(uint32_t idx)
 
 		P_DeathThink(pl);
 
-		if(pl->flags & PF_IS_FROZEN)
+		if (pl->flags & PF_IS_FROZEN)
 		{
-			pl->viewz = pl->mo->z + pl->mo->info->player.view_height;
+			pl->viewz =
+			    pl->mo->z + pl->mo->info->player.view_height;
 			pl->fixedpalette = 13;
-			if(pl == players + displayplayer)
+			if (pl == players + displayplayer)
 				r_fixed_palette(0x8400);
 		}
 
 		return;
 	}
 
-	if(!pl->mo->reactiontime)
+	if (!pl->mo->reactiontime)
 	{
-		ticcmd_t *cmd = &pl->cmd;
+		ticcmd_t* cmd = &pl->cmd;
 		int32_t scale;
 		angle_t angle;
 		uint32_t flight;
@@ -690,85 +704,98 @@ void player_think(uint32_t idx)
 
 		angle = pl->mo->angle >> ANGLETOFINESHIFT;
 
-		onground = (pl->mo->z <= pl->mo->floorz) && pl->mo->waterlevel <= 1;
+		onground =
+		    (pl->mo->z <= pl->mo->floorz) && pl->mo->waterlevel <= 1;
 
-		if(pl->health < pl->mo->info->player.run_health)
+		if (pl->health < pl->mo->info->player.run_health)
 		{
-			if(cmd->forwardmove < -0x19)
+			if (cmd->forwardmove < -0x19)
 				cmd->forwardmove = -0x19;
-			else
-			if(cmd->forwardmove > 0x19)
+			else if (cmd->forwardmove > 0x19)
 				cmd->forwardmove = 0x19;
 
-			if(cmd->sidemove < -0x18)
+			if (cmd->sidemove < -0x18)
 				cmd->sidemove = -0x18;
-			else
-			if(cmd->sidemove > 0x18)
+			else if (cmd->sidemove > 0x18)
 				cmd->sidemove = 0x18;
 		}
 
-		if(flight && pl->mo->pitch)
+		if (flight && pl->mo->pitch)
 		{
 			scale = (2048 * pl->mo->info->speed) >> FRACBITS;
 
-			if(cmd->forwardmove)
+			if (cmd->forwardmove)
 			{
 				fixed_t power = cmd->forwardmove * scale;
 
-				if(pl->mo->pitch)
+				if (pl->mo->pitch)
 				{
-					angle_t pitch = pl->mo->pitch >> ANGLETOFINESHIFT;
-					pl->mo->momz += FixedMul(power, finesine[pitch]);
-					power = FixedMul(power, finecosine[pitch]);
+					angle_t pitch =
+					    pl->mo->pitch >> ANGLETOFINESHIFT;
+					pl->mo->momz +=
+					    FixedMul(power, finesine[pitch]);
+					power =
+					    FixedMul(power, finecosine[pitch]);
 				}
 
-				pl->mo->momx += FixedMul(power, finecosine[angle]);
-				pl->mo->momy += FixedMul(power, finesine[angle]);
+				pl->mo->momx +=
+				    FixedMul(power, finecosine[angle]);
+				pl->mo->momy +=
+				    FixedMul(power, finesine[angle]);
 			}
-		} else
+		}
+		else
 		{
-			if(onground || flight)
-				scale = (2048 * pl->mo->info->speed) >> FRACBITS;
+			if (onground || flight)
+				scale =
+				    (2048 * pl->mo->info->speed) >> FRACBITS;
 			else
 				scale = 8;
 
-			if(cmd->forwardmove)
+			if (cmd->forwardmove)
 			{
 				fixed_t power = cmd->forwardmove * scale;
-				pl->mo->momx += FixedMul(power, finecosine[angle]);
-				pl->mo->momy += FixedMul(power, finesine[angle]);
+				pl->mo->momx +=
+				    FixedMul(power, finecosine[angle]);
+				pl->mo->momy +=
+				    FixedMul(power, finesine[angle]);
 			}
 		}
 
-		if(cmd->sidemove)
+		if (cmd->sidemove)
 		{
 			fixed_t power = cmd->sidemove * scale;
 			pl->mo->momx += FixedMul(power, finesine[angle]);
 			pl->mo->momy -= FixedMul(power, finecosine[angle]);
 		}
 
-		if((cmd->forwardmove || cmd->sidemove) && pl->mo->animation == ANIM_SPAWN && pl->mo->info->state_see)
+		if ((cmd->forwardmove || cmd->sidemove) &&
+		    pl->mo->animation == ANIM_SPAWN && pl->mo->info->state_see)
 			mobj_set_animation(pl->mo, ANIM_SEE);
 
-		if(player_info[idx].flags & PLF_MOUSE_LOOK && !(map_level_info->flags & MAP_FLAG_NO_FREELOOK))
+		if (player_info[idx].flags & PLF_MOUSE_LOOK &&
+		    !(map_level_info->flags & MAP_FLAG_NO_FREELOOK))
 		{
-			if(cmd->pitchturn)
+			if (cmd->pitchturn)
 			{
-				int32_t pitch = pl->mo->pitch + (int32_t)(cmd->pitchturn << 16);
-				if(pitch > PLAYER_LOOK_TOP)
+				int32_t pitch = pl->mo->pitch +
+				                (int32_t)(cmd->pitchturn << 16);
+				if (pitch > PLAYER_LOOK_TOP)
 					pitch = PLAYER_LOOK_TOP;
-				if(pitch < PLAYER_LOOK_BOT)
+				if (pitch < PLAYER_LOOK_BOT)
 					pitch = PLAYER_LOOK_BOT;
 				pl->mo->pitch = (angle_t)pitch;
 			}
-		} else
+		}
+		else
 			pl->mo->pitch = 0;
-	} else
+	}
+	else
 		pl->mo->reactiontime--;
 
 	P_CalcHeight(pl);
 
-	if(pl->state != PST_LIVE)
+	if (pl->state != PST_LIVE)
 	{
 		// spectator
 		pl->fixedcolormap = 0;
@@ -780,54 +807,64 @@ void player_think(uint32_t idx)
 		return;
 	}
 
-	if(pl->mo->waterlevel >= 3)
+	if (pl->mo->waterlevel >= 3)
 	{
-		if(pl->mo->player->airsupply > 0)
+		if (pl->mo->player->airsupply > 0)
 		{
 			pl->mo->player->airsupply--;
-			if(!pl->mo->player->airsupply)
+			if (!pl->mo->player->airsupply)
 				pl->mo->player->airsupply = -2;
-		} else
-		if(!(leveltime & 31))
+		}
+		else if (!(leveltime & 31))
 		{
-			mobj_damage(pl->mo, NULL, NULL, DAMAGE_WITH_TYPE(-pl->mo->player->airsupply, DAMAGE_DROWN) | DAMAGE_SKIP_ARMOR, NULL);
+			mobj_damage(pl->mo, NULL, NULL,
+			            DAMAGE_WITH_TYPE(-pl->mo->player->airsupply,
+			                             DAMAGE_DROWN) |
+			                DAMAGE_SKIP_ARMOR,
+			            NULL);
 			pl->mo->player->airsupply--;
 		}
-	} else
+	}
+	else
 		pl->airsupply = PLAYER_AIRSUPPLY;
 
-	if(map_format == MAP_FORMAT_DOOM)
+	if (map_format == MAP_FORMAT_DOOM)
 	{
-		if(pl->mo->subsector->sector->special)
+		if (pl->mo->subsector->sector->special)
 		{
 			uint32_t special = pl->mo->subsector->sector->special;
 			P_PlayerInSpecialSector(pl);
-			if(special == 9 && !pl->mo->subsector->sector->special)
+			if (special == 9 && !pl->mo->subsector->sector->special)
 			{
 				pl->message = "Secret!";
-				S_StartSound(SOUND_CONSOLEPLAYER(pl), SFX_SECRET);
+				S_StartSound(SOUND_CONSOLEPLAYER(pl),
+				             SFX_SECRET);
 			}
-			if(pl->mo->z <= pl->mo->subsector->sector->floorheight)
-				player_terrain_damage(pl, pl->mo->subsector->sector->floorpic, 0);
+			if (pl->mo->z <= pl->mo->subsector->sector->floorheight)
+				player_terrain_damage(
+				    pl, pl->mo->subsector->sector->floorpic, 0);
 		}
-	} else
+	}
+	else
 	{
-		sector_t *sec = pl->mo->subsector->sector;
-		extraplane_t *pp;
+		sector_t* sec = pl->mo->subsector->sector;
+		extraplane_t* pp;
 
 		// normal sector
-		if(pl->mo->z <= sec->floorheight)
+		if (pl->mo->z <= sec->floorheight)
 			handle_sector_special(pl, sec, sec->floorpic, 0);
 
 		// extra floors
 		pp = sec->exfloor;
-		while(pp)
+		while (pp)
 		{
-			if(	!(pp->flags & E3D_SWAP_PLANES) &&
-				pl->mo->z + pl->mo->height > pp->source->floorheight &&
-				pl->mo->z <= pp->source->ceilingheight
-			){
-				handle_sector_special(pl, pp->source, pp->source->ceilingpic, 1);
+			if (!(pp->flags & E3D_SWAP_PLANES) &&
+			    pl->mo->z + pl->mo->height >
+			        pp->source->floorheight &&
+			    pl->mo->z <= pp->source->ceilingheight)
+			{
+				handle_sector_special(
+				    pl, pp->source, pp->source->ceilingpic, 1);
 				// ZDoom takes only the first extra floor
 				break;
 			}
@@ -835,22 +872,23 @@ void player_think(uint32_t idx)
 		}
 	}
 
-	if(pl->inv_tick)
+	if (pl->inv_tick)
 		pl->inv_tick--;
 
-	if(cmd->buttons & BT_SPECIAL)
+	if (cmd->buttons & BT_SPECIAL)
 		cmd->buttons = 0;
 
 	check_buttons(pl, cmd);
 
-	if(cmd->buttons & BT_USE)
+	if (cmd->buttons & BT_USE)
 	{
-		if(!pl->usedown)
+		if (!pl->usedown)
 		{
 			P_UseLines(pl);
 			pl->usedown = 1;
 		}
-	} else
+	}
+	else
 		pl->usedown = 0;
 
 	weapon_move_pspr(pl);
@@ -858,75 +896,79 @@ void player_think(uint32_t idx)
 	// powers
 	pl->fixedcolormap = 0;
 	pl->fixedpalette = 0;
-	for(uint32_t i = 0; i < NUMPOWERS; i++)
+	for (uint32_t i = 0; i < NUMPOWERS; i++)
 	{
-		if(pl->powers[i])
+		if (pl->powers[i])
 		{
-			const powerup_t *pw = powerup + i;
+			const powerup_t* pw = powerup + i;
 
 			pl->powers[i] += pw->direction;
-			if(!pl->powers[i])
+			if (!pl->powers[i])
 			{
-				if(pw->stop)
+				if (pw->stop)
 				{
 					pw->stop(pl->mo);
 					cheat_player_flags(pl);
 				}
-			} else
-			if(pw->direction < 0)
+			}
+			else if (pw->direction < 0)
 			{
-				mobjinfo_t *info = mobjinfo + pl->power_mobj[i];
+				mobjinfo_t* info = mobjinfo + pl->power_mobj[i];
 				uint16_t color = info->powerup.colorstuff;
 
-				if(	color &&
-					(
-						info->eflags & MFE_INVENTORY_NOSCREENBLINK ||
-						pl->powers[i] > 128 || pl->powers[i] & 8
-					)
-				){
-					if(color & 0xF000)
+				if (color &&
+				    (info->eflags &
+				         MFE_INVENTORY_NOSCREENBLINK ||
+				     pl->powers[i] > 128 || pl->powers[i] & 8))
+				{
+					if (color & 0xF000)
 					{
-						if(!pl->fixedpalette)
+						if (!pl->fixedpalette)
 						{
 							pl->fixedpalette = 13;
-							if(pl == players + displayplayer)
-								r_fixed_palette(color);
+							if (pl ==
+							    players +
+							        displayplayer)
+								r_fixed_palette(
+								    color);
 						}
-					} else
+					}
+					else
 					{
-						if(!pl->fixedcolormap)
-							pl->fixedcolormap = color & 63;
+						if (!pl->fixedcolormap)
+							pl->fixedcolormap =
+							    color & 63;
 					}
 				}
 			}
 		}
 	}
 
-	if(pl->damagecount) // this IS done in 'P_DeathThink'
+	if (pl->damagecount) // this IS done in 'P_DeathThink'
 		pl->damagecount--;
 }
 
 //
 // input
 
-static void send_data_packet(uint8_t type, void *data, uint32_t len)
+static void send_data_packet(uint8_t type, void* data, uint32_t len)
 {
-	uint8_t *ptr = data;
+	uint8_t* ptr = data;
 
 	HU_queueChatChar(TIC_CMD_DATA | (len + 1));
 	HU_queueChatChar(type);
 
-	for(uint32_t i = 0; i < len; i++)
+	for (uint32_t i = 0; i < len; i++)
 		HU_queueChatChar(ptr[i]);
 }
 
-__attribute((regparm(2),no_caller_saved_registers))
-static void build_ticcmd(ticcmd_t *cmd)
+__attribute((regparm(2), no_caller_saved_registers)) static void
+build_ticcmd(ticcmd_t* cmd)
 {
 	static uint8_t mouse_inv_use;
 
 	// do nothing in titlemap
-	if(is_title_map)
+	if (is_title_map)
 	{
 		memset(cmd, 0, sizeof(ticcmd_t));
 		return;
@@ -936,14 +978,15 @@ static void build_ticcmd(ticcmd_t *cmd)
 	G_BuildTiccmd(cmd);
 
 	// data transfers
-	if((!demorecording || (!paused && !(menuactive && !netgame))) && leveltime)
+	if ((!demorecording || (!paused && !(menuactive && !netgame))) &&
+	    leveltime)
 		cmd->chatchar = HU_dequeueChatChar();
 
 	// packet transfers
-	if(hu_char_tail == hu_char_head)
+	if (hu_char_tail == hu_char_head)
 	{
 		// check for menu changes
-		if(player_info_changed && !menuactive && !demoplayback)
+		if (player_info_changed && !menuactive && !demoplayback)
 		{
 			player_info_t info;
 
@@ -952,43 +995,46 @@ static void build_ticcmd(ticcmd_t *cmd)
 			info.quick_inv = extra_config.quick_inv;
 			info.flags = 0;
 
-			if(extra_config.auto_switch)
+			if (extra_config.auto_switch)
 				info.flags |= PLF_AUTO_SWITCH;
-			if(extra_config.auto_aim)
+			if (extra_config.auto_aim)
 				info.flags |= PLF_AUTO_AIM;
-			if(extra_config.mouse_look)
+			if (extra_config.mouse_look)
 				info.flags |= PLF_MOUSE_LOOK;
 
-			if(player_class_change >= 0)
+			if (player_class_change >= 0)
 			{
 				info.playerclass = player_class_change;
 				player_class_change = -1;
 			}
 
-			send_data_packet(TIC_DATA_PLAYER_INFO, &info, sizeof(player_info_t));
+			send_data_packet(TIC_DATA_PLAYER_INFO, &info,
+			                 sizeof(player_info_t));
 
 			player_info_changed = 0;
 		}
 
 		// consistancy check
-		if((leveltime & 63) == 15 || is_net_desync > 1)
+		if ((leveltime & 63) == 15 || is_net_desync > 1)
 		{
 			uint32_t slot = (leveltime >> 6) & 3;
 			uint32_t magic;
 
-			if(is_net_desync)
+			if (is_net_desync)
 			{
 				is_net_desync = 1;
 				magic = 0xBAD00BAD;
-			} else
+			}
+			else
 				magic = netgame_check[consoleplayer][slot];
 
-			send_data_packet(TIC_DATA_CHECK0 | slot, &magic, sizeof(uint32_t));
+			send_data_packet(TIC_DATA_CHECK0 | slot, &magic,
+			                 sizeof(uint32_t));
 		}
 	}
 
 	// do nothing on special request
-	if(cmd->buttons & BT_SPECIAL)
+	if (cmd->buttons & BT_SPECIAL)
 		return;
 
 	// mouse look
@@ -996,26 +1042,26 @@ static void build_ticcmd(ticcmd_t *cmd)
 	mousey = 0;
 
 	// use (mouse)
-	if(mousebuttons[mouseb_use])
+	if (mousebuttons[mouseb_use])
 		cmd->buttons |= BT_USE;
 
 	// secondary attack
-	if(mousebuttons[mouseb_fire_alt] || gamekeydown[key_fire_alt])
+	if (mousebuttons[mouseb_fire_alt] || gamekeydown[key_fire_alt])
 		cmd->buttons |= BT_ALTACK;
 
 	// mask off weapon chagnes
 	cmd->buttons &= BT_ATTACK | BT_USE | BT_ALTACK;
 
 	// clear mouse use
-	if(!gamekeydown[key_inv_use] && !mousebuttons[mouseb_inv_use])
+	if (!gamekeydown[key_inv_use] && !mousebuttons[mouseb_inv_use])
 		mouse_inv_use = 0;
 
 	// action keys can not be combined
 
 	// new weapon changes
-	for(uint32_t i = 0; i < NUM_WPN_SLOTS; i++)
+	for (uint32_t i = 0; i < NUM_WPN_SLOTS; i++)
 	{
-		if(gamekeydown['0' + i])
+		if (gamekeydown['0' + i])
 		{
 			gamekeydown['0' + i] = 0;
 			cmd->buttons |= (i + 1) << BT_ACTIONSHIFT;
@@ -1024,28 +1070,29 @@ static void build_ticcmd(ticcmd_t *cmd)
 		}
 	}
 
-	if(gamekeydown[key_jump])
+	if (gamekeydown[key_jump])
 	{
 		gamekeydown[key_jump] = 0;
 		cmd->buttons |= BT_ACT_JUMP << BT_ACTIONSHIFT;
-	} else
-	if(gamekeydown[key_inv_quick])
+	}
+	else if (gamekeydown[key_inv_quick])
 	{
 		gamekeydown[key_inv_quick] = 0;
 		cmd->buttons |= BT_ACT_INV_QUICK << BT_ACTIONSHIFT;
-	} else
-	if(gamekeydown[key_inv_use] || (!mouse_inv_use && mousebuttons[mouseb_inv_use]))
+	}
+	else if (gamekeydown[key_inv_use] ||
+	         (!mouse_inv_use && mousebuttons[mouseb_inv_use]))
 	{
 		mouse_inv_use = 1;
 		gamekeydown[key_inv_use] = 0;
 		cmd->buttons |= BT_ACT_INV_USE << BT_ACTIONSHIFT;
-	} else
-	if(gamekeydown[key_inv_prev])
+	}
+	else if (gamekeydown[key_inv_prev])
 	{
 		gamekeydown[key_inv_prev] = 0;
 		cmd->buttons |= BT_ACT_INV_PREV << BT_ACTIONSHIFT;
-	} else
-	if(gamekeydown[key_inv_next])
+	}
+	else if (gamekeydown[key_inv_next])
 	{
 		gamekeydown[key_inv_next] = 0;
 		cmd->buttons |= BT_ACT_INV_NEXT << BT_ACTIONSHIFT;
@@ -1055,18 +1102,18 @@ static void build_ticcmd(ticcmd_t *cmd)
 //
 // level transition
 
-void player_finish(player_t *pl, uint32_t strip)
+void player_finish(player_t* pl, uint32_t strip)
 {
-	for(uint32_t i = 0; i < NUMPOWERS; i++)
+	for (uint32_t i = 0; i < NUMPOWERS; i++)
 	{
-		const powerup_t *pw = powerup + i;
-		if(pl->powers[i])
+		const powerup_t* pw = powerup + i;
+		if (pl->powers[i])
 		{
 			pl->powers[i] = 0;
-			if(pw->stop && pl->mo)
+			if (pw->stop && pl->mo)
 				pw->stop(pl->mo);
 		}
-		if(pl->state == PST_DEAD)
+		if (pl->state == PST_DEAD)
 			pl->state = PST_REBORN;
 	}
 
@@ -1075,65 +1122,68 @@ void player_finish(player_t *pl, uint32_t strip)
 	pl->bonuscount = 0;
 	pl->extralight = 0;
 
-	if(pl->mo && pl->mo->inventory)
+	if (pl->mo && pl->mo->inventory)
 	{
 		Z_ChangeTag2(pl->mo->inventory, PU_STATIC);
-		if(strip)
+		if (strip)
 			inventory_hubstrip(pl->mo);
 		pl->inventory = pl->mo->inventory;
 		pl->mo->inventory = NULL;
 		pl->angle = pl->mo->angle;
 		pl->pitch = pl->mo->pitch;
-	} else
+	}
+	else
 		pl->inventory = NULL;
 }
 
-void player_check_info(player_info_t *info)
+void player_check_info(player_info_t* info)
 {
-	if(info->quick_inv >= num_mobj_types)
+	if (info->quick_inv >= num_mobj_types)
 		info->quick_inv = 0;
 
-	if(info->playerclass >= num_player_classes)
+	if (info->playerclass >= num_player_classes)
 		info->playerclass = 0;
 }
 
 //
 // hooks
 
-static __attribute((regparm(2),no_caller_saved_registers))
-uint32_t spawn_player(mapthing_t *mt)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
+spawn_player(mapthing_t* mt)
 {
 	uint32_t angle;
 	angle = (ANG45 / 45) * mt->angle;
-	mobj_spawn_player(mt->type - 1, mt->x * FRACUNIT, mt->y * FRACUNIT, angle);
+	mobj_spawn_player(mt->type - 1, mt->x * FRACUNIT, mt->y * FRACUNIT,
+	                  angle);
 }
 
-static __attribute((regparm(2),no_caller_saved_registers))
-uint32_t respawn_check(uint32_t idx)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
+respawn_check(uint32_t idx)
 {
-	if(map_level_info->flags & MAP_FLAG_ALLOW_RESPAWN)
+	if (map_level_info->flags & MAP_FLAG_ALLOW_RESPAWN)
 	{
-		player_t *pl = players + idx;
+		player_t* pl = players + idx;
 		pl->inventory = pl->mo->inventory;
 		pl->mo->inventory = NULL;
 		reborn_inventory_hack = 1;
 		return 1;
 	}
 
-	if(netgame)
+	if (netgame)
 	{
-		player_t *pl = players + idx;
+		player_t* pl = players + idx;
 
-		if(survival)
+		if (survival)
 		{
-			mobj_t *mo;
+			mobj_t* mo;
 
 			inventory_clear(pl->mo);
 
 			pl->state = PST_SPECTATE;
 			pl->mo->player = NULL;
 
-			mo = P_SpawnMobj(pl->mo->x, pl->mo->y, pl->mo->z, MOBJ_IDX_ICE_CHUNK_HEAD);
+			mo = P_SpawnMobj(pl->mo->x, pl->mo->y, pl->mo->z,
+			                 MOBJ_IDX_ICE_CHUNK_HEAD);
 			mo->flags |= MF_NOGRAVITY | MF_NOCLIP;
 			mo->flags2 |= MF2_DONTSPLASH;
 			mo->render_style = RS_INVISIBLE;
@@ -1148,37 +1198,42 @@ uint32_t respawn_check(uint32_t idx)
 			return 0;
 		}
 
-		if(net_inventory == 1)
+		if (net_inventory == 1)
 		{
 			pl->inventory = pl->mo->inventory;
 			pl->mo->inventory = NULL;
 			reborn_inventory_hack = 1;
-		} else
+		}
+		else
 		{
-			if(keep_keys)
+			if (keep_keys)
 			{
-				inventory_t *inv = pl->mo->inventory;
+				inventory_t* inv = pl->mo->inventory;
 
 				pl->inventory = pl->mo->inventory;
 				pl->mo->inventory = NULL;
 				reborn_inventory_hack = 2;
 
-				if(inv)
-				for(uint32_t i = 0; i < inv->numslots; i++)
-				{
-					invitem_t *item = inv->slot + i;
-					mobjinfo_t *info = mobjinfo + item->type;
+				if (inv)
+					for (uint32_t i = 0; i < inv->numslots;
+					     i++)
+					{
+						invitem_t* item = inv->slot + i;
+						mobjinfo_t* info =
+						    mobjinfo + item->type;
 
-					if(!item->type)
-						continue;
+						if (!item->type)
+							continue;
 
-					if(info->extra_type == ETYPE_KEY)
-						continue;
+						if (info->extra_type ==
+						    ETYPE_KEY)
+							continue;
 
-					item->type = 0;
-					item->count = 0;
-				}
-			} else
+						item->type = 0;
+						item->count = 0;
+					}
+			}
+			else
 				inventory_clear(pl->mo);
 		}
 
@@ -1194,8 +1249,8 @@ uint32_t respawn_check(uint32_t idx)
 //
 // hooks
 
-static const hook_t hooks[] __attribute__((used,section(".hooks"),aligned(4))) =
-{
+static const hook_t hooks[]
+    __attribute__((used, section(".hooks"), aligned(4))) = {
 	// replace 'P_SpawnPlayer'
 	{0x000317F0, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)spawn_player},
 	// replace call to 'P_CalcHeight' in 'P_DeathThink'
@@ -1219,9 +1274,8 @@ static const hook_t hooks[] __attribute__((used,section(".hooks"),aligned(4))) =
 	{0x0002079A, CODE_HOOK | HOOK_UINT8, BT_SPECIALMASK},
 	// use 'fixedpalette' in 'ST_doPaletteStuff'
 	{0x0003A475, CODE_HOOK | HOOK_UINT16, 0x9B8B},
-	{0x0003A477, CODE_HOOK | HOOK_UINT32, offsetof(player_t,fixedpalette)},
+	{0x0003A477, CODE_HOOK | HOOK_UINT32, offsetof(player_t, fixedpalette)},
 	{0x0003A47B, CODE_HOOK | HOOK_UINT16, 0x10EB},
 	// PU_STATIC palette chache in 'ST_doPaletteStuff'
 	{0x0003A496, CODE_HOOK | HOOK_UINT8, PU_STATIC},
 };
-

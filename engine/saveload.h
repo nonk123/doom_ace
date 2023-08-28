@@ -1,7 +1,7 @@
 // kgsws' ACE Engine
 ////
 
-#define SAVE_DIR	"ace_save"
+#define SAVE_DIR "ace_save"
 
 void init_saveload();
 
@@ -12,4 +12,3 @@ void save_hub_level();
 
 void load_auto();
 uint32_t load_hub_level();
-

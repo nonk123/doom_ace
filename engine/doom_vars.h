@@ -10,31 +10,31 @@ extern angle_t tantoangle[];
 // arrays
 extern mapthing_t playerstarts[];
 extern mapthing_t deathmatchstarts[];
-extern mapthing_t *deathmatch_p;
+extern mapthing_t* deathmatch_p;
 
 // stuff
 extern uint32_t doom_stdin[];
 extern uint32_t doom_stdout[];
 extern heap_base_t heap_base;
-extern memzone_t *mainzone;
-extern uint8_t *screen_buffer;
+extern memzone_t* mainzone;
+extern uint8_t* screen_buffer;
 extern uint32_t message_is_important;
 extern uint8_t exitmsg[80];
 extern uint32_t french_version;
 extern int32_t myargc;
-extern uint8_t **myargv;
+extern uint8_t** myargv;
 extern int_regs_t x86regs;
 extern dpmi_regs_t dpmiregs;
 
 // automap
-extern uint8_t *am_fb;
-extern player_t *am_plr;
+extern uint8_t* am_fb;
+extern player_t* am_plr;
 extern fixed_t am_h;
 extern fixed_t am_y;
 
 // netgame
-extern doomcom_t *doomcom;
-extern doomdata_t *netbuffer;
+extern doomcom_t* doomcom;
+extern doomdata_t* netbuffer;
 
 // events
 extern event_t events[];
@@ -61,8 +61,8 @@ extern uint32_t startskill;
 extern uint32_t startepisode;
 extern uint32_t startmap;
 extern uint32_t autostart;
-extern uint8_t *demobuffer;
-extern uint8_t *demo_p;
+extern uint8_t* demobuffer;
+extern uint8_t* demo_p;
 
 // automap
 extern uint32_t automapactive;
@@ -71,9 +71,9 @@ extern uint32_t am_cheating;
 
 // menu
 extern uint32_t messageToPrint;
-extern uint8_t *messageString;
+extern uint8_t* messageString;
 extern uint16_t menu_item_now; // was itemOn
-extern menu_t *currentMenu;
+extern menu_t* currentMenu;
 extern uint32_t showMessages;
 extern uint32_t mouseSensitivity;
 extern menu_t NewDef;
@@ -82,7 +82,7 @@ extern menu_t LoadDef;
 extern menuitem_t LoadMenu[];
 
 // HUD
-extern patch_t *hu_font[];
+extern patch_t* hu_font[];
 extern uint32_t hu_char_head;
 extern uint32_t hu_char_tail;
 extern cheat_buf_t cheat_buf[]; // was w_inputbuffer, 468 bytes
@@ -115,25 +115,25 @@ extern uint32_t numsectors;
 extern uint32_t numsubsectors;
 extern uint32_t numsegs;
 extern uint32_t numnodes;
-extern uint8_t *rejectmatrix;
-extern line_t *lines;
-extern vertex_t *vertexes;
-extern side_t *sides;
-extern sector_t *sectors;
-extern subsector_t *subsectors;
-extern seg_t *segs;
-extern node_t *nodes;
+extern uint8_t* rejectmatrix;
+extern line_t* lines;
+extern vertex_t* vertexes;
+extern side_t* sides;
+extern sector_t* sectors;
+extern subsector_t* subsectors;
+extern seg_t* segs;
+extern node_t* nodes;
 extern fixed_t bmaporgx;
 extern fixed_t bmaporgy;
 extern int32_t bmapwidth;
 extern int32_t bmapheight;
-extern uint16_t *blockmaplump;
-extern uint16_t *blockmap;
-extern mobj_t **blocklinks;
+extern uint16_t* blockmaplump;
+extern uint16_t* blockmap;
+extern mobj_t** blocklinks;
 extern uint32_t bodyqueslot;
 
 // map & maputl
-extern mobj_t *tmthing;
+extern mobj_t* tmthing;
 extern uint32_t tmflags;
 extern fixed_t tmdropoffz;
 extern fixed_t tmfloorz;
@@ -144,30 +144,30 @@ extern fixed_t opentop;
 extern fixed_t openbottom;
 extern uint32_t nofit;
 extern uint32_t crushchange;
-extern mobj_t *linetarget;
-extern line_t *spechit[];
+extern mobj_t* linetarget;
+extern line_t* spechit[];
 extern uint32_t numspechit;
 extern uint32_t validcount;
 extern intercept_t intercepts[];
-extern intercept_t *intercept_p;
+extern intercept_t* intercept_p;
 extern divline_t trace;
 extern fixed_t bestslidefrac;
-extern line_t *bestslideline;
-extern mobj_t *slidemo;
+extern line_t* bestslideline;
+extern mobj_t* slidemo;
 extern fixed_t shootz;
 extern fixed_t aimslope;
 extern uint32_t la_damage;
 extern fixed_t bulletslope;
 extern fixed_t botslope; // was bottomslope
 extern fixed_t topslope;
-extern mobj_t *shootthing;
+extern mobj_t* shootthing;
 extern fixed_t attackrange;
 extern fixed_t tmbbox[4];
-extern mobj_t *bombspot;
-extern mobj_t *bombsource;
+extern mobj_t* bombspot;
+extern mobj_t* bombsource;
 extern uint32_t bombdamage;
-extern mobj_t *corpsehit;
-extern mobj_t *vileobj;
+extern mobj_t* corpsehit;
+extern mobj_t* vileobj;
 extern fixed_t viletryx;
 extern fixed_t viletryy;
 extern fixed_t tmymove;
@@ -181,29 +181,29 @@ extern uint32_t displayplayer;
 extern uint32_t onground;
 
 // sprite
-extern fixed_t *spritewidth;
-extern fixed_t *spriteoffset;
-extern fixed_t *spritetopoffset;
+extern fixed_t* spritewidth;
+extern fixed_t* spriteoffset;
+extern fixed_t* spritetopoffset;
 extern int32_t spr_maxframe;
 extern spriteframe_t sprtemp[];
-extern spritedef_t *sprites;
-extern uint32_t *spr_names[];
+extern spritedef_t* sprites;
+extern uint32_t* spr_names[];
 extern uint32_t numsprites;
 
 // texture
 extern uint32_t numtextures;
-extern texture_t **textures;
-extern uint16_t **texturecolumnlump;
-extern uint16_t **texturecolumnofs;
-extern uint8_t **texturecomposite;
-extern uint32_t *texturecompositesize;
-extern uint32_t *texturewidthmask;
-extern fixed_t *textureheight;
-extern uint32_t *texturetranslation;
+extern texture_t** textures;
+extern uint16_t** texturecolumnlump;
+extern uint16_t** texturecolumnofs;
+extern uint8_t** texturecomposite;
+extern uint32_t* texturecompositesize;
+extern uint32_t* texturewidthmask;
+extern fixed_t* textureheight;
+extern uint32_t* texturetranslation;
 
 // flat
 extern uint32_t numflats;
-extern uint16_t *flattranslation; // this was uint32_t
+extern uint16_t* flattranslation; // this was uint32_t
 
 // things
 extern thinker_t thinkercap;
@@ -211,15 +211,15 @@ extern thinker_t thinkercap;
 // render
 extern uint32_t r_setblocks;
 extern uint32_t r_setdetail;
-extern uint8_t *r_rdptr;
-extern uint8_t *r_fbptr;
+extern uint8_t* r_rdptr;
+extern uint8_t* r_fbptr;
 
 // render, textures
 extern uint32_t skytexture;
 extern uint32_t skyflatnum;
 
 // render, view
-extern player_t *viewplayer;
+extern player_t* viewplayer;
 extern fixed_t viewx;
 extern fixed_t viewy;
 extern fixed_t viewz;
@@ -227,7 +227,7 @@ extern fixed_t viewsin;
 extern fixed_t viewcos;
 extern angle_t viewangle;
 extern int32_t extralight;
-extern uint8_t *fixedcolormap;
+extern uint8_t* fixedcolormap;
 
 // render, screen
 extern fixed_t centerxfrac;
@@ -245,16 +245,16 @@ extern uint32_t usegamma;
 extern uint32_t detaillevel;
 
 // render, status
-extern visplane_t *lastvisplane;
-extern sector_t *frontsector;
-extern sector_t *backsector;
-extern seg_t *curline;
-extern drawseg_t *ds_p;
-extern visplane_t *ceilingplane;
-extern visplane_t *floorplane;
-extern line_t *linedef;
-extern side_t *sidedef;
-extern int16_t *maskedtexturecol;
+extern visplane_t* lastvisplane;
+extern sector_t* frontsector;
+extern sector_t* backsector;
+extern seg_t* curline;
+extern drawseg_t* ds_p;
+extern visplane_t* ceilingplane;
+extern visplane_t* floorplane;
+extern line_t* linedef;
+extern side_t* sidedef;
+extern int16_t* maskedtexturecol;
 extern uint32_t markceiling;
 extern uint32_t markfloor;
 extern uint32_t segtextured;
@@ -285,7 +285,7 @@ extern fixed_t pixhighstep;
 
 // render, map
 extern cliprange_t solidsegs[];
-extern vissprite_t *vissprite_p;
+extern vissprite_t* vissprite_p;
 extern vissprite_t vsprsortedhead;
 
 // render, tables
@@ -296,7 +296,7 @@ extern int16_t negonearray[];
 extern int16_t screenheightarray[];
 
 // render, light
-extern uint8_t *colormaps;
+extern uint8_t* colormaps;
 extern fixed_t planeheight;
 extern int32_t planezlight; // this was uint8_t**
 extern uint32_t fuzzpos;
@@ -305,11 +305,11 @@ extern uint32_t fuzzpos;
 extern int32_t dc_x;
 extern int32_t dc_yl;
 extern int32_t dc_yh;
-extern uint8_t *dc_source;
+extern uint8_t* dc_source;
 extern fixed_t dc_texturemid;
 extern fixed_t dc_iscale;
-extern uint8_t *dc_colormap;
-extern uint8_t *dc_translation;
+extern uint8_t* dc_colormap;
+extern uint8_t* dc_translation;
 extern fixed_t ds_xfrac;
 extern fixed_t ds_yfrac;
 extern fixed_t ds_ystep;
@@ -317,53 +317,53 @@ extern fixed_t ds_xstep;
 extern int32_t ds_x1;
 extern int32_t ds_x2;
 extern int32_t ds_y;
-extern uint8_t *ds_colormap;
-extern uint8_t *ds_source;
+extern uint8_t* ds_colormap;
+extern uint8_t* ds_source;
 extern fixed_t sprtopscreen;
 extern fixed_t spryscale;
 extern fixed_t pspriteiscale;
 extern fixed_t skytexturemid;
-extern int16_t *mfloorclip;
-extern int16_t *mceilingclip;
-extern void (*colfunc)() __attribute((regparm(2),no_caller_saved_registers));
-extern void (*spanfunc)() __attribute((regparm(2),no_caller_saved_registers));
+extern int16_t* mfloorclip;
+extern int16_t* mceilingclip;
+extern void (*colfunc)() __attribute((regparm(2), no_caller_saved_registers));
+extern void (*spanfunc)() __attribute((regparm(2), no_caller_saved_registers));
 
 // render, location
 extern uint32_t columnofs[SCREENWIDTH];
-extern uint8_t *ylookup[SCREENWIDTH];
+extern uint8_t* ylookup[SCREENWIDTH];
 
 // controls
 extern int32_t mousey;
 
 // special
-extern plat_t *activeplats[];
-extern ceiling_t *activeceilings[];
+extern plat_t* activeplats[];
+extern ceiling_t* activeceilings[];
 
 // demo
 extern uint32_t netdemo;
 extern int32_t demoplayback;
 extern int32_t demorecording;
-extern uint8_t *defdemoname;
+extern uint8_t* defdemoname;
 extern uint32_t singledemo;
 
 // sound
 extern old_sfxinfo_t S_sfx[];
 extern musicinfo_t S_music[];
-extern musicinfo_t *music_now;
+extern musicinfo_t* music_now;
 extern int32_t volume_val; // unknown name
 
 // wad
-extern uint8_t *wadfiles[MAXWADFILES];
-extern lumpinfo_t *lumpinfo;
-extern void **lumpcache;
+extern uint8_t* wadfiles[MAXWADFILES];
+extern lumpinfo_t* lumpinfo;
+extern void** lumpcache;
 extern uint32_t numlumps;
 
 // gfx
 extern uint32_t lu_palette;
 extern uint32_t st_palette;
-extern patch_t *tallnum[];
-extern patch_t *tallpercent;
-extern patch_t *shortnum[];
+extern patch_t* tallnum[];
+extern patch_t* tallpercent;
+extern patch_t* shortnum[];
 extern st_number_t w_ready;
 extern st_number_t w_ammo[];
 extern st_number_t w_maxammo[];
@@ -407,18 +407,18 @@ extern uint32_t snd_SfxVolume;
 // random
 extern uint8_t rndtable[256];
 extern uint32_t prndindex;
-extern uint8_t rng_table[128*16*4]; // was zlight
+extern uint8_t rng_table[128 * 16 * 4]; // was zlight
 
 // fi, wi
 extern wbstartstruct_t wminfo;
 extern int32_t finaleflat; // type is changed!
-extern uint8_t *finaletext;
+extern uint8_t* finaletext;
 extern int32_t finalecount;
 extern int32_t finalestage;
 
 // original map info
-extern uint8_t *mapnames[];
-extern uint8_t *mapnames2[];
+extern uint8_t* mapnames[];
+extern uint8_t* mapnames2[];
 extern uint32_t pars[];
 extern uint32_t cpars[];
 
@@ -493,4 +493,3 @@ extern uint8_t dtxt_STSTR_NCON[];
 extern uint8_t dtxt_STSTR_NCOFF[];
 extern uint8_t dtxt_m_loadg[];
 extern uint8_t dtxt_m_saveg[];
-

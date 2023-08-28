@@ -29,27 +29,27 @@
 #include "extra3d.h"
 #include "saveload.h"
 
-#define SAVE_SLOT_COUNT	6
-#define SAVE_NAME_SIZE	17
-#define SAVE_TITLE_SIZE	28
+#define SAVE_SLOT_COUNT 6
+#define SAVE_NAME_SIZE 17
+#define SAVE_TITLE_SIZE 28
 
-#define BMP_MAGIC	0x4D42
+#define BMP_MAGIC 0x4D42
 
-#define SAVE_MAGIC	0xB1E32A5D	// just a random number
-#define SAVE_VERSION	ace_git_version
+#define SAVE_MAGIC 0xB1E32A5D // just a random number
+#define SAVE_VERSION ace_git_version
 
 // doom special thinkers
-#define T_MoveCeiling	0x000263D0
-#define T_VerticalDoor	0x00026810
-#define T_MoveFloor	0x00029020
-#define T_PlatRaise	0x0002CB30
-#define T_LightFlash	0x0002A7F0
-#define T_StrobeFlash	0x0002A8A0
-#define T_Glow	0x0002AAC0
-#define T_FireFlicker	0x0002A750
+#define T_MoveCeiling 0x000263D0
+#define T_VerticalDoor 0x00026810
+#define T_MoveFloor 0x00029020
+#define T_PlatRaise 0x0002CB30
+#define T_LightFlash 0x0002A7F0
+#define T_StrobeFlash 0x0002A8A0
+#define T_Glow 0x0002AAC0
+#define T_FireFlicker 0x0002A750
 
 // save flags
-#define CHECK_BIT(f,x)	((f) & (1<<(x)))
+#define CHECK_BIT(f, x) ((f) & (1 << (x)))
 enum
 {
 	SF_SEC_TEXTURE_FLOOR,
@@ -75,7 +75,7 @@ enum
 {
 	SF_LINE_FLAGS,
 	SF_LINE_SPECIAL,
-	SF_LINE_TAG, // in Hexen: ID and ARG0
+	SF_LINE_TAG,  // in Hexen: ID and ARG0
 	SF_LINE_ARGS, // only Hexen: ARG1 to ARG4
 };
 
@@ -267,8 +267,8 @@ typedef struct
 	int32_t damagecount;
 	int32_t bonuscount;
 	//
-	fixed_t	pspx;
-	fixed_t	pspy;
+	fixed_t pspx;
+	fixed_t pspy;
 	save_pspr_t pspr[NUMPSPRITES];
 	// powers
 	int32_t powers[NUMPOWERS];
@@ -460,50 +460,49 @@ typedef struct
 
 //
 
-static uint32_t *brain_sound_id;
+static uint32_t* brain_sound_id;
 
-static save_name_t *save_name;
+static save_name_t* save_name;
 
-static patch_t *preview_patch;
+static patch_t* preview_patch;
 static uint_fast8_t show_save_slot = -1;
 static uint_fast8_t autosave_type;
 
 static const uint8_t empty_slot[] = "[EMPTY]";
 
 // bitmap header
-static bmp_head_t bmp_header =
-{
-	.magic = BMP_MAGIC,
-	.filesize = 0xFE36,
-	.pixoffs = 0x0436,
-	.dibsize = 40,
-	.width = 320,
-	.height = 200,
-	.planes = 1,
-	.bpp = 8,
-	.datasize = 320 * 200,
-	.resh = 0x0B13,
-	.resv = 0x0B13,
-	.colorcount = 256,
-	.icolor = 256,
+static bmp_head_t bmp_header = {
+    .magic = BMP_MAGIC,
+    .filesize = 0xFE36,
+    .pixoffs = 0x0436,
+    .dibsize = 40,
+    .width = 320,
+    .height = 200,
+    .planes = 1,
+    .bpp = 8,
+    .datasize = 320 * 200,
+    .resh = 0x0B13,
+    .resv = 0x0B13,
+    .colorcount = 256,
+    .icolor = 256,
 };
 
 //
 
-static void do_load() __attribute((regparm(2),no_caller_saved_registers));
+static void do_load() __attribute((regparm(2), no_caller_saved_registers));
 
 //
 // funcs
 
 static void generate_save_name(uint32_t slot)
 {
-	uint8_t *ptr = savename;
+	uint8_t* ptr = savename;
 
 	doom_sprintf(savename, "%s\\%s.bmp", SAVE_DIR, mod_config.save_name);
 
-	while(*ptr)
+	while (*ptr)
 	{
-		if(*ptr == '*')
+		if (*ptr == '*')
 		{
 			*ptr = '0' + slot;
 			break;
@@ -523,23 +522,23 @@ static inline void prepare_save_slot(int fd, uint32_t idx)
 	// header
 
 	tmp = doom_read(fd, &head, sizeof(bmp_head_t));
-	if(tmp != sizeof(bmp_head_t))
+	if (tmp != sizeof(bmp_head_t))
 		return;
 
-	if(head.magic != BMP_MAGIC)
+	if (head.magic != BMP_MAGIC)
 		return;
 
-	if(head.dibsize < 40)
+	if (head.dibsize < 40)
 		return;
 
 	// info
 
 	doom_lseek(fd, head.filesize, SEEK_SET);
 	tmp = doom_read(fd, &info, sizeof(save_info_t));
-	if(tmp != sizeof(save_info_t))
+	if (tmp != sizeof(save_info_t))
 		return;
 
-	if(info.title.magic != SAVE_MAGIC)
+	if (info.title.magic != SAVE_MAGIC)
 		return;
 
 	// create entry
@@ -547,13 +546,14 @@ static inline void prepare_save_slot(int fd, uint32_t idx)
 	strcpy(save_name[idx].text, info.title.text);
 
 	// version
-	if(info.version == SAVE_VERSION)
+	if (info.version == SAVE_VERSION)
 	{
-		if(info.mod_csum == dec_mod_csum)
+		if (info.mod_csum == dec_mod_csum)
 		{
 			LoadMenu[idx].status = 1;
 			save_name[idx].color = mod_config.menu_save_valid;
-		} else
+		}
+		else
 		{
 			LoadMenu[idx].status = dev_mode;
 			save_name[idx].color = mod_config.menu_save_mismatch;
@@ -562,23 +562,23 @@ static inline void prepare_save_slot(int fd, uint32_t idx)
 
 	// preview
 
-	if(head.pixoffs > 0xFFFF)
+	if (head.pixoffs > 0xFFFF)
 		return;
-	if(head.compression)
+	if (head.compression)
 		return;
-	if(head.bpp != 8)
+	if (head.bpp != 8)
 		return;
-	if(head.width < 160)
+	if (head.width < 160)
 		return;
-	if(head.width > 4096)
+	if (head.width > 4096)
 		return;
-	if(head.height < 100)
+	if (head.height < 100)
 		return;
-	if(head.height > 4096)
+	if (head.height > 4096)
 		return;
 
 	tmp = 1 + (head.width - 1) / 160;
-	if(head.height / tmp < 100)
+	if (head.height / tmp < 100)
 		return;
 
 	save_name[idx].step = tmp;
@@ -586,13 +586,14 @@ static inline void prepare_save_slot(int fd, uint32_t idx)
 	save_name[idx].pixoffs = head.pixoffs;
 }
 
-static inline void generate_preview_line(int fd, uint32_t y, save_name_t *slot)
+static inline void generate_preview_line(int fd, uint32_t y, save_name_t* slot)
 {
-	uint8_t *dst;
-	uint8_t *src;
+	uint8_t* dst;
+	uint8_t* src;
 
 	dst = screen_buffer;
-	dst += 320 * 200 * 2 + sizeof(patch_t) + 160 * sizeof(uint32_t) + 3 + (99 - y);
+	dst += 320 * 200 * 2 + sizeof(patch_t) + 160 * sizeof(uint32_t) + 3 +
+	       (99 - y);
 
 	src = screen_buffer;
 	src += 320 * 200 * 3;
@@ -600,7 +601,7 @@ static inline void generate_preview_line(int fd, uint32_t y, save_name_t *slot)
 	doom_lseek(fd, slot->pixoffs + y * slot->width * slot->step, SEEK_SET);
 	doom_read(fd, src, 160 * slot->step);
 
-	for(uint32_t i = 0; i < 160; i++)
+	for (uint32_t i = 0; i < 160; i++)
 	{
 		*dst = *src;
 		src += slot->step;
@@ -610,21 +611,21 @@ static inline void generate_preview_line(int fd, uint32_t y, save_name_t *slot)
 
 static void draw_check_preview()
 {
-	if(show_save_slot != menu_item_now)
+	if (show_save_slot != menu_item_now)
 	{
 		// generate preview patch in RAM
 		int fd;
-		uint8_t *base;
-		save_name_t *slot;
+		uint8_t* base;
+		save_name_t* slot;
 
 		show_save_slot = menu_item_now;
 		slot = save_name + show_save_slot;
 
-		if(slot->step)
+		if (slot->step)
 		{
 			generate_save_name(show_save_slot);
 			fd = doom_open_RD(savename);
-			if(fd < 0)
+			if (fd < 0)
 				slot->step = 0;
 		}
 
@@ -635,40 +636,40 @@ static void draw_check_preview()
 		preview_patch->y = -50;
 
 		base = (uint8_t*)(preview_patch->offs + 160);
-		for(uint32_t i = 0; i < 160; i++)
+		for (uint32_t i = 0; i < 160; i++)
 		{
 			preview_patch->offs[i] = base - (uint8_t*)preview_patch;
 			base[0] = 0;
 			base[1] = 100;
-			if(!slot->step)
+			if (!slot->step)
 				memset(base + 3, r_color_black, 100);
 			base[104] = 0xFF;
 			base += 105;
 		}
 
-		if(slot->step)
+		if (slot->step)
 		{
-			for(uint32_t i = 0; i < 100; i++)
+			for (uint32_t i = 0; i < 100; i++)
 				generate_preview_line(fd, i, slot);
 			doom_close(fd);
 		}
 	}
 
-	for(uint32_t i = 0; i < SAVE_SLOT_COUNT; i++)
+	for (uint32_t i = 0; i < SAVE_SLOT_COUNT; i++)
 	{
 		uint32_t y = 57 + i * 16;
 		uint32_t x = 171;
 
-		if(i == show_save_slot)
+		if (i == show_save_slot)
 			x -= 4;
 
 		menu_draw_slot_bg(x, y, 150);
 		menu_font_color = save_name[i].color;
-		font_menu_text(x+1, y, save_name[i].text);
+		font_menu_text(x + 1, y, save_name[i].text);
 	}
 	menu_font_color = FCOL_ORIGINAL;
 
-	for(uint32_t i = 0; i < 7; i++)
+	for (uint32_t i = 0; i < 7; i++)
 		menu_draw_slot_bg(5, 52 + i * 14, 164);
 	menu_draw_slot_bg(5, 142, 164);
 
@@ -678,15 +679,15 @@ static void draw_check_preview()
 //
 // drawers
 
-static __attribute((regparm(2),no_caller_saved_registers))
-void draw_load_menu()
+static __attribute((regparm(2), no_caller_saved_registers)) void
+draw_load_menu()
 {
 	V_DrawPatchDirect(97, 17, W_CacheLumpName(dtxt_m_loadg, PU_CACHE));
 	draw_check_preview();
 }
 
-static __attribute((regparm(2),no_caller_saved_registers))
-void draw_save_menu()
+static __attribute((regparm(2), no_caller_saved_registers)) void
+draw_save_menu()
 {
 	V_DrawPatchDirect(97, 17, W_CacheLumpName(dtxt_m_saveg, PU_CACHE));
 	draw_check_preview();
@@ -699,11 +700,12 @@ void saveload_clear_cluster(uint32_t idx)
 {
 	uint8_t name[32];
 
-	for(uint32_t i = 0; i < num_maps; i++)
+	for (uint32_t i = 0; i < num_maps; i++)
 	{
-		if(map_info[i].cluster == idx && map_info[i].lump >= 0)
+		if (map_info[i].cluster == idx && map_info[i].lump >= 0)
 		{
-			doom_sprintf(name, SAVE_DIR "\\%.8s.asv", lumpinfo[map_info[i].lump].name);
+			doom_sprintf(name, SAVE_DIR "\\%.8s.asv",
+			             lumpinfo[map_info[i].lump].name);
 			doom_unlink(name);
 		}
 	}
@@ -712,14 +714,15 @@ void saveload_clear_cluster(uint32_t idx)
 //
 // save game
 
-static void save_put_generic(generic_mover_t *gm, uint32_t magic)
+static void save_put_generic(generic_mover_t* gm, uint32_t magic)
 {
 	save_generic_mover_t sav;
 
 	writer_add_u16(magic);
 
 	sav.sector = gm->sector - sectors;
-	sav.texture = gm->flags & MVF_SET_TEXTURE ? flat_get_name(gm->texture) : 0;
+	sav.texture =
+	    gm->flags & MVF_SET_TEXTURE ? flat_get_name(gm->texture) : 0;
 	sav.sndseq = gm->seq_save;
 	sav.type = gm->type;
 	sav.direction = gm->direction;
@@ -741,33 +744,36 @@ static void save_put_generic(generic_mover_t *gm, uint32_t magic)
 
 static inline void sv_put_sectors(int32_t lump)
 {
-	map_sector_t *ms;
+	map_sector_t* ms;
 	uint32_t count;
 
 	ms = W_CacheLumpNum(lump, PU_STATIC);
 	count = W_LumpLength(lump) / sizeof(map_sector_t);
 
-	for(uint32_t i = 0; i < count; i++)
+	for (uint32_t i = 0; i < count; i++)
 	{
-		sector_t *sec = sectors + i;
+		sector_t* sec = sectors + i;
 		uint32_t flags = 0;
 		uint64_t tname;
 		fixed_t height;
 		int16_t lightlevel;
 
-		flags |= (sec->floorpic != flat_num_get(ms[i].floorpic)) << SF_SEC_TEXTURE_FLOOR;
-		flags |= (sec->ceilingpic != flat_num_get(ms[i].ceilingpic)) << SF_SEC_TEXTURE_CEILING;
+		flags |= (sec->floorpic != flat_num_get(ms[i].floorpic))
+		         << SF_SEC_TEXTURE_FLOOR;
+		flags |= (sec->ceilingpic != flat_num_get(ms[i].ceilingpic))
+		         << SF_SEC_TEXTURE_CEILING;
 
 		height = (fixed_t)ms[i].floorheight * FRACUNIT;
 		flags |= (sec->floorheight != height) << SF_SEC_HEIGHT_FLOOR;
 
 		height = (fixed_t)ms[i].ceilingheight * FRACUNIT;
-		flags |= (sec->ceilingheight != height) << SF_SEC_HEIGHT_CEILING;
+		flags |= (sec->ceilingheight != height)
+		         << SF_SEC_HEIGHT_CEILING;
 
 		lightlevel = ms[i].lightlevel;
-		if(lightlevel < 0)
+		if (lightlevel < 0)
 			lightlevel = 0;
-		if(lightlevel >= 384)
+		if (lightlevel >= 384)
 			lightlevel = 383;
 		flags |= (sec->lightlevel != lightlevel) << SF_SEC_LIGHT_LEVEL;
 
@@ -779,34 +785,34 @@ static inline void sv_put_sectors(int32_t lump)
 		flags |= (!!sec->extra->action.enter) << SF_SEC_ACTION_ENTER;
 		flags |= (!!sec->extra->action.leave) << SF_SEC_ACTION_LEAVE;
 
-		if(flags)
+		if (flags)
 		{
 			writer_add_u32(flags | (i << 16));
-			if(CHECK_BIT(flags, SF_SEC_TEXTURE_FLOOR))
+			if (CHECK_BIT(flags, SF_SEC_TEXTURE_FLOOR))
 			{
 				tname = flat_get_name(sec->floorpic);
 				writer_add_wame(&tname);
 			}
-			if(CHECK_BIT(flags, SF_SEC_TEXTURE_CEILING))
+			if (CHECK_BIT(flags, SF_SEC_TEXTURE_CEILING))
 			{
 				tname = flat_get_name(sec->ceilingpic);
 				writer_add_wame(&tname);
 			}
-			if(CHECK_BIT(flags, SF_SEC_HEIGHT_FLOOR))
+			if (CHECK_BIT(flags, SF_SEC_HEIGHT_FLOOR))
 				writer_add_u32(sec->floorheight);
-			if(CHECK_BIT(flags, SF_SEC_HEIGHT_CEILING))
+			if (CHECK_BIT(flags, SF_SEC_HEIGHT_CEILING))
 				writer_add_u32(sec->ceilingheight);
-			if(CHECK_BIT(flags, SF_SEC_LIGHT_LEVEL))
+			if (CHECK_BIT(flags, SF_SEC_LIGHT_LEVEL))
 				writer_add_u16(sec->lightlevel);
-			if(CHECK_BIT(flags, SF_SEC_SPECIAL))
+			if (CHECK_BIT(flags, SF_SEC_SPECIAL))
 				writer_add_u16(sec->special);
-			if(CHECK_BIT(flags, SF_SEC_TAG))
+			if (CHECK_BIT(flags, SF_SEC_TAG))
 				writer_add_u16(sec->tag);
-			if(CHECK_BIT(flags, SF_SEC_SOUNDTARGET))
+			if (CHECK_BIT(flags, SF_SEC_SOUNDTARGET))
 				writer_add_u32(sec->soundtarget->netid);
-			if(CHECK_BIT(flags, SF_SEC_ACTION_ENTER))
+			if (CHECK_BIT(flags, SF_SEC_ACTION_ENTER))
 				writer_add_u32(sec->extra->action.enter->netid);
-			if(CHECK_BIT(flags, SF_SEC_ACTION_LEAVE))
+			if (CHECK_BIT(flags, SF_SEC_ACTION_LEAVE))
 				writer_add_u32(sec->extra->action.leave->netid);
 		}
 	}
@@ -819,15 +825,15 @@ static inline void sv_put_sectors(int32_t lump)
 
 static inline void sv_put_sidedefs(int32_t lump)
 {
-	map_sidedef_t *ms;
+	map_sidedef_t* ms;
 	uint32_t count;
 
 	ms = W_CacheLumpNum(lump, PU_STATIC);
 	count = W_LumpLength(lump) / sizeof(map_sidedef_t);
 
-	for(uint32_t i = 0; i < count; i++)
+	for (uint32_t i = 0; i < count; i++)
 	{
-		side_t *side = sides + i;
+		side_t* side = sides + i;
 		uint32_t flags = 0;
 		uint64_t tname;
 		fixed_t offs;
@@ -837,28 +843,32 @@ static inline void sv_put_sidedefs(int32_t lump)
 		offs = (fixed_t)ms[i].rowoffset * FRACUNIT;
 		flags |= (side->rowoffset != offs) << SF_SIDE_OFFSY;
 
-		flags |= (side->toptexture != texture_num_get(ms[i].toptexture)) << SF_SIDE_TEXTURE_TOP;
-		flags |= (side->bottomtexture != texture_num_get(ms[i].bottomtexture)) << SF_SIDE_TEXTURE_BOT;
-		flags |= (side->midtexture != texture_num_get(ms[i].midtexture)) << SF_SIDE_TEXTURE_MID;
+		flags |= (side->toptexture != texture_num_get(ms[i].toptexture))
+		         << SF_SIDE_TEXTURE_TOP;
+		flags |= (side->bottomtexture !=
+		          texture_num_get(ms[i].bottomtexture))
+		         << SF_SIDE_TEXTURE_BOT;
+		flags |= (side->midtexture != texture_num_get(ms[i].midtexture))
+		         << SF_SIDE_TEXTURE_MID;
 
-		if(flags)
+		if (flags)
 		{
 			writer_add_u32(flags | (i << 16));
-			if(CHECK_BIT(flags, SF_SIDE_OFFSX))
+			if (CHECK_BIT(flags, SF_SIDE_OFFSX))
 				writer_add_u32(side->textureoffset);
-			if(CHECK_BIT(flags, SF_SIDE_OFFSY))
+			if (CHECK_BIT(flags, SF_SIDE_OFFSY))
 				writer_add_u32(side->rowoffset);
-			if(CHECK_BIT(flags, SF_SIDE_TEXTURE_TOP))
+			if (CHECK_BIT(flags, SF_SIDE_TEXTURE_TOP))
 			{
 				tname = texture_get_name(side->toptexture);
 				writer_add_wame(&tname);
 			}
-			if(CHECK_BIT(flags, SF_SIDE_TEXTURE_BOT))
+			if (CHECK_BIT(flags, SF_SIDE_TEXTURE_BOT))
 			{
 				tname = texture_get_name(side->bottomtexture);
 				writer_add_wame(&tname);
 			}
-			if(CHECK_BIT(flags, SF_SIDE_TEXTURE_MID))
+			if (CHECK_BIT(flags, SF_SIDE_TEXTURE_MID))
 			{
 				tname = texture_get_name(side->midtexture);
 				writer_add_wame(&tname);
@@ -874,29 +884,31 @@ static inline void sv_put_sidedefs(int32_t lump)
 
 static inline void sv_put_linedefs_doom(int32_t lump)
 {
-	map_linedef_t *ml;
+	map_linedef_t* ml;
 	uint32_t count;
 
 	ml = W_CacheLumpNum(lump, PU_STATIC);
 	count = W_LumpLength(lump) / sizeof(map_linedef_t);
 
-	for(uint32_t i = 0; i < count; i++)
+	for (uint32_t i = 0; i < count; i++)
 	{
-		line_t *line = lines + i;
+		line_t* line = lines + i;
 		uint32_t flags = 0;
 
-		flags |= ((line->flags & ~ML_MAPPED) != (ml[i].flags & ~ML_MAPPED)) << SF_LINE_FLAGS;
+		flags |=
+		    ((line->flags & ~ML_MAPPED) != (ml[i].flags & ~ML_MAPPED))
+		    << SF_LINE_FLAGS;
 		flags |= (line->special != ml[i].special) << SF_LINE_SPECIAL;
 		flags |= (line->tag != ml[i].tag) << SF_LINE_TAG;
 
-		if(flags)
+		if (flags)
 		{
 			writer_add_u32(flags | (i << 16));
-			if(CHECK_BIT(flags, SF_LINE_FLAGS))
+			if (CHECK_BIT(flags, SF_LINE_FLAGS))
 				writer_add_u16(line->flags);
-			if(CHECK_BIT(flags, SF_LINE_SPECIAL))
+			if (CHECK_BIT(flags, SF_LINE_SPECIAL))
 				writer_add_u16(line->special);
-			if(CHECK_BIT(flags, SF_LINE_TAG))
+			if (CHECK_BIT(flags, SF_LINE_TAG))
 				writer_add_u16(line->tag);
 		}
 	}
@@ -909,33 +921,35 @@ static inline void sv_put_linedefs_doom(int32_t lump)
 
 static inline void sv_put_linedefs_hexen(int32_t lump)
 {
-	map_linehex_t *ml;
+	map_linehex_t* ml;
 	uint32_t count;
 
 	ml = W_CacheLumpNum(lump, PU_STATIC);
 	count = W_LumpLength(lump) / sizeof(map_linehex_t);
 
-	for(uint32_t i = 0; i < count; i++)
+	for (uint32_t i = 0; i < count; i++)
 	{
-		line_t *line = lines + i;
+		line_t* line = lines + i;
 		uint32_t flags = 0;
 
-		flags |= ((line->flags & ~ML_MAPPED) != (ml[i].flags & ~ML_MAPPED)) << SF_LINE_FLAGS;
+		flags |=
+		    ((line->flags & ~ML_MAPPED) != (ml[i].flags & ~ML_MAPPED))
+		    << SF_LINE_FLAGS;
 		flags |= (line->special != ml[i].special) << SF_LINE_SPECIAL;
 		flags |= (!!line->id) << SF_LINE_TAG;
 		flags |= (line->arg0 != ml[i].arg0) << SF_LINE_TAG;
 		flags |= (line->args != ml[i].args) << SF_LINE_ARGS;
 
-		if(flags)
+		if (flags)
 		{
 			writer_add_u32(flags | (i << 16));
-			if(CHECK_BIT(flags, SF_LINE_FLAGS))
+			if (CHECK_BIT(flags, SF_LINE_FLAGS))
 				writer_add_u16(line->flags);
-			if(CHECK_BIT(flags, SF_LINE_SPECIAL))
+			if (CHECK_BIT(flags, SF_LINE_SPECIAL))
 				writer_add_u16(line->special);
-			if(CHECK_BIT(flags, SF_LINE_TAG))
+			if (CHECK_BIT(flags, SF_LINE_TAG))
 				writer_add_u16(line->tag);
-			if(CHECK_BIT(flags, SF_LINE_ARGS))
+			if (CHECK_BIT(flags, SF_LINE_ARGS))
 				writer_add_u32(line->args);
 		}
 	}
@@ -950,9 +964,9 @@ static inline void sv_put_polyobj()
 {
 	save_poly_t sp;
 
-	for(uint32_t i = 0; i < poly_count; i++)
+	for (uint32_t i = 0; i < poly_count; i++)
 	{
-		polyobj_t *poly = polyobj + i;
+		polyobj_t* poly = polyobj + i;
 
 		writer_add_u16(poly->id);
 
@@ -970,13 +984,13 @@ static inline void sv_put_buttons()
 {
 	save_switch_t sw;
 
-	for(uint32_t i = 0; i < MAX_BUTTONS; i++)
+	for (uint32_t i = 0; i < MAX_BUTTONS; i++)
 	{
-		switch_t *slot = active_switch + i;
+		switch_t* slot = active_switch + i;
 		uint16_t type;
 
 		type = anim_switch_type(slot);
-		if(!type)
+		if (!type)
 			continue;
 
 		writer_add_u16(STH__BUTTON + type);
@@ -995,12 +1009,12 @@ static inline void sv_put_buttons()
 
 static inline void sv_put_thinkers()
 {
-	for(thinker_t *th = thcap.next; th != &thcap; th = th->next)
+	for (thinker_t* th = thcap.next; th != &thcap; th = th->next)
 	{
-		if(th->function == think_line_scroll)
+		if (th->function == think_line_scroll)
 		{
 			save_line_scroll_t sav;
-			line_scroll_t *now = (line_scroll_t*)th;
+			line_scroll_t* now = (line_scroll_t*)th;
 
 			writer_add_u16(STH_ACE_LINE_SCROLL);
 
@@ -1009,19 +1023,19 @@ static inline void sv_put_thinkers()
 			sav.y = now->y;
 
 			writer_add(&sav, sizeof(sav));
-		} else
-		if(th->function == think_ceiling)
+		}
+		else if (th->function == think_ceiling)
 		{
 			save_put_generic((generic_mover_t*)th, STH_ACE_CEILING);
-		} else
-		if(th->function == think_floor)
+		}
+		else if (th->function == think_floor)
 		{
 			save_put_generic((generic_mover_t*)th, STH_ACE_FLOOR);
-		} else
-		if(th->function == think_light)
+		}
+		else if (th->function == think_light)
 		{
 			save_generic_light_t sav;
-			generic_light_t *gl = (generic_light_t*)th;
+			generic_light_t* gl = (generic_light_t*)th;
 
 			writer_add_u16(STH_ACE_LIGHT);
 
@@ -1037,11 +1051,11 @@ static inline void sv_put_thinkers()
 			sav.direction = gl->direction;
 
 			writer_add(&sav, sizeof(sav));
-		} else
-		if(th->function == think_poly_move)
+		}
+		else if (th->function == think_poly_move)
 		{
 			save_poly_move_t sav;
-			poly_move_t *pm = (poly_move_t*)th;
+			poly_move_t* pm = (poly_move_t*)th;
 
 			writer_add_u16(STH_ACE_POLY_MOV);
 
@@ -1059,11 +1073,11 @@ static inline void sv_put_thinkers()
 			sav.sndwait = pm->sndwait;
 
 			writer_add(&sav, sizeof(sav));
-		} else
-		if(th->function == think_poly_rotate)
+		}
+		else if (th->function == think_poly_rotate)
 		{
 			save_poly_rotate_t sav;
-			poly_rotate_t *pr = (poly_rotate_t*)th;
+			poly_rotate_t* pr = (poly_rotate_t*)th;
 
 			writer_add_u16(STH_ACE_POLY_ROT);
 
@@ -1086,62 +1100,62 @@ static inline void sv_put_thinkers()
 static inline void sv_put_specials()
 {
 	// only old Doom level specials
-	for(thinker_t *th = thinkercap.next; th != &thinkercap; th = th->next)
+	for (thinker_t* th = thinkercap.next; th != &thinkercap; th = th->next)
 	{
 		uint32_t ret;
 		uint32_t type;
 
-		if(th->function)
+		if (th->function)
 			type = (uint32_t)th->function - doom_code_segment;
 		else
 			type = 0;
 
-		if(!type) // [suspended]
+		if (!type) // [suspended]
 		{
 			uint32_t i;
 
 			// find suspended T_MoveCeiling
-			for(i = 0; i < MAXCEILINGS; i++)
-				if(activeceilings[i] == (ceiling_t*)th)
+			for (i = 0; i < MAXCEILINGS; i++)
+				if (activeceilings[i] == (ceiling_t*)th)
 					break;
-			if(i < MAXCEILINGS)
+			if (i < MAXCEILINGS)
 				goto add_ceiling;
 			// find suspended T_PlatRaise
-			for(i = 0; i < MAXPLATS; i++)
-				if(activeplats[i] == (plat_t*)th)
+			for (i = 0; i < MAXPLATS; i++)
+				if (activeplats[i] == (plat_t*)th)
 					break;
-			if(i < MAXPLATS)
+			if (i < MAXPLATS)
 				goto add_plat;
-		} else
-		if(type == T_MoveCeiling)
+		}
+		else if (type == T_MoveCeiling)
 		{
-add_ceiling:
-			{
-				save_ceiling_t sav;
-				ceiling_t *now = (ceiling_t*)th;
+		add_ceiling:
+		{
+			save_ceiling_t sav;
+			ceiling_t* now = (ceiling_t*)th;
 
-				writer_add_u16(STH_DOOM_CEILING);
+			writer_add_u16(STH_DOOM_CEILING);
 
-				sav.type = now->type;
-				sav.crush = now->crush;
-				sav.sector = now->sector - sectors;
-				sav.bottomheight = now->bottomheight;
-				sav.topheight = now->topheight;
-				sav.speed = now->speed;
-				sav.direction = now->direction;
-				sav.olddirection = now->olddirection;
-				sav.tag = now->tag;
+			sav.type = now->type;
+			sav.crush = now->crush;
+			sav.sector = now->sector - sectors;
+			sav.bottomheight = now->bottomheight;
+			sav.topheight = now->topheight;
+			sav.speed = now->speed;
+			sav.direction = now->direction;
+			sav.olddirection = now->olddirection;
+			sav.tag = now->tag;
 
-				if(!type) // sus!
-					sav.type |= 0x80;
+			if (!type) // sus!
+				sav.type |= 0x80;
 
-				writer_add(&sav, sizeof(sav));
-			}
-		} else
-		if(type == T_VerticalDoor)
+			writer_add(&sav, sizeof(sav));
+		}
+		}
+		else if (type == T_VerticalDoor)
 		{
 			save_door_t sav;
-			vldoor_t *now = (vldoor_t*)th;
+			vldoor_t* now = (vldoor_t*)th;
 
 			writer_add_u16(STH_DOOM_DOOR);
 
@@ -1154,11 +1168,11 @@ add_ceiling:
 			sav.topcountdown = now->topcountdown;
 
 			writer_add(&sav, sizeof(sav));
-		} else
-		if(type == T_MoveFloor)
+		}
+		else if (type == T_MoveFloor)
 		{
 			save_floor_t sav;
-			floormove_t *now = (floormove_t*)th;
+			floormove_t* now = (floormove_t*)th;
 
 			writer_add_u16(STH_DOOM_FLOOR);
 
@@ -1172,38 +1186,38 @@ add_ceiling:
 			sav.speed = now->speed;
 
 			writer_add(&sav, sizeof(sav));
-		} else
-		if(type == T_PlatRaise)
+		}
+		else if (type == T_PlatRaise)
 		{
-add_plat:
-			{
-				save_plat_t sav;
-				plat_t *now = (plat_t*)th;
+		add_plat:
+		{
+			save_plat_t sav;
+			plat_t* now = (plat_t*)th;
 
-				writer_add_u16(STH_DOOM_PLAT);
+			writer_add_u16(STH_DOOM_PLAT);
 
-				sav.type = now->type;
-				sav.crush = now->crush;
-				sav.status = now->status;
-				sav.oldstatus = now->oldstatus;
-				sav.wait = now->wait;
-				sav.count = now->count;
-				sav.sector = now->sector - sectors;
-				sav.tag = now->tag;
-				sav.speed = now->speed;
-				sav.low = now->low;
-				sav.high = now->high;
+			sav.type = now->type;
+			sav.crush = now->crush;
+			sav.status = now->status;
+			sav.oldstatus = now->oldstatus;
+			sav.wait = now->wait;
+			sav.count = now->count;
+			sav.sector = now->sector - sectors;
+			sav.tag = now->tag;
+			sav.speed = now->speed;
+			sav.low = now->low;
+			sav.high = now->high;
 
-				if(!type) // sus!
-					sav.type |= 0x80;
+			if (!type) // sus!
+				sav.type |= 0x80;
 
-				writer_add(&sav, sizeof(sav));
-			}
-		} else
-		if(type == T_LightFlash)
+			writer_add(&sav, sizeof(sav));
+		}
+		}
+		else if (type == T_LightFlash)
 		{
 			save_flash_t sav;
-			lightflash_t *now = (lightflash_t*)th;
+			lightflash_t* now = (lightflash_t*)th;
 
 			writer_add_u16(STH_DOOM_FLASH);
 
@@ -1215,11 +1229,11 @@ add_plat:
 			sav.mintime = now->mintime;
 
 			writer_add(&sav, sizeof(sav));
-		} else
-		if(type == T_StrobeFlash)
+		}
+		else if (type == T_StrobeFlash)
 		{
 			save_strobe_t sav;
-			strobe_t *now = (strobe_t*)th;
+			strobe_t* now = (strobe_t*)th;
 
 			writer_add_u16(STH_DOOM_STROBE);
 
@@ -1231,11 +1245,11 @@ add_plat:
 			sav.brighttime = now->brighttime;
 
 			writer_add(&sav, sizeof(sav));
-		} else
-		if(type == T_Glow)
+		}
+		else if (type == T_Glow)
 		{
 			save_glow_t sav;
-			glow_t *now = (glow_t*)th;
+			glow_t* now = (glow_t*)th;
 
 			writer_add_u16(STH_DOOM_GLOW);
 
@@ -1245,11 +1259,11 @@ add_plat:
 			sav.direction = now->direction;
 
 			writer_add(&sav, sizeof(sav));
-		} else
-		if(type == T_FireFlicker)
+		}
+		else if (type == T_FireFlicker)
 		{
 			save_flicker_t sav;
-			fireflicker_t *now = (fireflicker_t*)th;
+			fireflicker_t* now = (fireflicker_t*)th;
 
 			writer_add_u16(STH_DOOM_FLICKER);
 
@@ -1266,11 +1280,11 @@ add_plat:
 	writer_add_u16(0);
 }
 
-static uint32_t svcb_thing(mobj_t *mo)
+static uint32_t svcb_thing(mobj_t* mo)
 {
 	save_thing_t thing;
 	uint32_t state;
-	inventory_t *item;
+	inventory_t* item;
 
 	writer_add_wame(&mo->info->alias);
 
@@ -1318,13 +1332,20 @@ static uint32_t svcb_thing(mobj_t *mo)
 
 	thing.render_style = mo->render_style;
 	thing.render_alpha = mo->render_alpha;
-	if(mo->translation)
+	if (mo->translation)
 	{
-		if(mo->translation >= blood_translation && mo->translation < blood_translation + blood_color_count * 256)
-			thing.translation = 0x4000 | ((mo->translation - blood_translation) / 256);
+		if (mo->translation >= blood_translation &&
+		    mo->translation <
+		        blood_translation + blood_color_count * 256)
+			thing.translation =
+			    0x4000 |
+			    ((mo->translation - blood_translation) / 256);
 		else
-			thing.translation = 0x8000 | ((mo->translation - render_translation) / 256);
-	} else
+			thing.translation =
+			    0x8000 |
+			    ((mo->translation - render_translation) / 256);
+	}
+	else
 		thing.translation = 0;
 
 	thing.target = mo->target ? mo->target->netid : 0;
@@ -1334,7 +1355,7 @@ static uint32_t svcb_thing(mobj_t *mo)
 	thing.animation = mo->animation;
 	thing.damage_type = mo->damage_type;
 
-	if(mo->player)
+	if (mo->player)
 		thing.player = 1 + (mo->player - players);
 	else
 		thing.player = 0;
@@ -1343,12 +1364,12 @@ static uint32_t svcb_thing(mobj_t *mo)
 
 	// inventory
 
-	if(mo->inventory)
+	if (mo->inventory)
 	{
-		for(uint32_t i = 0; i < mo->inventory->numslots; i++)
+		for (uint32_t i = 0; i < mo->inventory->numslots; i++)
 		{
-			invitem_t *item = mo->inventory->slot + i;
-			if(!item->type)
+			invitem_t* item = mo->inventory->slot + i;
+			if (!item->type)
 				continue;
 			writer_add_wame(&mobjinfo[item->type].alias);
 			writer_add_u16(item->count);
@@ -1374,11 +1395,11 @@ static inline void sv_put_players()
 {
 	save_player_t plr;
 
-	for(uint32_t i = 0; i < MAXPLAYERS; i++)
+	for (uint32_t i = 0; i < MAXPLAYERS; i++)
 	{
-		player_t *pl;
+		player_t* pl;
 
-		if(!playeringame[i])
+		if (!playeringame[i])
 			continue;
 
 		pl = players + i;
@@ -1391,7 +1412,7 @@ static inline void sv_put_players()
 		plr.viewheight = pl->viewheight;
 		plr.deltaviewheight = pl->deltaviewheight;
 
-		for(uint32_t j = 0; j < NUMPOWERS; j++)
+		for (uint32_t j = 0; j < NUMPOWERS; j++)
 		{
 			plr.powers[j] = pl->powers[j];
 			plr.power_mobj[j] = pl->power_mobj[j];
@@ -1399,9 +1420,11 @@ static inline void sv_put_players()
 
 		plr.health = pl->health;
 		plr.armor_points = pl->armorpoints;
-		plr.armor_type = pl->armortype ? mobjinfo[pl->armortype].alias : 0;
+		plr.armor_type =
+		    pl->armortype ? mobjinfo[pl->armortype].alias : 0;
 		plr.weapon_ready = pl->readyweapon ? pl->readyweapon->alias : 0;
-		plr.weapon_pending = pl->pendingweapon ? pl->pendingweapon->alias : 0;
+		plr.weapon_pending =
+		    pl->pendingweapon ? pl->pendingweapon->alias : 0;
 
 		plr.cheats = pl->cheats;
 		plr.refire = pl->refire;
@@ -1419,9 +1442,11 @@ static inline void sv_put_players()
 		plr.pspx = pl->psprites[1].sx;
 		plr.pspy = pl->psprites[1].sy;
 
-		for(uint32_t j = 0; j < NUMPSPRITES; j++)
+		for (uint32_t j = 0; j < NUMPSPRITES; j++)
 		{
-			plr.pspr[j].state = pl->psprites[j].state ? pl->psprites[j].state - states : 0;
+			plr.pspr[j].state = pl->psprites[j].state
+			                        ? pl->psprites[j].state - states
+			                        : 0;
 			plr.pspr[j].tics = pl->psprites[j].tics;
 		}
 
@@ -1433,10 +1458,12 @@ static inline void sv_put_players()
 		plr.didsecret = pl->didsecret;
 		plr.playerclass = player_info[i].playerclass;
 
-		if(!pl->mo->inventory || pl->inv_sel < 0)
+		if (!pl->mo->inventory || pl->inv_sel < 0)
 			plr.inv_sel = 0;
 		else
-			plr.inv_sel = mobjinfo[pl->mo->inventory->slot[pl->inv_sel].type].alias;
+			plr.inv_sel =
+			    mobjinfo[pl->mo->inventory->slot[pl->inv_sel].type]
+				.alias;
 
 		plr.prop = pl->prop;
 
@@ -1451,17 +1478,17 @@ static inline void sv_put_mapped_lines()
 {
 	uint32_t flags;
 
-	for(uint32_t i = 0; i < numlines; i++)
+	for (uint32_t i = 0; i < numlines; i++)
 	{
 		uint32_t bit = 1 << (i & 31);
 
-		if(bit == 1)
+		if (bit == 1)
 			flags = 0;
 
-		if(lines[i].flags & ML_MAPPED)
+		if (lines[i].flags & ML_MAPPED)
 			flags |= bit;
 
-		if(bit == 0x80000000 || i == numlines - 1)
+		if (bit == 0x80000000 || i == numlines - 1)
 			writer_add_u32(flags);
 	}
 }
@@ -1470,9 +1497,9 @@ static inline void sv_put_sector_light()
 {
 	writer_add_u16(sector_light_count - 1);
 
-	for(uint32_t i = 1; i < sector_light_count; i++)
+	for (uint32_t i = 1; i < sector_light_count; i++)
 	{
-		sector_light_t *cl = sector_light + i;
+		sector_light_t* cl = sector_light + i;
 		writer_add_u32(cl->color | ((uint32_t)cl->fade << 16));
 	}
 }
@@ -1488,7 +1515,7 @@ static void do_write_level()
 	writer_add_u32(SAVE_VERSION);
 
 	// linedefs
-	if(map_format == MAP_FORMAT_DOOM)
+	if (map_format == MAP_FORMAT_DOOM)
 		sv_put_linedefs_doom(map_lump_idx + ML_LINEDEFS);
 	else
 		sv_put_linedefs_hexen(map_lump_idx + ML_LINEDEFS);
@@ -1531,18 +1558,18 @@ void save_auto(uint32_t clear)
 
 	doom_sprintf(name, SAVE_DIR "\\auto.asv");
 
-	if(clear)
+	if (clear)
 	{
 		doom_unlink(name);
 		return;
 	}
 
 	// unsavable
-	if(netgame)
+	if (netgame)
 		return;
 
 	// check
-	if(map_level_info->flags & MAP_FLAG_ALLOW_RESPAWN)
+	if (map_level_info->flags & MAP_FLAG_ALLOW_RESPAWN)
 		return;
 
 	// open file
@@ -1593,15 +1620,14 @@ void save_hub_level()
 	writer_close();
 }
 
-static __attribute((regparm(2),no_caller_saved_registers))
-void do_save()
+static __attribute((regparm(2), no_caller_saved_registers)) void do_save()
 {
 	save_info_t info;
-	uint8_t *src;
-	uint8_t *dst;
+	uint8_t* src;
+	uint8_t* dst;
 	uint32_t old_size;
 	uint32_t old_cmap;
-	map_cluster_t *cluster;
+	map_cluster_t* cluster;
 
 	// prepare save slot
 	generate_save_name(saveslot);
@@ -1629,7 +1655,7 @@ void do_save()
 
 	// palette
 	dst = writer_reserve(256 * sizeof(uint32_t));
-	for(uint32_t i = 0; i < 256; i++)
+	for (uint32_t i = 0; i < 256; i++)
 	{
 		*dst++ = r_palette[i].b;
 		*dst++ = r_palette[i].g;
@@ -1639,7 +1665,7 @@ void do_save()
 
 	// pixels
 	src = screen_buffer + 320 * 200;
-	for(uint32_t i = 0; i < 200; i++)
+	for (uint32_t i = 0; i < 200; i++)
 	{
 		src -= 320;
 		writer_add(src, 320);
@@ -1676,24 +1702,27 @@ void do_save()
 
 	// HUB levels
 	cluster = map_find_cluster(map_level_info->cluster);
-	if(cluster && cluster->flags & CLST_FLAG_HUB)
+	if (cluster && cluster->flags & CLST_FLAG_HUB)
 	{
-		for(uint32_t i = 0; i < num_maps; i++)
+		for (uint32_t i = 0; i < num_maps; i++)
 		{
-			map_level_t *info = map_info + i;
+			map_level_t* info = map_info + i;
 
-			if(info->cluster == map_level_info->cluster && info != map_level_info && info->lump >= 0)
+			if (info->cluster == map_level_info->cluster &&
+			    info != map_level_info && info->lump >= 0)
 			{
 				uint8_t name[32];
 				int32_t fd;
 
-				doom_sprintf(name, SAVE_DIR "\\%.8s.asv", lumpinfo[info->lump].name);
+				doom_sprintf(name, SAVE_DIR "\\%.8s.asv",
+				             lumpinfo[info->lump].name);
 				fd = doom_open_RD(name);
-				if(fd >= 0)
+				if (fd >= 0)
 				{
 					uint32_t tmp = doom_filelength(fd);
 					writer_add_u32(tmp);
-					writer_add_wame(&lumpinfo[info->lump].wame);
+					writer_add_wame(
+					    &lumpinfo[info->lump].wame);
 					writer_add_from_fd(fd, tmp);
 					doom_close(fd);
 				}
@@ -1716,30 +1745,31 @@ void do_save()
 static uint32_t ld_get_armor(uint64_t alias)
 {
 	int32_t type;
-	mobjinfo_t *info;
+	mobjinfo_t* info;
 
 	type = mobj_check_type(alias);
-	if(type < 0)
+	if (type < 0)
 		return 0;
 
 	info = mobjinfo + type;
-	if(info->extra_type != ETYPE_ARMOR && info->extra_type != ETYPE_ARMOR_BONUS)
+	if (info->extra_type != ETYPE_ARMOR &&
+	    info->extra_type != ETYPE_ARMOR_BONUS)
 		return 0;
 
 	return type;
 }
 
-static mobjinfo_t *ld_get_weapon(uint64_t alias)
+static mobjinfo_t* ld_get_weapon(uint64_t alias)
 {
 	int32_t type;
-	mobjinfo_t *info;
+	mobjinfo_t* info;
 
 	type = mobj_check_type(alias);
-	if(type < 0)
+	if (type < 0)
 		return NULL;
 
 	info = mobjinfo + type;
-	if(info->extra_type != ETYPE_WEAPON)
+	if (info->extra_type != ETYPE_WEAPON)
 		return NULL;
 
 	return info;
@@ -1748,13 +1778,13 @@ static mobjinfo_t *ld_get_weapon(uint64_t alias)
 static int32_t ld_get_inventory(uint64_t alias)
 {
 	int32_t type;
-	mobjinfo_t *info;
+	mobjinfo_t* info;
 
 	type = mobj_check_type(alias);
-	if(type < 0)
+	if (type < 0)
 		return -1;
 
-	if(!inventory_is_valid(mobjinfo + type))
+	if (!inventory_is_valid(mobjinfo + type))
 		return -1;
 
 	return type;
@@ -1762,91 +1792,91 @@ static int32_t ld_get_inventory(uint64_t alias)
 
 static inline uint32_t ld_get_sectors()
 {
-	while(1)
+	while (1)
 	{
 		uint16_t flags;
 		uint16_t idx;
-		sector_t *sec;
+		sector_t* sec;
 		uint64_t wame;
 		uint32_t update = 0;
 
-		if(reader_get_u16(&flags))
+		if (reader_get_u16(&flags))
 			return 1;
-		if(!flags)
+		if (!flags)
 			break;
 
-		if(reader_get_u16(&idx))
+		if (reader_get_u16(&idx))
 			return 1;
 
-		if(idx >= numsectors)
+		if (idx >= numsectors)
 			return 1;
 
 		sec = sectors + idx;
 
-		if(CHECK_BIT(flags, SF_SEC_TEXTURE_FLOOR))
+		if (CHECK_BIT(flags, SF_SEC_TEXTURE_FLOOR))
 		{
-			if(reader_get_wame(&wame))
+			if (reader_get_wame(&wame))
 				return 1;
 			sec->floorpic = flat_num_get((uint8_t*)&wame);
 		}
-		if(CHECK_BIT(flags, SF_SEC_TEXTURE_CEILING))
+		if (CHECK_BIT(flags, SF_SEC_TEXTURE_CEILING))
 		{
-			if(reader_get_wame(&wame))
+			if (reader_get_wame(&wame))
 				return 1;
 			sec->ceilingpic = flat_num_get((uint8_t*)&wame);
 		}
-		if(CHECK_BIT(flags, SF_SEC_HEIGHT_FLOOR))
+		if (CHECK_BIT(flags, SF_SEC_HEIGHT_FLOOR))
 		{
-			if(reader_get_u32(&sec->floorheight))
+			if (reader_get_u32(&sec->floorheight))
 				return 1;
-			if(sec->e3d_origin)
+			if (sec->e3d_origin)
 				update |= 2;
 		}
-		if(CHECK_BIT(flags, SF_SEC_HEIGHT_CEILING))
+		if (CHECK_BIT(flags, SF_SEC_HEIGHT_CEILING))
 		{
-			if(reader_get_u32(&sec->ceilingheight))
+			if (reader_get_u32(&sec->ceilingheight))
 				return 1;
-			if(sec->e3d_origin)
+			if (sec->e3d_origin)
 				update |= 1;
 		}
-		if(CHECK_BIT(flags, SF_SEC_LIGHT_LEVEL))
+		if (CHECK_BIT(flags, SF_SEC_LIGHT_LEVEL))
 		{
-			if(reader_get_u16(&sec->lightlevel))
+			if (reader_get_u16(&sec->lightlevel))
 				return 1;
 		}
-		if(CHECK_BIT(flags, SF_SEC_SPECIAL))
+		if (CHECK_BIT(flags, SF_SEC_SPECIAL))
 		{
-			if(reader_get_u16(&sec->special))
+			if (reader_get_u16(&sec->special))
 				return 1;
 		}
-		if(CHECK_BIT(flags, SF_SEC_TAG))
+		if (CHECK_BIT(flags, SF_SEC_TAG))
 		{
-			if(reader_get_u16(&sec->tag))
+			if (reader_get_u16(&sec->tag))
 				return 1;
 		}
-		if(CHECK_BIT(flags, SF_SEC_SOUNDTARGET))
+		if (CHECK_BIT(flags, SF_SEC_SOUNDTARGET))
 		{
 			uint32_t nid;
-			if(reader_get_u32(&nid))
+			if (reader_get_u32(&nid))
 				return 1;
 			sec->soundtarget = (mobj_t*)nid;
 		}
-		if(CHECK_BIT(flags, SF_SEC_ACTION_ENTER))
+		if (CHECK_BIT(flags, SF_SEC_ACTION_ENTER))
 		{
 			uint32_t nid;
-			if(reader_get_u32(&nid))
+			if (reader_get_u32(&nid))
 				return 1;
 			sec->extra->action.enter = (mobj_t*)nid;
 		}
-		if(CHECK_BIT(flags, SF_SEC_ACTION_LEAVE))
+		if (CHECK_BIT(flags, SF_SEC_ACTION_LEAVE))
 		{
 			uint32_t nid;
-			if(reader_get_u32(&nid))
+			if (reader_get_u32(&nid))
 				return 1;
 			sec->extra->action.leave = (mobj_t*)nid;
 		}
 
-		if(update)
+		if (update)
 			e3d_update_planes(sec, update);
 	}
 
@@ -1857,51 +1887,51 @@ static inline uint32_t ld_get_sectors()
 
 static inline uint32_t ld_get_sidedefs()
 {
-	while(1)
+	while (1)
 	{
 		uint16_t flags;
 		uint16_t idx;
-		side_t *side;
+		side_t* side;
 		uint64_t wame;
 
-		if(reader_get_u16(&flags))
+		if (reader_get_u16(&flags))
 			return 1;
-		if(!flags)
+		if (!flags)
 			break;
 
-		if(reader_get_u16(&idx))
+		if (reader_get_u16(&idx))
 			return 1;
 
-		if(idx >= numsides)
+		if (idx >= numsides)
 			return 1;
 
 		side = sides + idx;
 
-		if(CHECK_BIT(flags, SF_SIDE_OFFSX))
+		if (CHECK_BIT(flags, SF_SIDE_OFFSX))
 		{
-			if(reader_get_u32(&side->textureoffset))
+			if (reader_get_u32(&side->textureoffset))
 				return 1;
 		}
-		if(CHECK_BIT(flags, SF_SIDE_OFFSY))
+		if (CHECK_BIT(flags, SF_SIDE_OFFSY))
 		{
-			if(reader_get_u32(&side->rowoffset))
+			if (reader_get_u32(&side->rowoffset))
 				return 1;
 		}
-		if(CHECK_BIT(flags, SF_SIDE_TEXTURE_TOP))
+		if (CHECK_BIT(flags, SF_SIDE_TEXTURE_TOP))
 		{
-			if(reader_get_wame(&wame))
+			if (reader_get_wame(&wame))
 				return 1;
 			side->toptexture = texture_num_get((uint8_t*)&wame);
 		}
-		if(CHECK_BIT(flags, SF_SIDE_TEXTURE_BOT))
+		if (CHECK_BIT(flags, SF_SIDE_TEXTURE_BOT))
 		{
-			if(reader_get_wame(&wame))
+			if (reader_get_wame(&wame))
 				return 1;
 			side->bottomtexture = texture_num_get((uint8_t*)&wame);
 		}
-		if(CHECK_BIT(flags, SF_SIDE_TEXTURE_MID))
+		if (CHECK_BIT(flags, SF_SIDE_TEXTURE_MID))
 		{
-			if(reader_get_wame(&wame))
+			if (reader_get_wame(&wame))
 				return 1;
 			side->midtexture = texture_num_get((uint8_t*)&wame);
 		}
@@ -1914,45 +1944,45 @@ static inline uint32_t ld_get_sidedefs()
 
 static inline uint32_t ld_get_linedefs()
 {
-	while(1)
+	while (1)
 	{
 		uint16_t flags;
 		uint16_t idx;
-		line_t *line;
+		line_t* line;
 
-		if(reader_get_u16(&flags))
+		if (reader_get_u16(&flags))
 			return 1;
-		if(!flags)
+		if (!flags)
 			break;
 
-		if(reader_get_u16(&idx))
+		if (reader_get_u16(&idx))
 			return 1;
 
-		if(idx >= numlines)
+		if (idx >= numlines)
 			return 1;
 
 		line = lines + idx;
 
-		if(CHECK_BIT(flags, SF_LINE_FLAGS))
+		if (CHECK_BIT(flags, SF_LINE_FLAGS))
 		{
-			if(reader_get_u16(&line->flags))
+			if (reader_get_u16(&line->flags))
 				return 1;
 		}
-		if(CHECK_BIT(flags, SF_LINE_SPECIAL))
+		if (CHECK_BIT(flags, SF_LINE_SPECIAL))
 		{
 			uint16_t tmp;
-			if(reader_get_u16(&tmp))
+			if (reader_get_u16(&tmp))
 				return 1;
 			line->special = tmp;
 		}
-		if(CHECK_BIT(flags, SF_LINE_TAG))
+		if (CHECK_BIT(flags, SF_LINE_TAG))
 		{
-			if(reader_get_u16(&line->tag))
+			if (reader_get_u16(&line->tag))
 				return 1;
 		}
-		if(CHECK_BIT(flags, SF_LINE_ARGS))
+		if (CHECK_BIT(flags, SF_LINE_ARGS))
 		{
-			if(reader_get_u32(&line->args))
+			if (reader_get_u32(&line->args))
 				return 1;
 		}
 	}
@@ -1964,23 +1994,23 @@ static inline uint32_t ld_get_linedefs()
 
 static inline uint32_t ld_get_polyobj()
 {
-	while(1)
+	while (1)
 	{
 		uint16_t idx;
 		save_poly_t sp;
-		polyobj_t *poly;
+		polyobj_t* poly;
 
-		if(reader_get_u16(&idx))
+		if (reader_get_u16(&idx))
 			return 1;
 
-		if(!idx)
+		if (!idx)
 			break;
 
-		if(reader_get(&sp, sizeof(sp)))
+		if (reader_get(&sp, sizeof(sp)))
 			return 1;
 
 		poly = poly_find(idx, 0);
-		if(!poly)
+		if (!poly)
 			return 1;
 
 		poly->x = sp.x;
@@ -1997,445 +2027,461 @@ static inline uint32_t ld_get_polyobj()
 
 static inline uint32_t ld_get_specials()
 {
-	while(1)
+	while (1)
 	{
 		uint16_t type;
 
-		if(reader_get_u16(&type))
+		if (reader_get_u16(&type))
 			return 1;
 
-		if(!type)
+		if (!type)
 			break;
 
-		switch(type)
+		switch (type)
 		{
-			case STH_BUTTON_FRONT_TOP:
-			case STH_BUTTON_FRONT_BOT:
-			case STH_BUTTON_FRONT_MID:
-			case STH_BUTTON_BACK_TOP:
-			case STH_BUTTON_BACK_BOT:
-			case STH_BUTTON_BACK_MID:
-			{
-				save_switch_t sw;
-				switch_t *slot;
-
-				if(reader_get(&sw, sizeof(sw)))
-					return 1;
-
-				if(sw.line >= numlines)
-					return 1;
-
-				type -= STH__BUTTON;
-				slot = anim_switch_make(type, lines + sw.line, sw.texture);
-				if(!slot)
-					break;
-
-				slot->base = sw.base;
-				slot->animate = sw.animate;
-				slot->delay = sw.delay;
-			}
-			break;
-			// new thinkers
-			case STH_ACE_LINE_SCROLL:
-			{
-				save_line_scroll_t sav;
-				line_scroll_t *now;
-
-				if(reader_get(&sav, sizeof(sav)))
-					return 1;
-
-				if(sav.line >= numlines)
-					return 1;
-
-				now = Z_Malloc(sizeof(line_scroll_t), PU_LEVELSPEC, NULL);
-
-				now->line = lines + sav.line;
-				now->x = sav.x;
-				now->y = sav.y;
-
-				now->thinker.function = think_line_scroll;
-
-				think_add(&now->thinker);
-			}
-			break;
-			case STH_ACE_CEILING:
-			case STH_ACE_FLOOR:
-			{
-				save_generic_mover_t sav;
-				generic_mover_t *gm;
-				sector_t *sec;
-
-				if(reader_get(&sav, sizeof(sav)))
-					return 1;
-
-				if(sav.sector >= numsectors)
-					return 1;
-
-				if(sav.direction > 1)
-					return 1;
-
-				sec = sectors + sav.sector;
-
-				if(type == STH_ACE_CEILING)
-					gm = generic_ceiling(sec, sav.direction, sav.sndseq & 3, sav.sndseq & 128);
-				else
-				if(type == STH_ACE_FLOOR)
-					gm = generic_floor(sec, sav.direction, sav.sndseq & 3, sav.sndseq & 128);
-
-				if(!gm)
-					return 1;
-
-				if(sav.flags & MVF_SET_TEXTURE)
-					gm->texture = flat_num_get((uint8_t*)&sav.texture);
-
-				gm->type = sav.type;
-				gm->direction = sav.direction;
-				gm->top_height = sav.top_height;
-				gm->bot_height = sav.bot_height;
-				gm->speed_now = sav.speed_now;
-				gm->speed_up = sav.speed_up;
-				gm->speed_dn = sav.speed_dn;
-				gm->flags = sav.flags;
-				gm->sndwait = sav.sndwait;
-				gm->wait = sav.wait;
-				gm->delay = sav.delay;
-				gm->crush = sav.crush;
-				gm->lighttag = sav.lighttag;
-				gm->special = sav.special;
-			}
-			break;
-			case STH_ACE_LIGHT:
-			{
-				save_generic_light_t sav;
-				generic_light_t *gl;
-				sector_t *sec;
-
-				if(reader_get(&sav, sizeof(sav)))
-					return 1;
-
-				if(sav.sector >= numsectors)
-					return 1;
-
-				if(sav.direction > 1)
-					return 1;
-
-				sec = sectors + sav.sector;
-
-				gl = generic_light(sec);
-				if(!gl)
-					return 1;
-
-				gl->speed = sav.speed;
-				gl->level = sav.level;
-				gl->top = sav.top;
-				gl->bot = sav.bot;
-				gl->wait = sav.wait;
-				gl->delay_top = sav.delay_top;
-				gl->delay_bot = sav.delay_bot;
-				gl->flags = sav.flags;
-				gl->direction = sav.direction;
-			}
-			break;
-			case STH_ACE_POLY_MOV:
-			{
-				save_poly_move_t sav;
-				poly_move_t *pm;
-				polyobj_t *poly;
-
-				if(reader_get(&sav, sizeof(sav)))
-					return 1;
-
-				poly = poly_find(sav.id, 0);
-				if(!poly)
-					return 1;
-
-				if(sav.dir > 1)
-					return 1;
-
-				pm = poly_mover(poly);
-				if(!pm)
-					return 1;
-
-				pm->spd_x = sav.spd_x;
-				pm->spd_y = sav.spd_y;
-				pm->dst_x = sav.dst_x;
-				pm->dst_y = sav.dst_y;
-				pm->org_x = sav.org_x;
-				pm->org_y = sav.org_y;
-				pm->thrust = sav.thrust;
-				pm->dir = sav.dir;
-				pm->wait = sav.wait;
-				pm->delay = sav.delay;
-				pm->sndwait = sav.sndwait;
-			}
-			break;
-			case STH_ACE_POLY_ROT:
-			{
-				save_poly_rotate_t sav;
-				poly_rotate_t *pr;
-				polyobj_t *poly;
-
-				if(reader_get(&sav, sizeof(sav)))
-					return 1;
-
-				poly = poly_find(sav.id, 0);
-				if(!poly)
-					return 1;
-
-				if(sav.dir > 1)
-					return 1;
-
-				pr = poly_rotater(poly);
-				if(!pr)
-					return 1;
-
-				pr->now = sav.now;
-				pr->dst = sav.dst;
-				pr->spd = sav.spd;
-				pr->org = sav.org;
-				pr->thrust = sav.thrust;
-				pr->dir = sav.dir;
-				pr->poly->id = sav.id;
-				pr->wait = sav.wait;
-				pr->delay = sav.delay;
-				pr->sndwait = sav.sndwait;
-			}
-			break;
-			// old thinkers
-			case STH_DOOM_CEILING:
-			{
-				save_ceiling_t sav;
-				ceiling_t *now;
-
-				if(map_format != MAP_FORMAT_DOOM)
-					return 1;
-
-				if(reader_get(&sav, sizeof(sav)))
-					return 1;
-
-				if(sav.sector >= numsectors)
-					return 1;
-
-				now = Z_Malloc(sizeof(ceiling_t), PU_LEVELSPEC, NULL);
-
-				now->type = sav.type & 0x7F;
-				now->crush = sav.crush;
-				now->sector = sectors + sav.sector;
-				now->bottomheight = sav.bottomheight;
-				now->topheight = sav.topheight;
-				now->speed = sav.speed;
-				now->direction = sav.direction;
-				now->olddirection = sav.olddirection;
-				now->tag = sav.tag;
-
-				now->sector->specialdata = now;
-				now->thinker.function = (void*)T_MoveCeiling + doom_code_segment;
-
-				P_AddThinker(&now->thinker);
-				P_AddActiveCeiling(now);
-
-				if(sav.type & 0x80) // sus!
-					now->thinker.function = NULL;
-			}
-			break;
-			case STH_DOOM_DOOR:
-			{
-				save_door_t sav;
-				vldoor_t *now;
-
-				if(map_format != MAP_FORMAT_DOOM)
-					return 1;
-
-				if(reader_get(&sav, sizeof(sav)))
-					return 1;
-
-				if(sav.sector >= numsectors)
-					return 1;
-
-				now = Z_Malloc(sizeof(vldoor_t), PU_LEVELSPEC, NULL);
-
-				now->type = sav.type;
-				now->direction = sav.direction;
-				now->sector = sectors + sav.sector;
-				now->topheight = sav.topheight;
-				now->speed = sav.speed;
-				now->topwait = sav.topwait;
-				now->topcountdown = sav.topcountdown;
-
-				now->sector->specialdata = now;
-				now->thinker.function = (void*)T_VerticalDoor + doom_code_segment;
-
-				P_AddThinker(&now->thinker);
-			}
-			break;
-			case STH_DOOM_FLOOR:
-			{
-				save_floor_t sav;
-				floormove_t *now;
-
-				if(map_format != MAP_FORMAT_DOOM)
-					return 1;
-
-				if(reader_get(&sav, sizeof(sav)))
-					return 1;
-
-				if(sav.sector >= numsectors)
-					return 1;
-
-				now = Z_Malloc(sizeof(floormove_t), PU_LEVELSPEC, NULL);
-
-				now->type = sav.type;
-				now->crush = sav.crush;
-				now->direction = sav.direction;
-				now->sector = sectors + sav.sector;
-				now->newspecial = sav.newspecial;
-				now->texture = texture_num_get((uint8_t*)&sav.texture);
-				now->floordestheight = sav.floordestheight;
-				now->speed = sav.speed;
-
-				now->sector->specialdata = now;
-				now->thinker.function = (void*)T_MoveFloor + doom_code_segment;
-
-				P_AddThinker(&now->thinker);
-			}
-			break;
-			case STH_DOOM_PLAT:
-			{
-				save_plat_t sav;
-				plat_t *now;
-
-				if(map_format != MAP_FORMAT_DOOM)
-					return 1;
-
-				if(reader_get(&sav, sizeof(sav)))
-					return 1;
-
-				if(sav.sector >= numsectors)
-					return 1;
-
-				now = Z_Malloc(sizeof(plat_t), PU_LEVELSPEC, NULL);
-
-				now->type = sav.type & 0x7F;
-				now->crush = sav.crush;
-				now->status = sav.status;
-				now->oldstatus = sav.oldstatus;
-				now->wait = sav.wait;
-				now->count = sav.count;
-				now->sector = sectors + sav.sector;
-				now->tag = sav.tag;
-				now->speed = sav.speed;
-				now->low = sav.low;
-				now->high = sav.high;
-
-				now->sector->specialdata = now;
-				now->thinker.function = (void*)T_PlatRaise + doom_code_segment;
-
-				P_AddThinker(&now->thinker);
-				P_AddActivePlat(now);
-
-				if(sav.type & 0x80) // sus!
-					now->thinker.function = NULL;
-			}
-			break;
-			case STH_DOOM_FLASH:
-			{
-				save_flash_t sav;
-				lightflash_t *now;
-
-				if(reader_get(&sav, sizeof(sav)))
-					return 1;
-
-				if(sav.sector >= numsectors)
-					return 1;
-
-				now = Z_Malloc(sizeof(lightflash_t), PU_LEVELSPEC, NULL);
-
-				now->sector = sectors + sav.sector;
-				now->maxlight = sav.maxlight;
-				now->minlight = sav.minlight;
-				now->count = sav.count;
-				now->maxtime = sav.maxtime;
-				now->mintime = sav.mintime;
-
-				now->thinker.function = (void*)T_LightFlash + doom_code_segment;
-
-				P_AddThinker(&now->thinker);
-			}
-			break;
-			case STH_DOOM_STROBE:
-			{
-				save_strobe_t sav;
-				strobe_t *now;
-
-				if(reader_get(&sav, sizeof(sav)))
-					return 1;
-
-				if(sav.sector >= numsectors)
-					return 1;
-
-				now = Z_Malloc(sizeof(strobe_t), PU_LEVELSPEC, NULL);
-
-				now->sector = sectors + sav.sector;
-				now->minlight = sav.minlight;
-				now->maxlight = sav.maxlight;
-				now->count = sav.count;
-				now->darktime = sav.darktime;
-				now->brighttime = sav.brighttime;
-
-				now->thinker.function = (void*)T_StrobeFlash + doom_code_segment;
-
-				P_AddThinker(&now->thinker);
-			}
-			break;
-			case STH_DOOM_GLOW:
-			{
-				save_glow_t sav;
-				glow_t *now;
-
-				if(reader_get(&sav, sizeof(sav)))
-					return 1;
-
-				if(sav.sector >= numsectors)
-					return 1;
-
-				now = Z_Malloc(sizeof(glow_t), PU_LEVELSPEC, NULL);
-
-				now->sector = sectors + sav.sector;
-				now->minlight = sav.minlight;
-				now->maxlight = sav.maxlight;
-				now->direction = sav.direction;
-
-				now->thinker.function = (void*)T_Glow + doom_code_segment;
-
-				P_AddThinker(&now->thinker);
-			}
-			break;
-			case STH_DOOM_FLICKER:
-			{
-				save_flicker_t sav;
-				fireflicker_t *now;
-
-				if(reader_get(&sav, sizeof(sav)))
-					return 1;
-
-				if(sav.sector >= numsectors)
-					return 1;
-
-				now = Z_Malloc(sizeof(fireflicker_t), PU_LEVELSPEC, NULL);
-
-				now->sector = sectors + sav.sector;
-				now->maxlight = sav.maxlight;
-				now->minlight = sav.minlight;
-				now->count = sav.count;
-
-				now->thinker.function = (void*)T_FireFlicker + doom_code_segment;
-
-				P_AddThinker(&now->thinker);
-			}
-			break;
-			default:
-				// unknown!
+		case STH_BUTTON_FRONT_TOP:
+		case STH_BUTTON_FRONT_BOT:
+		case STH_BUTTON_FRONT_MID:
+		case STH_BUTTON_BACK_TOP:
+		case STH_BUTTON_BACK_BOT:
+		case STH_BUTTON_BACK_MID:
+		{
+			save_switch_t sw;
+			switch_t* slot;
+
+			if (reader_get(&sw, sizeof(sw)))
 				return 1;
+
+			if (sw.line >= numlines)
+				return 1;
+
+			type -= STH__BUTTON;
+			slot =
+			    anim_switch_make(type, lines + sw.line, sw.texture);
+			if (!slot)
+				break;
+
+			slot->base = sw.base;
+			slot->animate = sw.animate;
+			slot->delay = sw.delay;
+		}
+		break;
+		// new thinkers
+		case STH_ACE_LINE_SCROLL:
+		{
+			save_line_scroll_t sav;
+			line_scroll_t* now;
+
+			if (reader_get(&sav, sizeof(sav)))
+				return 1;
+
+			if (sav.line >= numlines)
+				return 1;
+
+			now =
+			    Z_Malloc(sizeof(line_scroll_t), PU_LEVELSPEC, NULL);
+
+			now->line = lines + sav.line;
+			now->x = sav.x;
+			now->y = sav.y;
+
+			now->thinker.function = think_line_scroll;
+
+			think_add(&now->thinker);
+		}
+		break;
+		case STH_ACE_CEILING:
+		case STH_ACE_FLOOR:
+		{
+			save_generic_mover_t sav;
+			generic_mover_t* gm;
+			sector_t* sec;
+
+			if (reader_get(&sav, sizeof(sav)))
+				return 1;
+
+			if (sav.sector >= numsectors)
+				return 1;
+
+			if (sav.direction > 1)
+				return 1;
+
+			sec = sectors + sav.sector;
+
+			if (type == STH_ACE_CEILING)
+				gm = generic_ceiling(sec, sav.direction,
+				                     sav.sndseq & 3,
+				                     sav.sndseq & 128);
+			else if (type == STH_ACE_FLOOR)
+				gm = generic_floor(sec, sav.direction,
+				                   sav.sndseq & 3,
+				                   sav.sndseq & 128);
+
+			if (!gm)
+				return 1;
+
+			if (sav.flags & MVF_SET_TEXTURE)
+				gm->texture =
+				    flat_num_get((uint8_t*)&sav.texture);
+
+			gm->type = sav.type;
+			gm->direction = sav.direction;
+			gm->top_height = sav.top_height;
+			gm->bot_height = sav.bot_height;
+			gm->speed_now = sav.speed_now;
+			gm->speed_up = sav.speed_up;
+			gm->speed_dn = sav.speed_dn;
+			gm->flags = sav.flags;
+			gm->sndwait = sav.sndwait;
+			gm->wait = sav.wait;
+			gm->delay = sav.delay;
+			gm->crush = sav.crush;
+			gm->lighttag = sav.lighttag;
+			gm->special = sav.special;
+		}
+		break;
+		case STH_ACE_LIGHT:
+		{
+			save_generic_light_t sav;
+			generic_light_t* gl;
+			sector_t* sec;
+
+			if (reader_get(&sav, sizeof(sav)))
+				return 1;
+
+			if (sav.sector >= numsectors)
+				return 1;
+
+			if (sav.direction > 1)
+				return 1;
+
+			sec = sectors + sav.sector;
+
+			gl = generic_light(sec);
+			if (!gl)
+				return 1;
+
+			gl->speed = sav.speed;
+			gl->level = sav.level;
+			gl->top = sav.top;
+			gl->bot = sav.bot;
+			gl->wait = sav.wait;
+			gl->delay_top = sav.delay_top;
+			gl->delay_bot = sav.delay_bot;
+			gl->flags = sav.flags;
+			gl->direction = sav.direction;
+		}
+		break;
+		case STH_ACE_POLY_MOV:
+		{
+			save_poly_move_t sav;
+			poly_move_t* pm;
+			polyobj_t* poly;
+
+			if (reader_get(&sav, sizeof(sav)))
+				return 1;
+
+			poly = poly_find(sav.id, 0);
+			if (!poly)
+				return 1;
+
+			if (sav.dir > 1)
+				return 1;
+
+			pm = poly_mover(poly);
+			if (!pm)
+				return 1;
+
+			pm->spd_x = sav.spd_x;
+			pm->spd_y = sav.spd_y;
+			pm->dst_x = sav.dst_x;
+			pm->dst_y = sav.dst_y;
+			pm->org_x = sav.org_x;
+			pm->org_y = sav.org_y;
+			pm->thrust = sav.thrust;
+			pm->dir = sav.dir;
+			pm->wait = sav.wait;
+			pm->delay = sav.delay;
+			pm->sndwait = sav.sndwait;
+		}
+		break;
+		case STH_ACE_POLY_ROT:
+		{
+			save_poly_rotate_t sav;
+			poly_rotate_t* pr;
+			polyobj_t* poly;
+
+			if (reader_get(&sav, sizeof(sav)))
+				return 1;
+
+			poly = poly_find(sav.id, 0);
+			if (!poly)
+				return 1;
+
+			if (sav.dir > 1)
+				return 1;
+
+			pr = poly_rotater(poly);
+			if (!pr)
+				return 1;
+
+			pr->now = sav.now;
+			pr->dst = sav.dst;
+			pr->spd = sav.spd;
+			pr->org = sav.org;
+			pr->thrust = sav.thrust;
+			pr->dir = sav.dir;
+			pr->poly->id = sav.id;
+			pr->wait = sav.wait;
+			pr->delay = sav.delay;
+			pr->sndwait = sav.sndwait;
+		}
+		break;
+		// old thinkers
+		case STH_DOOM_CEILING:
+		{
+			save_ceiling_t sav;
+			ceiling_t* now;
+
+			if (map_format != MAP_FORMAT_DOOM)
+				return 1;
+
+			if (reader_get(&sav, sizeof(sav)))
+				return 1;
+
+			if (sav.sector >= numsectors)
+				return 1;
+
+			now = Z_Malloc(sizeof(ceiling_t), PU_LEVELSPEC, NULL);
+
+			now->type = sav.type & 0x7F;
+			now->crush = sav.crush;
+			now->sector = sectors + sav.sector;
+			now->bottomheight = sav.bottomheight;
+			now->topheight = sav.topheight;
+			now->speed = sav.speed;
+			now->direction = sav.direction;
+			now->olddirection = sav.olddirection;
+			now->tag = sav.tag;
+
+			now->sector->specialdata = now;
+			now->thinker.function =
+			    (void*)T_MoveCeiling + doom_code_segment;
+
+			P_AddThinker(&now->thinker);
+			P_AddActiveCeiling(now);
+
+			if (sav.type & 0x80) // sus!
+				now->thinker.function = NULL;
+		}
+		break;
+		case STH_DOOM_DOOR:
+		{
+			save_door_t sav;
+			vldoor_t* now;
+
+			if (map_format != MAP_FORMAT_DOOM)
+				return 1;
+
+			if (reader_get(&sav, sizeof(sav)))
+				return 1;
+
+			if (sav.sector >= numsectors)
+				return 1;
+
+			now = Z_Malloc(sizeof(vldoor_t), PU_LEVELSPEC, NULL);
+
+			now->type = sav.type;
+			now->direction = sav.direction;
+			now->sector = sectors + sav.sector;
+			now->topheight = sav.topheight;
+			now->speed = sav.speed;
+			now->topwait = sav.topwait;
+			now->topcountdown = sav.topcountdown;
+
+			now->sector->specialdata = now;
+			now->thinker.function =
+			    (void*)T_VerticalDoor + doom_code_segment;
+
+			P_AddThinker(&now->thinker);
+		}
+		break;
+		case STH_DOOM_FLOOR:
+		{
+			save_floor_t sav;
+			floormove_t* now;
+
+			if (map_format != MAP_FORMAT_DOOM)
+				return 1;
+
+			if (reader_get(&sav, sizeof(sav)))
+				return 1;
+
+			if (sav.sector >= numsectors)
+				return 1;
+
+			now = Z_Malloc(sizeof(floormove_t), PU_LEVELSPEC, NULL);
+
+			now->type = sav.type;
+			now->crush = sav.crush;
+			now->direction = sav.direction;
+			now->sector = sectors + sav.sector;
+			now->newspecial = sav.newspecial;
+			now->texture = texture_num_get((uint8_t*)&sav.texture);
+			now->floordestheight = sav.floordestheight;
+			now->speed = sav.speed;
+
+			now->sector->specialdata = now;
+			now->thinker.function =
+			    (void*)T_MoveFloor + doom_code_segment;
+
+			P_AddThinker(&now->thinker);
+		}
+		break;
+		case STH_DOOM_PLAT:
+		{
+			save_plat_t sav;
+			plat_t* now;
+
+			if (map_format != MAP_FORMAT_DOOM)
+				return 1;
+
+			if (reader_get(&sav, sizeof(sav)))
+				return 1;
+
+			if (sav.sector >= numsectors)
+				return 1;
+
+			now = Z_Malloc(sizeof(plat_t), PU_LEVELSPEC, NULL);
+
+			now->type = sav.type & 0x7F;
+			now->crush = sav.crush;
+			now->status = sav.status;
+			now->oldstatus = sav.oldstatus;
+			now->wait = sav.wait;
+			now->count = sav.count;
+			now->sector = sectors + sav.sector;
+			now->tag = sav.tag;
+			now->speed = sav.speed;
+			now->low = sav.low;
+			now->high = sav.high;
+
+			now->sector->specialdata = now;
+			now->thinker.function =
+			    (void*)T_PlatRaise + doom_code_segment;
+
+			P_AddThinker(&now->thinker);
+			P_AddActivePlat(now);
+
+			if (sav.type & 0x80) // sus!
+				now->thinker.function = NULL;
+		}
+		break;
+		case STH_DOOM_FLASH:
+		{
+			save_flash_t sav;
+			lightflash_t* now;
+
+			if (reader_get(&sav, sizeof(sav)))
+				return 1;
+
+			if (sav.sector >= numsectors)
+				return 1;
+
+			now =
+			    Z_Malloc(sizeof(lightflash_t), PU_LEVELSPEC, NULL);
+
+			now->sector = sectors + sav.sector;
+			now->maxlight = sav.maxlight;
+			now->minlight = sav.minlight;
+			now->count = sav.count;
+			now->maxtime = sav.maxtime;
+			now->mintime = sav.mintime;
+
+			now->thinker.function =
+			    (void*)T_LightFlash + doom_code_segment;
+
+			P_AddThinker(&now->thinker);
+		}
+		break;
+		case STH_DOOM_STROBE:
+		{
+			save_strobe_t sav;
+			strobe_t* now;
+
+			if (reader_get(&sav, sizeof(sav)))
+				return 1;
+
+			if (sav.sector >= numsectors)
+				return 1;
+
+			now = Z_Malloc(sizeof(strobe_t), PU_LEVELSPEC, NULL);
+
+			now->sector = sectors + sav.sector;
+			now->minlight = sav.minlight;
+			now->maxlight = sav.maxlight;
+			now->count = sav.count;
+			now->darktime = sav.darktime;
+			now->brighttime = sav.brighttime;
+
+			now->thinker.function =
+			    (void*)T_StrobeFlash + doom_code_segment;
+
+			P_AddThinker(&now->thinker);
+		}
+		break;
+		case STH_DOOM_GLOW:
+		{
+			save_glow_t sav;
+			glow_t* now;
+
+			if (reader_get(&sav, sizeof(sav)))
+				return 1;
+
+			if (sav.sector >= numsectors)
+				return 1;
+
+			now = Z_Malloc(sizeof(glow_t), PU_LEVELSPEC, NULL);
+
+			now->sector = sectors + sav.sector;
+			now->minlight = sav.minlight;
+			now->maxlight = sav.maxlight;
+			now->direction = sav.direction;
+
+			now->thinker.function =
+			    (void*)T_Glow + doom_code_segment;
+
+			P_AddThinker(&now->thinker);
+		}
+		break;
+		case STH_DOOM_FLICKER:
+		{
+			save_flicker_t sav;
+			fireflicker_t* now;
+
+			if (reader_get(&sav, sizeof(sav)))
+				return 1;
+
+			if (sav.sector >= numsectors)
+				return 1;
+
+			now =
+			    Z_Malloc(sizeof(fireflicker_t), PU_LEVELSPEC, NULL);
+
+			now->sector = sectors + sav.sector;
+			now->maxlight = sav.maxlight;
+			now->minlight = sav.minlight;
+			now->count = sav.count;
+
+			now->thinker.function =
+			    (void*)T_FireFlicker + doom_code_segment;
+
+			P_AddThinker(&now->thinker);
+		}
+		break;
+		default:
+			// unknown!
+			return 1;
 		}
 	}
 
@@ -2444,7 +2490,7 @@ static inline uint32_t ld_get_specials()
 	return reader_get_u32(&version) || version != SAVE_VERSION;
 }
 
-static uint32_t ldcb_thing(mobj_t *mo)
+static uint32_t ldcb_thing(mobj_t* mo)
 {
 	mo->target = mobj_by_netid((uint32_t)mo->target);
 	mo->tracer = mobj_by_netid((uint32_t)mo->tracer);
@@ -2456,75 +2502,78 @@ static inline uint32_t ld_get_things(uint32_t hub_data)
 	save_thing_t thing;
 	uint64_t alias;
 	int32_t type, sprite;
-	mobj_t *mo;
-	uint8_t *translation;
+	mobj_t* mo;
+	uint8_t* translation;
 
-	while(1)
+	while (1)
 	{
-		if(reader_get_wame(&alias))
+		if (reader_get_wame(&alias))
 			return 1;
 
-		if(!alias)
+		if (!alias)
 			break;
 
 		type = mobj_check_type(alias);
-		if(type < 0)
+		if (type < 0)
 			return 1;
 
 		reader_get(&thing, sizeof(thing));
 
-		for(sprite = 0; sprite < numsprites; sprite++)
-			if(sprite_table[sprite] == thing.sprite)
+		for (sprite = 0; sprite < numsprites; sprite++)
+			if (sprite_table[sprite] == thing.sprite)
 				break;
 
-		if(sprite >= numsprites)
+		if (sprite >= numsprites)
 			return 1;
 
-//		if(thing.sprite != 0x31544E54 && (thing.frame & 0x1F) >= sprites[sprite].numframes)
-//			return 1; // this causes 'invalid save' on sprites with missing frames
+		//		if(thing.sprite != 0x31544E54 && (thing.frame &
+		// 0x1F) >= sprites[sprite].numframes) 			return
+		// 1;
+		// // this causes 'invalid save' on sprites with missing frames
 
-		if(thing.netid > mobj_netid)
+		if (thing.netid > mobj_netid)
 			mobj_netid = thing.netid;
 
-		if(hub_data && thing.player)
+		if (hub_data && thing.player)
 		{
-			player_t *pl;
+			player_t* pl;
 
 			// skip the thing
 			thing.player--;
 			pl = players + thing.player;
-			if(pl->mo)
+			if (pl->mo)
 				pl->mo->netid = thing.netid;
 
 			// skip inventory
-			while(1)
+			while (1)
 			{
 				uint16_t count;
-				if(reader_get_wame(&alias))
+				if (reader_get_wame(&alias))
 					return 1;
-				if(!alias)
+				if (!alias)
 					break;
-				if(reader_get_u16(&count))
+				if (reader_get_u16(&count))
 					return 1;
 			}
 
 			continue;
 		}
 
-		if(thing.translation & 0x8000)
+		if (thing.translation & 0x8000)
 		{
 			uint16_t tmp = thing.translation & 0x7FFF;
-			if(tmp >= translation_count)
+			if (tmp >= translation_count)
 				return 1;
 			translation = render_translation + tmp * 256;
-		} else
-		if(thing.translation & 0x4000)
+		}
+		else if (thing.translation & 0x4000)
 		{
 			uint16_t tmp = thing.translation & 0x3FFF;
-			if(tmp >= blood_color_count)
+			if (tmp >= blood_color_count)
 				return 1;
 			translation = blood_translation + tmp * 256;
-		} else
+		}
+		else
 			translation = NULL;
 
 		mo = P_SpawnMobj(thing.x, thing.y, thing.z, type);
@@ -2552,7 +2601,7 @@ static inline uint32_t ld_get_things(uint32_t hub_data)
 		mo->threshold = thing.threshold;
 		mo->lastlook = thing.lastlook;
 
-		if(thing.state >= num_states)
+		if (thing.state >= num_states)
 			return 1;
 
 		mo->state = states + thing.state;
@@ -2586,36 +2635,40 @@ static inline uint32_t ld_get_things(uint32_t hub_data)
 
 		P_SetThingPosition(mo);
 
-		if(thing.damage_type >= NUM_DAMAGE_TYPES)
+		if (thing.damage_type >= NUM_DAMAGE_TYPES)
 			return 1;
 
-		if(thing.player)
+		if (thing.player)
 		{
 			thing.player--;
-			if(thing.player < MAXPLAYERS)
+			if (thing.player < MAXPLAYERS)
 			{
 				mo->player = players + thing.player;
-				mo->player->backpack = 1; // fake backpack for 'inventory_give'; will be overwritten later
-			} else
+				mo->player->backpack =
+				    1; // fake backpack for 'inventory_give';
+				       // will be overwritten later
+			}
+			else
 				mo->player = NULL;
-		} else
+		}
+		else
 			mo->player = NULL;
 
 		// inventory
-		while(1)
+		while (1)
 		{
 			uint16_t count;
 
-			if(reader_get_wame(&alias))
+			if (reader_get_wame(&alias))
 				return 1;
-			if(!alias)
+			if (!alias)
 				break;
 
 			type = ld_get_inventory(alias);
-			if(type < 0)
+			if (type < 0)
 				return 1;
 
-			if(reader_get_u16(&count))
+			if (reader_get_u16(&count))
 				return 1;
 
 			inventory_give(mo, type, count);
@@ -2626,12 +2679,14 @@ static inline uint32_t ld_get_things(uint32_t hub_data)
 	mobj_for_each(ldcb_thing);
 
 	// relocate soundtargets
-	for(uint32_t i = 0; i < numsectors; i++)
+	for (uint32_t i = 0; i < numsectors; i++)
 	{
-		sector_t *sec = sectors + i;
+		sector_t* sec = sectors + i;
 		sec->soundtarget = mobj_by_netid((uint32_t)sec->soundtarget);
-		sec->extra->action.enter = mobj_by_netid((uint32_t)sec->extra->action.enter);
-		sec->extra->action.leave = mobj_by_netid((uint32_t)sec->extra->action.leave);
+		sec->extra->action.enter =
+		    mobj_by_netid((uint32_t)sec->extra->action.enter);
+		sec->extra->action.leave =
+		    mobj_by_netid((uint32_t)sec->extra->action.leave);
 	}
 
 	// version check
@@ -2642,44 +2697,44 @@ static inline uint32_t ld_get_players(uint32_t hub_data)
 {
 	save_player_t plr;
 
-	if(!hub_data)
+	if (!hub_data)
 	{
-		for(uint32_t i = 0; i < MAXPLAYERS; i++)
+		for (uint32_t i = 0; i < MAXPLAYERS; i++)
 			playeringame[i] = 0;
 	}
 
-	while(1)
+	while (1)
 	{
 		uint16_t idx;
-		player_t *pl;
+		player_t* pl;
 
-		if(reader_get_u16(&idx))
+		if (reader_get_u16(&idx))
 			return 1;
-		if(!idx)
+		if (!idx)
 			break;
 
 		idx--;
-		if(idx >= MAXPLAYERS)
+		if (idx >= MAXPLAYERS)
 			return 1;
 		pl = players + idx;
 
-		if(reader_get(&plr, sizeof(plr)))
+		if (reader_get(&plr, sizeof(plr)))
 			return 1;
 
-		if(hub_data)
+		if (hub_data)
 			continue;
 
 		memset(pl, 0, sizeof(player_t));
 
-		if(plr.state >= PST_REBORN)
+		if (plr.state >= PST_REBORN)
 			return 1;
 
 		pl->mo = mobj_by_netid(plr.mobj);
-		if(!pl->mo)
+		if (!pl->mo)
 			return 1;
 
 		pl->camera = mobj_by_netid(plr.camj);
-		if(!pl->mo)
+		if (!pl->mo)
 			return 1;
 
 		playeringame[idx] = 1;
@@ -2688,10 +2743,10 @@ static inline uint32_t ld_get_players(uint32_t hub_data)
 		pl->viewheight = plr.viewheight;
 		pl->deltaviewheight = plr.deltaviewheight;
 
-		for(uint32_t i = 0; i < NUMPOWERS; i++)
+		for (uint32_t i = 0; i < NUMPOWERS; i++)
 		{
 			pl->powers[i] = plr.powers[i];
-			if(plr.power_mobj[i] >= num_mobj_types)
+			if (plr.power_mobj[i] >= num_mobj_types)
 				return 1;
 			pl->power_mobj[i] = plr.power_mobj[i];
 		}
@@ -2718,15 +2773,17 @@ static inline uint32_t ld_get_players(uint32_t hub_data)
 		pl->psprites[1].sx = plr.pspx;
 		pl->psprites[1].sy = plr.pspy;
 
-		for(uint32_t i = 0; i < NUMPSPRITES; i++)
+		for (uint32_t i = 0; i < NUMPSPRITES; i++)
 		{
-			if(plr.pspr[i].state >= num_states)
+			if (plr.pspr[i].state >= num_states)
 				return 1;
-			if(plr.pspr[i].state)
+			if (plr.pspr[i].state)
 			{
-				pl->psprites[i].state = states + plr.pspr[i].state;
+				pl->psprites[i].state =
+				    states + plr.pspr[i].state;
 				pl->psprites[i].tics = plr.pspr[i].tics;
-			} else
+			}
+			else
 			{
 				pl->psprites[i].state = NULL;
 				pl->psprites[i].tics = -1;
@@ -2740,26 +2797,27 @@ static inline uint32_t ld_get_players(uint32_t hub_data)
 		pl->state = plr.state;
 		pl->didsecret = plr.didsecret;
 
-		if(plr.playerclass >= num_player_classes)
+		if (plr.playerclass >= num_player_classes)
 			return 1;
 
 		player_info[idx].playerclass = plr.playerclass;
 
-		if(plr.inv_sel)
+		if (plr.inv_sel)
 		{
 			int32_t type;
-			invitem_t *item;
+			invitem_t* item;
 
 			type = ld_get_inventory(plr.inv_sel);
-			if(type < 0)
+			if (type < 0)
 				return 1;
 
 			item = inventory_find(pl->mo, type);
-			if(!item)
+			if (!item)
 				return 1;
 
 			pl->inv_sel = item - pl->mo->inventory->slot;
-		} else
+		}
+		else
 			pl->inv_sel = -1;
 
 		pl->prop = plr.prop;
@@ -2777,17 +2835,17 @@ static inline uint32_t ld_get_mapped_lines()
 {
 	uint32_t flags;
 
-	for(uint32_t i = 0; i < numlines; i++)
+	for (uint32_t i = 0; i < numlines; i++)
 	{
 		uint32_t bit = 1 << (i & 31);
 
-		if(bit == 1)
+		if (bit == 1)
 		{
-			if(reader_get_u32(&flags))
+			if (reader_get_u32(&flags))
 				return 1;
 		}
 
-		if(flags & bit)
+		if (flags & bit)
 			lines[i].flags |= ML_MAPPED;
 	}
 
@@ -2799,24 +2857,24 @@ static inline uint32_t ld_get_sector_light()
 	uint32_t check;
 	uint16_t count;
 
-	if(reader_get_u16(&count))
+	if (reader_get_u16(&count))
 		return 1;
 
 	sector_light_count = count + 1;
-	if(sector_light_count >= MAX_SECTOR_COLORS)
+	if (sector_light_count >= MAX_SECTOR_COLORS)
 		return 1;
 
-	for(uint32_t i = 1; i < sector_light_count; i++)
+	for (uint32_t i = 1; i < sector_light_count; i++)
 	{
-		sector_light_t *cl = sector_light + i;
+		sector_light_t* cl = sector_light + i;
 
-		if(reader_get_u32(&check))
+		if (reader_get_u32(&check))
 			return 1;
 
 		cl->color = check;
 		cl->fade = check >> 16;
 
-		if(cl->fade & 0xF000)
+		if (cl->fade & 0xF000)
 			return 1;
 	}
 
@@ -2825,56 +2883,56 @@ static inline uint32_t ld_get_sector_light()
 
 static uint32_t do_read_level(uint32_t hub_data)
 {
-	player_t *pl;
+	player_t* pl;
 
 	mobj_netid = 0;
 
 	// sectors
-	if(ld_get_sectors())
+	if (ld_get_sectors())
 		return 1;
 
 	// sidedefs
-	if(ld_get_sidedefs())
+	if (ld_get_sidedefs())
 		return 1;
 
 	// linedefs
-	if(ld_get_linedefs())
+	if (ld_get_linedefs())
 		return 1;
 
 	// polyobjects
-	if(ld_get_polyobj())
+	if (ld_get_polyobj())
 		return 1;
 
 	// specials
-	if(ld_get_specials())
+	if (ld_get_specials())
 		return 1;
 
 	// things
-	if(ld_get_things(hub_data))
+	if (ld_get_things(hub_data))
 		return 1;
 
 	// players
-	if(ld_get_players(hub_data))
+	if (ld_get_players(hub_data))
 		return 1;
 
-	if(ld_get_mapped_lines())
+	if (ld_get_mapped_lines())
 		return 1;
 
-	if(ld_get_sector_light())
+	if (ld_get_sector_light())
 		return 1;
 
-	if(!playeringame[consoleplayer])
+	if (!playeringame[consoleplayer])
 		return 1;
 
-	if(!players[consoleplayer].mo)
+	if (!players[consoleplayer].mo)
 		return 1;
 
 	pl = players + consoleplayer;
-	if(pl->mo->info->extra_type != ETYPE_PLAYERPAWN)
+	if (pl->mo->info->extra_type != ETYPE_PLAYERPAWN)
 		return 1;
 
 	// colored light
-	if(render_setup_light_color(1))
+	if (render_setup_light_color(1))
 		return 1;
 
 	// count brain targets; hack + silence
@@ -2894,7 +2952,7 @@ void load_auto()
 	save_level_t info;
 
 	// check
-	if(autosave_type)
+	if (autosave_type)
 	{
 		saveslot = -1;
 		do_load();
@@ -2903,18 +2961,18 @@ void load_auto()
 
 	// name
 	doom_sprintf(name, SAVE_DIR "\\auto.asv");
-	if(doom_access(name, 4) < 0)
+	if (doom_access(name, 4) < 0)
 		return;
 
 	// open file
 	reader_open(name);
 
 	// info
-	if(reader_get(&info, sizeof(info)))
+	if (reader_get(&info, sizeof(info)))
 		goto error_fail;
-	if(info.magic != SAVE_MAGIC)
+	if (info.magic != SAVE_MAGIC)
 		goto error_fail;
-	if(info.version != SAVE_VERSION)
+	if (info.version != SAVE_VERSION)
 		goto error_fail;
 
 	map_start_id = info.playerstart;
@@ -2922,9 +2980,9 @@ void load_auto()
 	map_skip_stuff = 1;
 
 	// invalidate player links
-	for(uint32_t i = 0; i < MAXPLAYERS; i++)
+	for (uint32_t i = 0; i < MAXPLAYERS; i++)
 	{
-		if(playeringame[i] && players[i].mo)
+		if (playeringame[i] && players[i].mo)
 		{
 			players[i].mo->player = NULL;
 			players[i].mo = NULL;
@@ -2932,7 +2990,7 @@ void load_auto()
 	}
 
 	// load map
-	if(map_load_setup(0))
+	if (map_load_setup(0))
 	{
 		reader_close();
 		return;
@@ -2941,7 +2999,7 @@ void load_auto()
 	leveltime = info.leveltime;
 	respawnmonsters = gameskill == sk_nightmare || respawnparm;
 
-	if(do_read_level(0))
+	if (do_read_level(0))
 		goto error_fail;
 
 	totalkills = info.kills;
@@ -2969,18 +3027,18 @@ uint32_t load_hub_level()
 
 	// name
 	doom_sprintf(name, SAVE_DIR "\\%.8s.asv", map_lump.name);
-	if(doom_access(name, 4) < 0)
+	if (doom_access(name, 4) < 0)
 		return 1;
 
 	// open file
 	reader_open(name);
 
 	// info
-	if(reader_get(&info, sizeof(info)))
+	if (reader_get(&info, sizeof(info)))
 		goto error_fail;
-	if(info.magic != SAVE_MAGIC)
+	if (info.magic != SAVE_MAGIC)
 		goto error_fail;
-	if(info.version != SAVE_VERSION)
+	if (info.version != SAVE_VERSION)
 		goto error_fail;
 
 	// don't use map_start_id
@@ -2988,9 +3046,9 @@ uint32_t load_hub_level()
 	map_skip_stuff = 2;
 
 	// invalidate player links
-	for(uint32_t i = 0; i < MAXPLAYERS; i++)
+	for (uint32_t i = 0; i < MAXPLAYERS; i++)
 	{
-		if(playeringame[i] && players[i].mo)
+		if (playeringame[i] && players[i].mo)
 		{
 			players[i].mo->player = NULL;
 			players[i].mo = NULL;
@@ -2998,7 +3056,7 @@ uint32_t load_hub_level()
 	}
 
 	// load map
-	if(map_load_setup(0))
+	if (map_load_setup(0))
 	{
 		reader_close();
 		return 0;
@@ -3007,7 +3065,7 @@ uint32_t load_hub_level()
 	leveltime = info.leveltime;
 	respawnmonsters = gameskill == sk_nightmare || respawnparm;
 
-	if(do_read_level(1))
+	if (do_read_level(1))
 		goto error_fail;
 
 	totalkills = info.kills;
@@ -3033,15 +3091,14 @@ error_fail:
 	return 0;
 }
 
-static __attribute((regparm(2),no_caller_saved_registers))
-void do_load()
+static __attribute((regparm(2), no_caller_saved_registers)) void do_load()
 {
 	bmp_head_t head;
 	save_info_t info;
-	map_cluster_t *cluster;
+	map_cluster_t* cluster;
 
 	// prepare save slot
-	if(saveslot >= 0)
+	if (saveslot >= 0)
 		generate_save_name(saveslot);
 	gameaction = ga_nothing;
 
@@ -3049,19 +3106,19 @@ void do_load()
 	reader_open(savename);
 
 	// skip bitmap stuff
-	if(reader_get(&head, sizeof(head)))
+	if (reader_get(&head, sizeof(head)))
 		goto error_fail;
-	if(reader_seek(head.filesize))
+	if (reader_seek(head.filesize))
 		goto error_fail;
 
 	// game info
-	if(reader_get(&info, sizeof(info)))
+	if (reader_get(&info, sizeof(info)))
 		goto error_fail;
-	if(info.version != SAVE_VERSION)
+	if (info.version != SAVE_VERSION)
 		goto error_fail;
-	if(!dev_mode && info.mod_csum != dec_mod_csum)
+	if (!dev_mode && info.mod_csum != dec_mod_csum)
 		goto error_fail;
-	if(info.rng >= rng_max)
+	if (info.rng >= rng_max)
 		goto error_fail;
 
 	// load map
@@ -3076,23 +3133,23 @@ void do_load()
 
 	map_lump.wame = info.map_wame;
 
-	if(gameskill > sk_nightmare)
+	if (gameskill > sk_nightmare)
 		goto error_fail;
 
-//	netgame = 0; // TODO: net saves?
+	//	netgame = 0; // TODO: net saves?
 	netdemo = 0;
 
 	// invalidate player links
-	for(uint32_t i = 0; i < MAXPLAYERS; i++)
+	for (uint32_t i = 0; i < MAXPLAYERS; i++)
 	{
-		if(playeringame[i] && players[i].mo)
+		if (playeringame[i] && players[i].mo)
 		{
 			players[i].mo->player = NULL;
 			players[i].mo = NULL;
 		}
 	}
 
-	if(map_load_setup(saveslot >= 0))
+	if (map_load_setup(saveslot >= 0))
 	{
 		reader_close();
 		return;
@@ -3101,48 +3158,49 @@ void do_load()
 	leveltime = info.leveltime;
 	respawnmonsters = gameskill == sk_nightmare || respawnparm;
 
-	if(do_read_level(0))
+	if (do_read_level(0))
 		goto error_fail;
 
 	// HUB levels
-	if(saveslot >= 0)
+	if (saveslot >= 0)
 	{
 		uint32_t value;
 
-		while(1)
+		while (1)
 		{
 			uint8_t buff[512];
 			uint32_t size;
 			uint64_t wame;
 			int32_t fd;
 
-			if(reader_get_u32(&size))
+			if (reader_get_u32(&size))
 				goto error_fail;
 
-			if(!size || size > 64 * 1024 * 1024)
+			if (!size || size > 64 * 1024 * 1024)
 				break;
 
-			if(reader_get_wame(&wame))
+			if (reader_get_wame(&wame))
 				goto error_fail;
 
 			doom_sprintf(buff, SAVE_DIR "\\%.8s.asv", &wame);
 			fd = doom_open_WR(buff);
-			if(fd < 0)
+			if (fd < 0)
 				goto error_fail;
 
-			while(size)
+			while (size)
 			{
-				uint32_t len = size > sizeof(buff) ? sizeof(buff) : size;
+				uint32_t len =
+				    size > sizeof(buff) ? sizeof(buff) : size;
 				uint32_t ret;
 
-				if(reader_get(buff, len))
+				if (reader_get(buff, len))
 				{
 					doom_close(fd);
 					goto error_fail;
 				}
 
 				ret = doom_write(fd, buff, len);
-				if(ret != len)
+				if (ret != len)
 				{
 					doom_close(fd);
 					goto error_fail;
@@ -3154,10 +3212,10 @@ void do_load()
 			doom_close(fd);
 		}
 
-		if(reader_get_u32(&value))
+		if (reader_get_u32(&value))
 			goto error_fail;
 
-		if(value != SAVE_VERSION)
+		if (value != SAVE_VERSION)
 			goto error_fail;
 	}
 
@@ -3185,14 +3243,14 @@ error_fail:
 //
 // hooks
 
-static __attribute((regparm(2),no_caller_saved_registers))
-void setup_save_slots()
+static __attribute((regparm(2), no_caller_saved_registers)) void
+setup_save_slots()
 {
 	int fd;
 
 	show_save_slot = -1;
 
-	for(uint32_t i = 0; i < SAVE_SLOT_COUNT; i++)
+	for (uint32_t i = 0; i < SAVE_SLOT_COUNT; i++)
 	{
 		// prepare empty or broken
 		strcpy(save_name[i].text, empty_slot);
@@ -3203,7 +3261,7 @@ void setup_save_slots()
 		// try to read
 		generate_save_name(i);
 		fd = doom_open_RD(savename);
-		if(fd >= 0)
+		if (fd >= 0)
 		{
 			prepare_save_slot(fd, i);
 			doom_close(fd);
@@ -3211,8 +3269,8 @@ void setup_save_slots()
 	}
 }
 
-static __attribute((regparm(2),no_caller_saved_registers))
-void select_load(uint32_t slot)
+static __attribute((regparm(2), no_caller_saved_registers)) void
+select_load(uint32_t slot)
 {
 	saveslot = slot;
 	gameaction = ga_loadgame;
@@ -3222,16 +3280,13 @@ void select_load(uint32_t slot)
 //
 // init
 
-void init_saveload()
-{
-	doom_mkdir(SAVE_DIR);
-}
+void init_saveload() { doom_mkdir(SAVE_DIR); }
 
 //
 // hooks
 
-static const hook_t hooks[] __attribute__((used,section(".hooks"),aligned(4))) =
-{
+static const hook_t hooks[]
+    __attribute__((used, section(".hooks"), aligned(4))) = {
 	// replace call to 'G_DoLoadGame' in 'G_Ticker'
 	{0x00020515, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)do_load},
 	// replace call to 'G_DoSaveGame' in 'G_Ticker'
@@ -3243,14 +3298,15 @@ static const hook_t hooks[] __attribute__((used,section(".hooks"),aligned(4))) =
 	// change text in 'M_SaveSelect'
 	{0x00022196, CODE_HOOK | HOOK_UINT32, (uint32_t)empty_slot},
 	// replace 'M_DrawLoad' in menu structure
-	{0x00012510 + offsetof(menu_t, draw), DATA_HOOK | HOOK_UINT32, (uint32_t)&draw_load_menu},
+	{0x00012510 + offsetof(menu_t, draw), DATA_HOOK | HOOK_UINT32,
+         (uint32_t)&draw_load_menu},
 	{0x00012510 + offsetof(menu_t, x), DATA_HOOK | HOOK_UINT16, -1},
 	// replace 'M_DrawSave' in menu structure
-	{0x0001258C + offsetof(menu_t, draw), DATA_HOOK | HOOK_UINT32, (uint32_t)&draw_save_menu},
+	{0x0001258C + offsetof(menu_t, draw), DATA_HOOK | HOOK_UINT32,
+         (uint32_t)&draw_save_menu},
 	{0x0001258C + offsetof(menu_t, x), DATA_HOOK | HOOK_UINT16, -1},
 	// brain targets hack
 	{0x00028AFC, CODE_HOOK | HOOK_IMPORT, (uint32_t)&brain_sound_id},
 	// import variables
 	{0x0002B568, DATA_HOOK | HOOK_IMPORT, (uint32_t)&save_name},
 };
-

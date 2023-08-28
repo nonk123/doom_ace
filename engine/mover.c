@@ -10,25 +10,25 @@
 //
 // API
 
-void mover_tick(mobj_t *mo)
+void mover_tick(mobj_t* mo)
 {
 	uint32_t next_tid;
-	mobj_t *th;
+	mobj_t* th;
 	fixed_t xx, yy, zz;
 	angle_t aa, pp;
 
-	if(mo->iflags & MFI_FOLLOW_INIT)
+	if (mo->iflags & MFI_FOLLOW_INIT)
 	{
 		// interpolation check
-		if(!(mo->special.arg[2] & 1))
+		if (!(mo->special.arg[2] & 1))
 			engine_error("MOVER", "Invalid interpolation!");
 
 		// actor mover
-		if(mo->spawnpoint.type == 9074)
+		if (mo->spawnpoint.type == 9074)
 		{
 			// find actor to move
 			th = mobj_by_tid_first(mo->special.arg[3]);
-			if(!th)
+			if (!th)
 				goto stop_moving;
 			mo->tracer = th;
 		}
@@ -40,9 +40,9 @@ void mover_tick(mobj_t *mo)
 		next_tid += (uint32_t)mo->special.arg[1] * 256;
 
 		th = mobj_by_tid_first(next_tid);
-		if(!th)
+		if (!th)
 			goto stop_moving;
-		if(th->spawnpoint.type != 9070) // interpolation point
+		if (th->spawnpoint.type != 9070) // interpolation point
 			goto stop_moving;
 
 		mo->target = th;
@@ -56,53 +56,56 @@ void mover_tick(mobj_t *mo)
 		mo->floorz = mo->subsector->sector->floorheight;
 		mo->ceilingz = mo->subsector->sector->ceilingheight;
 
-		if(mo->tracer)
+		if (mo->tracer)
 		{
 			fixed_t oldz = mo->tracer->z;
 			mo->tracer->z = mo->z;
-			if(P_TryMove(mo->tracer, mo->x, mo->y))
+			if (P_TryMove(mo->tracer, mo->x, mo->y))
 			{
 				mo->tracer->momx = 0;
 				mo->tracer->momy = 0;
 				mo->tracer->momz = 0;
-			} else
+			}
+			else
 				mo->tracer->z = oldz;
 		}
 
 		// setup next point right away
-		mo->reactiontime = ((uint32_t)mo->target->special.arg[2] * 35) / 8;
+		mo->reactiontime =
+		    ((uint32_t)mo->target->special.arg[2] * 35) / 8;
 		mo->reactiontime++;
 	}
 
-	if(mo->spawnpoint.type == 9074 && !mo->tracer)
+	if (mo->spawnpoint.type == 9074 && !mo->tracer)
 		// thing was removed
 		goto stop_moving;
 
-	if(mo->reactiontime)
+	if (mo->reactiontime)
 	{
 		// delay
 		mo->reactiontime--;
-		if(!mo->reactiontime)
+		if (!mo->reactiontime)
 		{
 			// set angles
 			mo->angle = mo->target->angle;
 			mo->pitch = mo->target->pitch;
 
 			// move time
-			mo->threshold = ((uint32_t)mo->target->special.arg[1] * 35) / 8;
+			mo->threshold =
+			    ((uint32_t)mo->target->special.arg[1] * 35) / 8;
 			mo->threshold++;
 
 			// get new point
 			next_tid = mo->target->special.arg[3];
 			next_tid += (uint32_t)mo->target->special.arg[4] * 256;
-			if(!next_tid)
+			if (!next_tid)
 				goto stop_moving;
 
 			// find new point
 			th = mobj_by_tid_first(next_tid);
-			if(!th)
+			if (!th)
 				goto stop_moving;
-			if(th->spawnpoint.type != 9070) // interpolation point
+			if (th->spawnpoint.type != 9070) // interpolation point
 				goto stop_moving;
 
 			mo->target = th;
@@ -112,33 +115,41 @@ void mover_tick(mobj_t *mo)
 			mo->momy = (th->y - mo->y) / mo->threshold;
 			mo->momz = (th->z - mo->z) / mo->threshold;
 
-			if(mo->special.arg[2] & 2)
+			if (mo->special.arg[2] & 2)
 			{
-				if(th->angle != mo->angle)
+				if (th->angle != mo->angle)
 				{
 					angle_t angle = th->angle - mo->angle;
-					if(angle > 0x80000000)
+					if (angle > 0x80000000)
 					{
 						angle = -angle;
-						mo->mover.angle = angle / mo->threshold;
-						mo->mover.angle = -mo->mover.angle;
-					} else
-						mo->mover.angle = angle / mo->threshold;
-				} else
+						mo->mover.angle =
+						    angle / mo->threshold;
+						mo->mover.angle =
+						    -mo->mover.angle;
+					}
+					else
+						mo->mover.angle =
+						    angle / mo->threshold;
+				}
+				else
 					mo->mover.angle = 0;
 			}
 
-			if(mo->special.arg[2] & 4)
+			if (mo->special.arg[2] & 4)
 			{
-				if(th->pitch != mo->pitch)
+				if (th->pitch != mo->pitch)
 				{
-					mo->mover.pitch = (int32_t)(th->pitch + ANG90) - (int32_t)(mo->pitch + ANG90);
+					mo->mover.pitch =
+					    (int32_t)(th->pitch + ANG90) -
+					    (int32_t)(mo->pitch + ANG90);
 					mo->mover.pitch /= mo->threshold;
-				} else
+				}
+				else
 					mo->mover.pitch = 0;
 			}
-		} else
-		if(mo->tracer)
+		}
+		else if (mo->tracer)
 			mo->tracer->iflags &= ~MFI_FOLLOW_MOVE;
 		return;
 	}
@@ -148,26 +159,27 @@ void mover_tick(mobj_t *mo)
 	xx = mo->x + mo->momx;
 	yy = mo->y + mo->momy;
 	zz = mo->z + mo->momz;
-	if(mo->special.arg[2] & 2)
+	if (mo->special.arg[2] & 2)
 		aa = mo->angle + mo->mover.angle;
-	if(mo->special.arg[2] & 4)
+	if (mo->special.arg[2] & 4)
 		pp = mo->pitch + mo->mover.pitch;
 
-	if(mo->tracer)
+	if (mo->tracer)
 	{
 		fixed_t oldz = mo->tracer->z;
 		mo->tracer->z = zz;
-		if(P_TryMove(mo->tracer, xx, yy))
+		if (P_TryMove(mo->tracer, xx, yy))
 		{
-			if(mo->special.arg[2] & 2)
+			if (mo->special.arg[2] & 2)
 				mo->tracer->angle = aa;
-			if(mo->special.arg[2] & 4)
+			if (mo->special.arg[2] & 4)
 				mo->tracer->pitch = pp;
 			mo->tracer->momx = mo->momx;
 			mo->tracer->momy = mo->momy;
 			mo->tracer->momz = mo->momz;
 			mo->tracer->iflags |= MFI_FOLLOW_MOVE;
-		} else
+		}
+		else
 		{
 			mo->tracer->z = oldz;
 			mo->tracer->iflags &= ~MFI_FOLLOW_MOVE;
@@ -184,15 +196,15 @@ void mover_tick(mobj_t *mo)
 	mo->floorz = mo->subsector->sector->floorheight;
 	mo->ceilingz = mo->subsector->sector->ceilingheight;
 
-	if(mo->special.arg[2] & 2)
+	if (mo->special.arg[2] & 2)
 		mo->angle = aa;
 
-	if(mo->special.arg[2] & 4)
+	if (mo->special.arg[2] & 4)
 		mo->pitch = pp;
 
 	// step
 	mo->threshold--;
-	if(mo->threshold)
+	if (mo->threshold)
 		return;
 
 	// next point delay
@@ -203,7 +215,6 @@ void mover_tick(mobj_t *mo)
 
 stop_moving:
 	mo->iflags &= ~MFI_FOLLOW_PATH;
-	if(mo->tracer)
+	if (mo->tracer)
 		mo->tracer->iflags &= ~MFI_FOLLOW_MOVE;
 }
-

@@ -14,5 +14,4 @@ enum
 	NUM_WIPE_TYPES
 };
 
-extern uint8_t *wipe_name[];
-
+extern uint8_t* wipe_name[];

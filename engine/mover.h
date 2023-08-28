@@ -1,3 +1,2 @@
 
-void mover_tick(mobj_t *mo);
-
+void mover_tick(mobj_t* mo);

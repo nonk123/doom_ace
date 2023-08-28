@@ -27,4 +27,3 @@ extern const uint8_t deh_pickup_type[NUMSPRITES];
 //
 
 void init_dehacked();
-

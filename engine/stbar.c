@@ -16,21 +16,23 @@
 #include "draw.h"
 #include "stbar.h"
 
-#define STBAR_Y	(SCREENHEIGHT-2)
-#define ST_H	32
-#define ST_Y	(SCREENHEIGHT-ST_H)
-#define BG	4
-#define FG	0
+#define STBAR_Y (SCREENHEIGHT - 2)
+#define ST_H 32
+#define ST_Y (SCREENHEIGHT - ST_H)
+#define BG 4
+#define FG 0
 
-#define INVBAR_Y	(SCREENHEIGHT-16)
-#define INVBAR_STEP	32
-#define INVBAR_COUNT	7
-#define INVBAR_CENTER	(SCREENWIDTH / 2)
-#define INVBAR_START	((INVBAR_CENTER - ((INVBAR_COUNT * INVBAR_STEP) / 2)) + (INVBAR_STEP / 2))
-#define INVBAR_END	(INVBAR_START + INVBAR_COUNT * INVBAR_STEP)
+#define INVBAR_Y (SCREENHEIGHT - 16)
+#define INVBAR_STEP 32
+#define INVBAR_COUNT 7
+#define INVBAR_CENTER (SCREENWIDTH / 2)
+#define INVBAR_START                                                           \
+	((INVBAR_CENTER - ((INVBAR_COUNT * INVBAR_STEP) / 2)) +                \
+	 (INVBAR_STEP / 2))
+#define INVBAR_END (INVBAR_START + INVBAR_COUNT * INVBAR_STEP)
 
-#define NOT_A_NUMBER	0x7FFFFFFF
-#define MAX_KEY_ICONS	(6*6)
+#define NOT_A_NUMBER 0x7FFFFFFF
+#define MAX_KEY_ICONS (6 * 6)
 
 //
 
@@ -50,13 +52,13 @@ static uint8_t do_evil_grin;
 static int32_t inv_box;
 static int32_t inv_sel;
 
-static uint16_t *ammo_pri;
-static uint16_t *ammo_sec;
+static uint16_t* ammo_pri;
+static uint16_t* ammo_sec;
 
-static mobjinfo_t *keyinv[MAX_KEY_ICONS];
+static mobjinfo_t* keyinv[MAX_KEY_ICONS];
 
-static patch_t *xhair;
-static patch_t *xhair_custom;
+static patch_t* xhair;
+static patch_t* xhair_custom;
 
 static uint32_t fps_value;
 static uint32_t fps_diff;
@@ -84,23 +86,23 @@ typedef struct
 	uint8_t dG[11];
 } __attribute__((packed)) xhair_patch_t;
 
-static xhair_patch_t xhair_data =
-{
-	.dA = {0x00, 0x01, 0x04, 0x04, 0x04, 0xFF},
-	.dB = {0x01, 0x01, 0x04, 0x04, 0x04, 0xFF},
-	.dC = {0x02, 0x01, 0x04, 0x04, 0x04, 0xFF},
-	.dD = {0x00, 0x01, 0x04, 0x04, 0x04, 0x02, 0x01, 0x04, 0x04, 0x04, 0xFF},
-	.dE = {0x00, 0x02, 0x04, 0x04, 0x04, 0x04, 0x03, 0x02, 0x04, 0x04, 0x04, 0x04, 0xFF},
-	.dF = {0x01, 0x01, 0x04, 0x04, 0x04, 0x03, 0x01, 0x04, 0x04, 0x04, 0xFF},
-	.dG = {0x00, 0x01, 0x04, 0x04, 0x04, 0x04, 0x01, 0x04, 0x04, 0x04, 0xFF},
+static xhair_patch_t xhair_data = {
+    .dA = {0x00, 0x01, 0x04, 0x04, 0x04, 0xFF},
+    .dB = {0x01, 0x01, 0x04, 0x04, 0x04, 0xFF},
+    .dC = {0x02, 0x01, 0x04, 0x04, 0x04, 0xFF},
+    .dD = {0x00, 0x01, 0x04, 0x04, 0x04, 0x02, 0x01, 0x04, 0x04, 0x04, 0xFF},
+    .dE = {0x00, 0x02, 0x04, 0x04, 0x04, 0x04, 0x03, 0x02, 0x04, 0x04, 0x04,
+           0x04, 0xFF},
+    .dF = {0x01, 0x01, 0x04, 0x04, 0x04, 0x03, 0x01, 0x04, 0x04, 0x04, 0xFF},
+    .dG = {0x00, 0x01, 0x04, 0x04, 0x04, 0x04, 0x01, 0x04, 0x04, 0x04, 0xFF},
 };
 
 //
 // icon cache
 
-patch_t *stbar_icon_ptr(int32_t lump)
+patch_t* stbar_icon_ptr(int32_t lump)
 {
-	if(lumpcache[lump])
+	if (lumpcache[lump])
 		// already cachced, do not change TAG
 		return lumpcache[lump];
 
@@ -111,31 +113,31 @@ patch_t *stbar_icon_ptr(int32_t lump)
 //
 // draw
 
-static void stbar_draw_number_r(int32_t x, int32_t y, int32_t value, int32_t digits, patch_t **numfont)
+static void stbar_draw_number_r(int32_t x, int32_t y, int32_t value,
+                                int32_t digits, patch_t** numfont)
 {
-	if(digits < 0)
+	if (digits < 0)
 		// negative digit count means also show zero
 		digits = -digits;
-	else
-		if(!value)
-			return;
+	else if (!value)
+		return;
 
-	if(value < 0) // TODO: minus
+	if (value < 0) // TODO: minus
 		value = -value;
 
-	while(digits--)
+	while (digits--)
 	{
 		x -= numfont[0]->width;
 		V_DrawPatchDirect(x, y, numfont[value % 10]);
 		value /= 10;
-		if(!value)
+		if (!value)
 			return;
 	}
 }
 
 static void stbar_draw_center(int32_t x, int32_t y, int32_t lump)
 {
-	patch_t *patch;
+	patch_t* patch;
 	int16_t ox, oy;
 
 	patch = stbar_icon_ptr(lump);
@@ -151,11 +153,15 @@ static void stbar_draw_center(int32_t x, int32_t y, int32_t lump)
 	patch->y = oy;
 }
 
-static void sbar_draw_invslot(int32_t x, int32_t y, mobjinfo_t *info, invitem_t *item)
+static void sbar_draw_invslot(int32_t x, int32_t y, mobjinfo_t* info,
+                              invitem_t* item)
 {
 	stbar_draw_center(x, y, info->inventory.icon);
-	if(!item->count || info->inventory.max_count > 1)
-		stbar_draw_number_r(x + (INVBAR_STEP / 2) - 1, y - shortnum[0]->height + (INVBAR_STEP / 2) - 2, item->count, 5, shortnum);
+	if (!item->count || info->inventory.max_count > 1)
+		stbar_draw_number_r(x + (INVBAR_STEP / 2) - 1,
+		                    y - shortnum[0]->height +
+		                        (INVBAR_STEP / 2) - 2,
+		                    item->count, 5, shortnum);
 }
 
 //
@@ -186,25 +192,25 @@ void stbar_init()
 
 	// inventory
 	inv_box = W_CheckNumForName("ARTIBOX");
-	if(inv_box < 0)
+	if (inv_box < 0)
 		inv_box = W_GetNumForName("STFB1");
 	inv_sel = W_CheckNumForName("SELECTBO");
-	if(inv_sel < 0)
+	if (inv_sel < 0)
 		inv_sel = W_GetNumForName("STFB0");
 
 	// custom crosshair
 	lump = W_CheckNumForName("XHAIR");
-	if(lump >= 0)
+	if (lump >= 0)
 		xhair_custom = W_CacheLumpNum(lump, PU_STATIC);
 
 	// old status bar ammo
-	for(uint32_t i = 0; i < 4; i++)
+	for (uint32_t i = 0; i < 4; i++)
 	{
 		lump = mobj_check_type(mod_config.ammo_type[i]);
-		if(lump < 0)
+		if (lump < 0)
 			goto ammo_error;
 		mod_config.ammo_type[i] = lump;
-		if(mobjinfo[mod_config.ammo_type[i]].extra_type != ETYPE_AMMO)
+		if (mobjinfo[mod_config.ammo_type[i]].extra_type != ETYPE_AMMO)
 			goto ammo_error;
 	}
 
@@ -219,7 +225,7 @@ ammo_error:
 //
 // key overlay
 
-static inline void draw_keybar(player_t *pl)
+static inline void draw_keybar(player_t* pl)
 {
 	uint32_t tx, ty, cc, cm;
 
@@ -227,12 +233,12 @@ static inline void draw_keybar(player_t *pl)
 	cc = 0;
 	tx = SCREENWIDTH - 1;
 	ty = 1;
-	for(uint32_t i = 0; i < MAX_KEY_ICONS; i++)
+	for (uint32_t i = 0; i < MAX_KEY_ICONS; i++)
 	{
-		patch_t *patch;
+		patch_t* patch;
 		int16_t ox, oy; // hack for right align
 
-		if(!keyinv[i])
+		if (!keyinv[i])
 			break;
 
 		patch = stbar_icon_ptr(keyinv[i]->inventory.icon);
@@ -249,11 +255,11 @@ static inline void draw_keybar(player_t *pl)
 
 		ty += patch->height + 1;
 
-		if(patch->width > cm)
+		if (patch->width > cm)
 			cm = patch->width;
 
 		cc++;
-		if(cc >= 6)
+		if (cc >= 6)
 		{
 			tx -= cm + 1;
 			ty = 1;
@@ -266,28 +272,29 @@ static inline void draw_keybar(player_t *pl)
 //
 // fullscreen status bar
 
-static inline void draw_full_stbar(player_t *pl)
+static inline void draw_full_stbar(player_t* pl)
 {
 	uint32_t ty;
 	uint16_t stbar_y, stbar_hp_x, stbar_ar_x;
-	patch_t **numfont;
+	patch_t** numfont;
 
-	if(screenblocks < 11)
+	if (screenblocks < 11)
 		return;
 
-	if(screenblocks > 12)
+	if (screenblocks > 12)
 		return;
 
 	// keys overlay
 	draw_keybar(pl);
 
-	if(screenblocks > 11)
+	if (screenblocks > 11)
 	{
 		stbar_y = stbar_s_y;
 		stbar_hp_x = stbar_s_hp_x;
 		stbar_ar_x = stbar_s_ar_x;
 		numfont = shortnum;
-	} else
+	}
+	else
 	{
 		stbar_y = stbar_t_y;
 		stbar_hp_x = stbar_t_hp_x;
@@ -295,7 +302,7 @@ static inline void draw_full_stbar(player_t *pl)
 		numfont = tallnum;
 
 		V_DrawPatchDirect(stbar_hp_x, stbar_y, tallpercent);
-		if(pl->armorpoints)
+		if (pl->armorpoints)
 			V_DrawPatchDirect(stbar_ar_x, stbar_y, tallpercent);
 	}
 
@@ -303,50 +310,60 @@ static inline void draw_full_stbar(player_t *pl)
 	stbar_draw_number_r(stbar_hp_x, stbar_y, pl->health, 3, numfont);
 
 	// armor
-	if(pl->armorpoints)
-		stbar_draw_number_r(stbar_ar_x, stbar_y, pl->armorpoints, 3, numfont);
+	if (pl->armorpoints)
+		stbar_draw_number_r(stbar_ar_x, stbar_y, pl->armorpoints, 3,
+		                    numfont);
 
 	// AMMO
 	ty = stbar_y;
-	if(ammo_pri)
+	if (ammo_pri)
 	{
-		stbar_draw_number_r(SCREENWIDTH - 4, ty, *ammo_pri, -4, numfont);
+		stbar_draw_number_r(SCREENWIDTH - 4, ty, *ammo_pri, -4,
+		                    numfont);
 		ty -= numfont[0]->height + 1;
 	}
-	if(ammo_sec && ammo_sec != ammo_pri)
-		stbar_draw_number_r(SCREENWIDTH - 4, ty, *ammo_sec, -4, numfont);
+	if (ammo_sec && ammo_sec != ammo_pri)
+		stbar_draw_number_r(SCREENWIDTH - 4, ty, *ammo_sec, -4,
+		                    numfont);
 }
 
 //
 // inventory bar
 
-static void draw_invbar(player_t *pl)
+static void draw_invbar(player_t* pl)
 {
-	if(pl->inv_tick)
+	if (pl->inv_tick)
 	{
-		mobjinfo_t *info;
-		mobj_t *mo = pl->mo;
+		mobjinfo_t* info;
+		mobj_t* mo = pl->mo;
 		uint32_t idx;
 		int32_t item;
 
-		if(screenblocks < 11)
+		if (screenblocks < 11)
 			invbar_was_on = 1;
 
-		for(uint32_t x = INVBAR_START; x < INVBAR_END; x += INVBAR_STEP)
+		for (uint32_t x = INVBAR_START; x < INVBAR_END;
+		     x += INVBAR_STEP)
 			stbar_draw_center(x, INVBAR_Y, inv_box);
 		stbar_draw_center(INVBAR_CENTER, INVBAR_Y, inv_sel);
 
-		if(pl->inv_sel >= 0 && mo->inventory)
+		if (pl->inv_sel >= 0 && mo->inventory)
 		{
 			// previous items
 			item = pl->inv_sel - 1;
 			idx = 0;
-			while(item >= 0 && idx < INVBAR_COUNT / 2)
+			while (item >= 0 && idx < INVBAR_COUNT / 2)
 			{
-				info = mobjinfo + mo->inventory->slot[item].type;
-				if(info->inventory.icon && info->eflags & MFE_INVENTORY_INVBAR)
+				info =
+				    mobjinfo + mo->inventory->slot[item].type;
+				if (info->inventory.icon &&
+				    info->eflags & MFE_INVENTORY_INVBAR)
 				{
-					sbar_draw_invslot(INVBAR_CENTER - INVBAR_STEP - idx * INVBAR_STEP, INVBAR_Y, info, mo->inventory->slot + item);
+					sbar_draw_invslot(
+					    INVBAR_CENTER - INVBAR_STEP -
+						idx * INVBAR_STEP,
+					    INVBAR_Y, info,
+					    mo->inventory->slot + item);
 					idx++;
 				}
 				item--;
@@ -355,12 +372,19 @@ static void draw_invbar(player_t *pl)
 			// next items
 			item = pl->inv_sel + 1;
 			idx = 0;
-			while(item < mo->inventory->numslots && idx < INVBAR_COUNT / 2)
+			while (item < mo->inventory->numslots &&
+			       idx < INVBAR_COUNT / 2)
 			{
-				info = mobjinfo + mo->inventory->slot[item].type;
-				if(info->inventory.icon && info->eflags & MFE_INVENTORY_INVBAR)
+				info =
+				    mobjinfo + mo->inventory->slot[item].type;
+				if (info->inventory.icon &&
+				    info->eflags & MFE_INVENTORY_INVBAR)
 				{
-					sbar_draw_invslot(INVBAR_CENTER + INVBAR_STEP + idx * INVBAR_STEP, INVBAR_Y, info, mo->inventory->slot + item);
+					sbar_draw_invslot(
+					    INVBAR_CENTER + INVBAR_STEP +
+						idx * INVBAR_STEP,
+					    INVBAR_Y, info,
+					    mo->inventory->slot + item);
 					idx++;
 				}
 				item++;
@@ -368,25 +392,26 @@ static void draw_invbar(player_t *pl)
 
 			// current selection
 			info = mobjinfo + mo->inventory->slot[pl->inv_sel].type;
-			sbar_draw_invslot(INVBAR_CENTER, INVBAR_Y, info, mo->inventory->slot + pl->inv_sel);
+			sbar_draw_invslot(INVBAR_CENTER, INVBAR_Y, info,
+			                  mo->inventory->slot + pl->inv_sel);
 		}
 
 		return;
 	}
 
-	if(screenblocks < 11 && invbar_was_on)
+	if (screenblocks < 11 && invbar_was_on)
 	{
 		invbar_was_on = 0;
 		stbar_refresh_force = 1;
 	}
 
-	if(pl->inv_sel >= 0 && pl->mo->inventory)
+	if (pl->inv_sel >= 0 && pl->mo->inventory)
 	{
-		if(screenblocks == 11 && !automapactive)
+		if (screenblocks == 11 && !automapactive)
 		{
 			// current selection
-			invitem_t *item = pl->mo->inventory->slot + pl->inv_sel;
-			mobjinfo_t *info = mobjinfo + item->type;
+			invitem_t* item = pl->mo->inventory->slot + pl->inv_sel;
+			mobjinfo_t* info = mobjinfo + item->type;
 			sbar_draw_invslot(INVBAR_CENTER, INVBAR_Y, info, item);
 		}
 	}
@@ -395,23 +420,23 @@ static void draw_invbar(player_t *pl)
 //
 // crosshair
 
-static inline void draw_crosshair(player_t *pl)
+static inline void draw_crosshair(player_t* pl)
 {
 	int32_t y;
 
-	if(!xhair)
+	if (!xhair)
 		return;
 
 	y = viewwindowy + viewheight / 2;
 
-	if(extra_config.mouse_look > 1)
+	if (extra_config.mouse_look > 1)
 	{
 		int32_t height = viewwindowy + viewheight;
-		y -= finetangent[(pl->mo->pitch + ANG90) >> ANGLETOFINESHIFT] / 410;
-		if(y < viewwindowy + xhair->y)
+		y -= finetangent[(pl->mo->pitch + ANG90) >> ANGLETOFINESHIFT] /
+		     410;
+		if (y < viewwindowy + xhair->y)
 			y = viewwindowy + xhair->y;
-		else
-		if(y > height - xhair->height + xhair->y)
+		else if (y > height - xhair->height + xhair->y)
 			y = height - xhair->height + xhair->y;
 	}
 
@@ -421,30 +446,31 @@ static inline void draw_crosshair(player_t *pl)
 //
 // hooks
 
-static __attribute((regparm(2),no_caller_saved_registers))
-void hook_draw_stbar(uint32_t fullscreen, uint32_t refresh)
+static __attribute((regparm(2), no_caller_saved_registers)) void
+hook_draw_stbar(uint32_t fullscreen, uint32_t refresh)
 {
 	static uint_fast8_t was_in_menu;
 
 	ST_doPaletteStuff();
 
-	if(is_title_map)
+	if (is_title_map)
 	{
-		uint8_t *dst;
+		uint8_t* dst;
 
-		if(wipebuffer == (void*)0x000A0000)
+		if (wipebuffer == (void*)0x000A0000)
 			dst = screen_buffer;
 		else
 			dst = framebuffer;
 
-		memset(dst + SCREENWIDTH * ST_Y, r_color_black, SCREENWIDTH * ST_H);
+		memset(dst + SCREENWIDTH * ST_Y, r_color_black,
+		       SCREENWIDTH * ST_H);
 
 		return;
 	}
 
-	if(automapactive)
+	if (automapactive)
 	{
-		if(wipebuffer != (void*)0x000A0000)
+		if (wipebuffer != (void*)0x000A0000)
 			am_fb = framebuffer;
 		return;
 	}
@@ -454,8 +480,10 @@ void hook_draw_stbar(uint32_t fullscreen, uint32_t refresh)
 
 	ST_Drawer(fullscreen, refresh);
 
-	if(!fullscreen && wipebuffer != (void*)0x000A0000)
-		dwcopy(framebuffer + SCREENWIDTH * ST_Y, screen_buffer + SCREENWIDTH * ST_Y, (SCREENWIDTH * ST_H) / sizeof(uint32_t));
+	if (!fullscreen && wipebuffer != (void*)0x000A0000)
+		dwcopy(framebuffer + SCREENWIDTH * ST_Y,
+		       screen_buffer + SCREENWIDTH * ST_Y,
+		       (SCREENWIDTH * ST_H) / sizeof(uint32_t));
 
 	was_in_menu = menuactive;
 }
@@ -463,67 +491,64 @@ void hook_draw_stbar(uint32_t fullscreen, uint32_t refresh)
 //
 // update
 
-static void update_ammo(player_t *pl)
+static void update_ammo(player_t* pl)
 {
-	if(	pl->readyweapon &&
-		(
-			(pl->readyweapon->weapon.ammo_type[0] && !ammo_pri) ||
-			(pl->readyweapon->weapon.ammo_type[1] && !ammo_sec)
-		)
-	)
+	if (pl->readyweapon &&
+	    ((pl->readyweapon->weapon.ammo_type[0] && !ammo_pri) ||
+	     (pl->readyweapon->weapon.ammo_type[1] && !ammo_sec)))
 		// update missing ammo pointer
 		pl->stbar_update |= STU_WEAPON_NOW;
 }
 
-static void update_ammo_old(player_t *pl)
+static void update_ammo_old(player_t* pl)
 {
 	static uint16_t zero;
-	invitem_t *item;
+	invitem_t* item;
 
 	item = inventory_find(pl->mo, mod_config.ammo_bullet); // Clip
-	if(item)
+	if (item)
 		w_ammo[0].num = &item->count;
 	else
 		w_ammo[0].num = &zero;
 
 	item = inventory_find(pl->mo, mod_config.ammo_shell); // Shell
-	if(item)
+	if (item)
 		w_ammo[1].num = &item->count;
 	else
 		w_ammo[1].num = &zero;
 
 	item = inventory_find(pl->mo, mod_config.ammo_rocket); // RocketAmmo
-	if(item)
+	if (item)
 		w_ammo[3].num = &item->count;
 	else
 		w_ammo[3].num = &zero;
 
 	item = inventory_find(pl->mo, mod_config.ammo_cell); // Cell
-	if(item)
+	if (item)
 		w_ammo[2].num = &item->count;
 	else
 		w_ammo[2].num = &zero;
 }
 
-static void update_weapon(player_t *pl)
+static void update_weapon(player_t* pl)
 {
 	static uint32_t val[6];
 
-	for(uint32_t i = 0; i < 6; i++)
+	for (uint32_t i = 0; i < 6; i++)
 	{
-		uint16_t *ptr;
+		uint16_t* ptr;
 
 		w_arms[i].inum = val + (i);
 		val[i] = 0;
 
 		ptr = pl->mo->info->player.wpn_slot[i + 2];
-		if(!ptr)
+		if (!ptr)
 			continue;
 
-		while(*ptr)
+		while (*ptr)
 		{
 			uint16_t type = *ptr++;
-			if(inventory_check(pl->mo, type))
+			if (inventory_check(pl->mo, type))
 			{
 				val[i] = 1;
 				break;
@@ -532,87 +557,90 @@ static void update_weapon(player_t *pl)
 	}
 }
 
-static void update_keys(player_t *pl)
+static void update_keys(player_t* pl)
 {
 	uint32_t idx = 0;
 
-	for(uint32_t i = 0; i < num_mobj_types; i++)
+	for (uint32_t i = 0; i < num_mobj_types; i++)
 	{
-		mobjinfo_t *info = mobjinfo + i;
+		mobjinfo_t* info = mobjinfo + i;
 
-		if(info->extra_type != ETYPE_KEY)
+		if (info->extra_type != ETYPE_KEY)
 			continue;
 
-		if(!info->inventory.icon)
+		if (!info->inventory.icon)
 			continue;
 
-		if(!inventory_check(pl->mo, i))
+		if (!inventory_check(pl->mo, i))
 			continue;
 
 		keyinv[idx++] = info;
 
-		if(idx >= MAX_KEY_ICONS)
+		if (idx >= MAX_KEY_ICONS)
 			break;
 	}
 
-	if(idx < MAX_KEY_ICONS)
+	if (idx < MAX_KEY_ICONS)
 		keyinv[idx] = NULL;
 
-	for(uint32_t i = 0; i < ORIGINAL_KEY_COUNT / 2; i++)
+	for (uint32_t i = 0; i < ORIGINAL_KEY_COUNT / 2; i++)
 		keyboxes[i] = -1;
 
-	for(uint32_t i = 0; i < ORIGINAL_KEY_COUNT; i++)
+	for (uint32_t i = 0; i < ORIGINAL_KEY_COUNT; i++)
 	{
-		if(!mobj_check_keylock(pl->mo, keyboxlock[i], 0))
+		if (!mobj_check_keylock(pl->mo, keyboxlock[i], 0))
 			keyboxes[i % 3] = i;
 	}
 }
 
-static void update_backpack(player_t *pl)
+static void update_backpack(player_t* pl)
 {
-	if(pl->backpack)
+	if (pl->backpack)
 	{
-		for(uint32_t i = 0; i < 4; i++)
+		for (uint32_t i = 0; i < 4; i++)
 		{
 			w_maxammo[i].num = ammo_dispmax + i;
-			ammo_dispmax[i] = mobjinfo[mod_config.ammo_type[i]].ammo.max_count;
+			ammo_dispmax[i] =
+			    mobjinfo[mod_config.ammo_type[i]].ammo.max_count;
 		}
-	} else
+	}
+	else
 	{
-		for(uint32_t i = 0; i < 4; i++)
+		for (uint32_t i = 0; i < 4; i++)
 		{
 			w_maxammo[i].num = ammo_dispmax + i;
-			ammo_dispmax[i] = mobjinfo[mod_config.ammo_type[i]].inventory.max_count;
+			ammo_dispmax[i] = mobjinfo[mod_config.ammo_type[i]]
+			                      .inventory.max_count;
 		}
 	}
 }
 
-static void update_ready_weapon(player_t *pl)
+static void update_ready_weapon(player_t* pl)
 {
 	// weapon changed
-	mobjinfo_t *info = pl->readyweapon;
-	invitem_t *item;
+	mobjinfo_t* info = pl->readyweapon;
+	invitem_t* item;
 
 	ammo_pri = NULL;
 	ammo_sec = NULL;
 	w_ready.num = NULL;
 
-	if(!info)
+	if (!info)
 		return;
 
 	// primary ammo
-	if(info->weapon.ammo_type[0])
+	if (info->weapon.ammo_type[0])
 	{
 		item = inventory_find(pl->mo, info->weapon.ammo_type[0]);
-		if(item)
+		if (item)
 			ammo_pri = &item->count;
 	}
 
 	// secondary ammo
-	if(info->weapon.ammo_type[1])
+	if (info->weapon.ammo_type[1])
 	{
 		item = inventory_find(pl->mo, info->weapon.ammo_type[1]);
-		if(item)
+		if (item)
 			ammo_sec = &item->count;
 	}
 
@@ -629,90 +657,91 @@ void stbar_set_xhair()
 	uint8_t color;
 	uint8_t r, g, b;
 
-	if(extra_config.crosshair_type == 0xFF)
+	if (extra_config.crosshair_type == 0xFF)
 		extra_config.crosshair_type = 6;
 
-	if(extra_config.crosshair_type > 6)
+	if (extra_config.crosshair_type > 6)
 		extra_config.crosshair_type = 0;
 
 	type = extra_config.crosshair_type;
 
-	if(extra_config.mouse_look > 1 && !type)
+	if (extra_config.mouse_look > 1 && !type)
 		type = 1;
 
-	switch(extra_config.crosshair_type)
+	switch (extra_config.crosshair_type)
 	{
-		case 1:
-			// single dot
+	case 1:
+		// single dot
+		xhair_data.width = 1;
+		xhair_data.height = 1;
+		xhair_data.ox = 0;
+		xhair_data.oy = 0;
+		xhair_data.offs[0] = offsetof(xhair_patch_t, dA);
+		break;
+	case 2:
+		// + size 3
+		xhair_data.width = 3;
+		xhair_data.height = 3;
+		xhair_data.ox = 1;
+		xhair_data.oy = 1;
+		xhair_data.offs[0] = offsetof(xhair_patch_t, dB);
+		xhair_data.offs[1] = offsetof(xhair_patch_t, dD);
+		xhair_data.offs[2] = offsetof(xhair_patch_t, dB);
+		break;
+	case 3:
+		// + size 5
+		xhair_data.width = 5;
+		xhair_data.height = 5;
+		xhair_data.ox = 2;
+		xhair_data.oy = 2;
+		xhair_data.offs[0] = offsetof(xhair_patch_t, dC);
+		xhair_data.offs[1] = offsetof(xhair_patch_t, dC);
+		xhair_data.offs[2] = offsetof(xhair_patch_t, dE);
+		xhair_data.offs[3] = offsetof(xhair_patch_t, dC);
+		xhair_data.offs[4] = offsetof(xhair_patch_t, dC);
+		break;
+	case 4:
+		// x size 3
+		xhair_data.width = 3;
+		xhair_data.height = 3;
+		xhair_data.ox = 1;
+		xhair_data.oy = 1;
+		xhair_data.offs[0] = offsetof(xhair_patch_t, dD);
+		xhair_data.offs[1] = offsetof(xhair_patch_t, dB);
+		xhair_data.offs[2] = offsetof(xhair_patch_t, dD);
+		break;
+	case 5:
+		// x size 5
+		xhair_data.width = 5;
+		xhair_data.height = 5;
+		xhair_data.ox = 2;
+		xhair_data.oy = 2;
+		xhair_data.offs[0] = offsetof(xhair_patch_t, dG);
+		xhair_data.offs[1] = offsetof(xhair_patch_t, dF);
+		xhair_data.offs[2] = offsetof(xhair_patch_t, dC);
+		xhair_data.offs[3] = offsetof(xhair_patch_t, dF);
+		xhair_data.offs[4] = offsetof(xhair_patch_t, dG);
+		break;
+	case 6:
+		if (!xhair_custom)
+		{
+			// single dot, as a backup
 			xhair_data.width = 1;
 			xhair_data.height = 1;
 			xhair_data.ox = 0;
 			xhair_data.oy = 0;
 			xhair_data.offs[0] = offsetof(xhair_patch_t, dA);
-		break;
-		case 2:
-			// + size 3
-			xhair_data.width = 3;
-			xhair_data.height = 3;
-			xhair_data.ox = 1;
-			xhair_data.oy = 1;
-			xhair_data.offs[0] = offsetof(xhair_patch_t, dB);
-			xhair_data.offs[1] = offsetof(xhair_patch_t, dD);
-			xhair_data.offs[2] = offsetof(xhair_patch_t, dB);
-		break;
-		case 3:
-			// + size 5
-			xhair_data.width = 5;
-			xhair_data.height = 5;
-			xhair_data.ox = 2;
-			xhair_data.oy = 2;
-			xhair_data.offs[0] = offsetof(xhair_patch_t, dC);
-			xhair_data.offs[1] = offsetof(xhair_patch_t, dC);
-			xhair_data.offs[2] = offsetof(xhair_patch_t, dE);
-			xhair_data.offs[3] = offsetof(xhair_patch_t, dC);
-			xhair_data.offs[4] = offsetof(xhair_patch_t, dC);
-		break;
-		case 4:
-			// x size 3
-			xhair_data.width = 3;
-			xhair_data.height = 3;
-			xhair_data.ox = 1;
-			xhair_data.oy = 1;
-			xhair_data.offs[0] = offsetof(xhair_patch_t, dD);
-			xhair_data.offs[1] = offsetof(xhair_patch_t, dB);
-			xhair_data.offs[2] = offsetof(xhair_patch_t, dD);
-		break;
-		case 5:
-			// x size 5
-			xhair_data.width = 5;
-			xhair_data.height = 5;
-			xhair_data.ox = 2;
-			xhair_data.oy = 2;
-			xhair_data.offs[0] = offsetof(xhair_patch_t, dG);
-			xhair_data.offs[1] = offsetof(xhair_patch_t, dF);
-			xhair_data.offs[2] = offsetof(xhair_patch_t, dC);
-			xhair_data.offs[3] = offsetof(xhair_patch_t, dF);
-			xhair_data.offs[4] = offsetof(xhair_patch_t, dG);
-		break;
-		case 6:
-			if(!xhair_custom)
-			{
-				// single dot, as a backup
-				xhair_data.width = 1;
-				xhair_data.height = 1;
-				xhair_data.ox = 0;
-				xhair_data.oy = 0;
-				xhair_data.offs[0] = offsetof(xhair_patch_t, dA);
-			} else
-			{
-				// use 'XHAIR' lump
-				xhair = xhair_custom;
-				return;
-			}
-		break;
-		default:
-			xhair = NULL;
+		}
+		else
+		{
+			// use 'XHAIR' lump
+			xhair = xhair_custom;
 			return;
+		}
+		break;
+	default:
+		xhair = NULL;
+		return;
 	}
 
 	xhair = (patch_t*)&xhair_data;
@@ -723,47 +752,47 @@ void stbar_set_xhair()
 	b = (extra_config.crosshair_color >> 8) & 15;
 	color = r_find_color((r << 4) | r, (g << 4) | g, (b << 4) | b);
 
-	for(uint32_t i = 0; i < xhair->width; i++)
+	for (uint32_t i = 0; i < xhair->width; i++)
 	{
-		uint8_t *ptr = (uint8_t*)xhair + xhair->offs[i];
+		uint8_t* ptr = (uint8_t*)xhair + xhair->offs[i];
 
-		while(*ptr++ != 0xFF)
+		while (*ptr++ != 0xFF)
 		{
 			uint32_t count = *ptr++;
 			count += 2;
-			for(uint32_t i = 0; i < count; i++)
+			for (uint32_t i = 0; i < count; i++)
 				*ptr++ = color;
 		}
 	}
 }
 
-void stbar_update(player_t *pl)
+void stbar_update(player_t* pl)
 {
-	if(pl->stbar_update & STU_AMMO)
+	if (pl->stbar_update & STU_AMMO)
 		update_ammo(pl);
 
-	if(pl->stbar_update & STU_AMMO_SBAR)
+	if (pl->stbar_update & STU_AMMO_SBAR)
 		update_ammo_old(pl);
 
-	if(pl->stbar_update & STU_WEAPON)
+	if (pl->stbar_update & STU_WEAPON)
 		update_weapon(pl);
 
-	if(pl->stbar_update & STU_KEYS)
+	if (pl->stbar_update & STU_KEYS)
 		update_keys(pl);
 
-	if(pl->stbar_update & STU_BACKPACK)
+	if (pl->stbar_update & STU_BACKPACK)
 		update_backpack(pl);
 
-	if(pl->stbar_update & STU_WEAPON_NOW)
+	if (pl->stbar_update & STU_WEAPON_NOW)
 		update_ready_weapon(pl);
 
-	if(pl->stbar_update & STU_WEAPON_NEW)
+	if (pl->stbar_update & STU_WEAPON_NEW)
 		do_evil_grin = 1;
 
 	pl->stbar_update = 0;
 }
 
-void stbar_start(player_t *pl)
+void stbar_start(player_t* pl)
 {
 	// reset FPS counter
 	fps_value = 0;
@@ -781,16 +810,16 @@ void stbar_start(player_t *pl)
 	stbar_set_xhair();
 }
 
-void stbar_draw(player_t *pl)
+void stbar_draw(player_t* pl)
 {
 	// not in titlemap
-	if(is_title_map)
+	if (is_title_map)
 		return;
 
 	// not if dead
-	if(pl->state != PST_LIVE)
+	if (pl->state != PST_LIVE)
 	{
-		if(screenblocks < 11 && invbar_was_on)
+		if (screenblocks < 11 && invbar_was_on)
 		{
 			invbar_was_on = 0;
 			stbar_refresh_force = 1;
@@ -798,9 +827,9 @@ void stbar_draw(player_t *pl)
 		return;
 	}
 
-	if(!automapactive)
+	if (!automapactive)
 	{
-		if(consoleplayer != displayplayer || pl->camera->player)
+		if (consoleplayer != displayplayer || pl->camera->player)
 		{
 			// status bar
 			draw_full_stbar(pl);
@@ -811,17 +840,18 @@ void stbar_draw(player_t *pl)
 			// draw crosshair
 			draw_crosshair(pl);
 		}
-	} else
+	}
+	else
 		// inventory bar
 		draw_invbar(pl);
 
 	// FPS counter
-	if(extra_config.show_fps)
+	if (extra_config.show_fps)
 	{
 		uint32_t gettime = I_GetTime();
 		uint32_t gdiff = gettime - last_gt;
 		fps_diff++;
-		if(gdiff >= 35)
+		if (gdiff >= 35)
 		{
 			fps_value = fps_diff * FRACUNIT;
 			fps_value /= gdiff;
@@ -837,26 +867,27 @@ void stbar_draw(player_t *pl)
 //
 // hooks
 
-static __attribute((regparm(2),no_caller_saved_registers))
-void st_draw_num(st_number_t *st, uint32_t refresh)
+static __attribute((regparm(2), no_caller_saved_registers)) void
+st_draw_num(st_number_t* st, uint32_t refresh)
 {
 	uint32_t w, h;
 	int32_t x;
 	uint32_t value, len;
 
 	// actually do a differential draw
-	if(!refresh)
+	if (!refresh)
 	{
-		if(st->num)
+		if (st->num)
 		{
 			// valid number
-			if(*st->num == st->oldnum)
+			if (*st->num == st->oldnum)
 				return;
 			st->oldnum = *st->num;
-		} else
+		}
+		else
 		{
 			// not a number
-			if(st->oldnum == 0xFFFFFFFF)
+			if (st->oldnum == 0xFFFFFFFF)
 				return;
 			st->oldnum = 0xFFFFFFFF;
 		}
@@ -871,19 +902,19 @@ void st_draw_num(st_number_t *st, uint32_t refresh)
 	x = st->x - len * w;
 	V_CopyRect(x, st->y - ST_Y, BG, len * w, h, x, st->y, FG);
 
-	if(!st->num)
+	if (!st->num)
 		return;
 
 	value = *st->num;
 	x = st->x;
 
-	if(!value)
+	if (!value)
 	{
 		V_DrawPatch(x - w, st->y, FG, st->p[0]);
 		return;
 	}
 
-	while(value && len--)
+	while (value && len--)
 	{
 		x -= w;
 		V_DrawPatch(x, st->y, FG, st->p[value % 10]);
@@ -894,8 +925,8 @@ void st_draw_num(st_number_t *st, uint32_t refresh)
 //
 // hooks
 
-static const hook_t hooks[] __attribute__((used,section(".hooks"),aligned(4))) =
-{
+static const hook_t hooks[]
+    __attribute__((used, section(".hooks"), aligned(4))) = {
 	// replace 'STlib_drawNum'
 	{0x0003B020, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)st_draw_num},
 	// replace call to 'ST_Drawer' in 'D_Display'
@@ -915,4 +946,3 @@ static const hook_t hooks[] __attribute__((used,section(".hooks"),aligned(4))) =
 	{0x00039FDD, CODE_HOOK | HOOK_UINT32, 0x08FE5674},
 	{0x00039FE1, CODE_HOOK | HOOK_UINT16, 0x2FEB},
 };
-
