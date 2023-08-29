@@ -1,6 +1,8 @@
 #include "sdk.h"
 #include "engine.h"
 
+#define MODULE "RIBBIT-VM"
+
 #define HACK_STDOUT (NULL)
 
 void* hack_malloc(size_t size)
@@ -9,8 +11,7 @@ void* hack_malloc(size_t size)
 
 	if (result == NULL)
 	{
-		engine_error("RIBBIT",
-		             "Ribbit VM wanted to malloc(), but it failed");
+		engine_error(MODULE, "Ribbit VM wanted to malloc(), but it failed");
 	}
 
 	return result;
@@ -20,19 +21,13 @@ void* hack_free(void* ptr)
 {
 	if (ptr == NULL)
 	{
-		engine_error("RIBBIT",
-		             "Ribbit VM tried to free() a null pointer");
+		engine_error(MODULE, "Ribbit VM tried to free() a null pointer");
 	}
 
 	Z_Free(ptr);
 }
 
-void hack_exit(int code)
-{
-	engine_error(
-	    "RIBBIT",
-	    "Ribbit VM requested exit; this absolutely should not happen!");
-}
+void hack_exit(int code) { engine_error(MODULE, "Ribbit VM requested exit; this absolutely should not happen!"); }
 
 #define PUTCHAR_BUF_LEN 512
 
@@ -42,8 +37,7 @@ int hack_putchar(int c)
 {
 	size_t idx = 0;
 
-	for (uint8_t* current = putchar_buf; idx < PUTCHAR_BUF_LEN - 1;
-	     current++, idx++)
+	for (uint8_t* current = putchar_buf; idx < PUTCHAR_BUF_LEN - 1; current++, idx++)
 	{
 		if (*current == 0)
 		{
@@ -60,8 +54,8 @@ int hack_fflush(FILE* file)
 {
 	if (file != HACK_STDOUT)
 	{
-		engine_error("RIBBIT", "`fflush` called outside of the ribbit "
-		                       "module; this should never happen!");
+		engine_error(MODULE, "`hack_fflush` called outside of the ribbit "
+		                     "module; this should never happen!");
 	}
 
 	player_t* pl = players + consoleplayer;
@@ -73,8 +67,7 @@ int hack_fflush(FILE* file)
 
 	size_t idx = 0;
 
-	for (uint8_t* current = putchar_buf; idx < PUTCHAR_BUF_LEN - 1;
-	     current++, idx++)
+	for (uint8_t* current = putchar_buf; idx < PUTCHAR_BUF_LEN - 1; current++, idx++)
 	{
 		if (*current == 0)
 		{
@@ -91,7 +84,19 @@ int hack_fflush(FILE* file)
 	return 0;
 }
 
-int hack_getchar() { return 0; }
+void print_message(char* message)
+{
+	while (*message != 0)
+	{
+		hack_putchar(*message++);
+	}
+
+	hack_fflush(HACK_STDOUT);
+}
+
+int hack_getchar() { return EOF; }
+
+void add_tick_hook(void* r);
 
 // @@(location pre_decl)@@
 
@@ -106,12 +111,12 @@ int hack_getchar() { return 0; }
 #undef stdout
 #endif
 
+#define stdout HACK_STDOUT
+
 // Obliterate these keywords entirely.
 #define register      /* register */
 #define asm           /* asm */
 #define volatile(...) /* volatile */
-
-#define stdout HACK_STDOUT
 
 #define malloc hack_malloc
 #define free hack_free
@@ -140,9 +145,54 @@ int hack_getchar() { return 0; }
 #undef NO_STD
 #undef NO_REG
 
+static obj tick_hook;
+static bool initial_run = true;
+
+void add_tick_hook(void* r)
+{
+	obj fn = (obj)r;
+
+	if (!initial_run)
+	{
+		return;
+	}
+
+	obj dest = tick_hook;
+
+	while (dest != NIL && IS_RIB(CDR(dest)))
+	{
+		dest = CDR(dest);
+	}
+
+	obj cell = TAG_RIB(alloc_rib(fn, NIL, PAIR_TAG));
+
+	if (dest == NIL)
+	{
+		tick_hook = cell;
+	}
+	else
+	{
+		CDR(dest) = cell;
+	}
+}
+
+void run_tick_hook()
+{
+	obj hook = tick_hook;
+
+	pc = TAG_RIB(alloc_rib(INSTR_HALT, NUM_0, pc));
+
+	while (hook != NIL)
+	{
+		obj sym = CAR(hook);
+		pc = TAG_RIB(alloc_rib(INSTR_AP, sym, pc));
+		hook = CDR(hook);
+	}
+}
+
 // @@(location post_decl)@@
 
-void run_ribbit(bool initial_run);
+void run_ribbit();
 
 void init_ribbit()
 {
@@ -154,16 +204,15 @@ void init_ribbit()
 
 	if (heap_start == NULL)
 	{
-		engine_error("RIBBIT", "Failed to allocate a heap");
+		engine_error(MODULE, "Failed to allocate a heap");
 	}
 
 	alloc = heap_bot;
 	alloc_limit = heap_mid;
 	stack = NUM_0;
 
-	FALSE = TAG_RIB(alloc_rib(
-	    TAG_RIB(alloc_rib(NUM_0, NUM_0, SINGLETON_TAG)),
-	    TAG_RIB(alloc_rib(NUM_0, NUM_0, SINGLETON_TAG)), SINGLETON_TAG));
+	FALSE = TAG_RIB(alloc_rib(TAG_RIB(alloc_rib(NUM_0, NUM_0, SINGLETON_TAG)),
+	                          TAG_RIB(alloc_rib(NUM_0, NUM_0, SINGLETON_TAG)), SINGLETON_TAG));
 
 	build_sym_table();
 	decode();
@@ -177,22 +226,30 @@ void init_ribbit()
 
 	// @@(location post_init)@@
 
-	// Initial run. Afterwards, it is run every tick.
-	run_ribbit(true);
+	// Initial run. Afterwards, the VM is run every tick.
+	run_ribbit();
+	initial_run = false;
+
+	// TODO: move into a tick handler.
+	run_ribbit();
 }
 
-#define ADVANCE_PC                                                             \
-	do                                                                     \
-	{                                                                      \
-		pc = TAG(pc);                                                  \
+#define ADVANCE_PC                                                                                                     \
+	do                                                                                                             \
+	{                                                                                                              \
+		pc = TAG(pc);                                                                                          \
 	} while (0)
 
-obj init_fns = NUM_0;
-obj tick_fns = NUM_0;
-
-void run_ribbit(bool initial_run)
+void run_ribbit()
 {
-	obj append_from = initial_run ? init_fns : tick_fns;
+	if (initial_run)
+	{
+		tick_hook = NIL;
+	}
+	else
+	{
+		run_tick_hook();
+	}
 
 	bool halt = false;
 
@@ -203,10 +260,9 @@ void run_ribbit(bool initial_run)
 		switch (instr)
 		{
 		default:
-		{ // error
-			engine_error("RIBBIT-VM", "Error in Lisp code: %d",
-			             instr);
-			break;
+		{
+			// TODO: print stack trace or something?
+			engine_error(MODULE, "Error in Lisp code");
 		}
 		case INSTR_HALT:
 		{
@@ -237,16 +293,14 @@ void run_ribbit(bool initial_run)
 			{
 				num nparams = NUM(CAR(code)) >> 1;
 
-				obj s2 =
-				    TAG_RIB(alloc_rib(NUM_0, proc, PAIR_TAG));
+				obj s2 = TAG_RIB(alloc_rib(NUM_0, proc, PAIR_TAG));
 				CAR(pc) = CAR(proc);
 
 				// @@(feature arity-check
 				num vari = NUM(CAR(code)) & 1;
-				if ((!vari && nparams != nargs) ||
-				    (vari && nparams > nargs))
+				if ((!vari && nparams != nargs) || (vari && nparams > nargs))
 				{
-					engine_error("RIBBIT",
+					engine_error(MODULE,
 					             "Unexpected number of "
 					             "arguments nargs: %ld "
 					             "nparams: %ld vari: %ld\n",
@@ -261,18 +315,15 @@ void run_ribbit(bool initial_run)
 					obj rest = NIL;
 					for (int i = 0; i < nargs; ++i)
 					{
-						rest = TAG_RIB(alloc_rib(
-						    pop(), rest, PAIR_TAG));
+						rest = TAG_RIB(alloc_rib(pop(), rest, PAIR_TAG));
 					}
-					s2 = TAG_RIB(
-					    alloc_rib(rest, s2, PAIR_TAG));
+					s2 = TAG_RIB(alloc_rib(rest, s2, PAIR_TAG));
 				}
 				// )@@
 
 				for (int i = 0; i < nparams; ++i)
 				{
-					s2 = TAG_RIB(
-					    alloc_rib(pop(), s2, PAIR_TAG));
+					s2 = TAG_RIB(alloc_rib(pop(), s2, PAIR_TAG));
 				}
 
 				obj c2 = TAG_RIB(list_tail(RIB(s2), nparams));
@@ -295,17 +346,18 @@ void run_ribbit(bool initial_run)
 				CAR(pc) = TAG_NUM(instr);
 				pc = TAG(new_pc);
 			}
+
 			break;
 		}
 #undef code
 		case INSTR_SET:
 		{
 			obj x = CAR(stack);
-			((IS_NUM(CDR(pc))) ? list_tail(RIB(stack), NUM(CDR(pc)))
-			                   : RIB(CDR(pc)))
-			    ->fields[0] = x;
+			((IS_NUM(CDR(pc))) ? list_tail(RIB(stack), NUM(CDR(pc))) : RIB(CDR(pc)))->fields[0] = x;
 			stack = CDR(stack);
+
 			ADVANCE_PC;
+
 			break;
 		}
 		case INSTR_GET:

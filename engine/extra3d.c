@@ -37,8 +37,7 @@ uint32_t e3d_dbg_planecount;
 //
 // funcs
 
-void add_floor_plane(extraplane_t** dest, sector_t* sec, line_t* line,
-                     uint32_t flags, uint16_t alpha)
+void add_floor_plane(extraplane_t** dest, sector_t* sec, line_t* line, uint32_t flags, uint16_t alpha)
 {
 	extraplane_t* pl = *dest;
 	extraplane_t* new;
@@ -82,8 +81,7 @@ void add_floor_plane(extraplane_t** dest, sector_t* sec, line_t* line,
 	}
 }
 
-void add_ceiling_plane(extraplane_t** dest, sector_t* sec, line_t* line,
-                       uint32_t flags, uint16_t alpha)
+void add_ceiling_plane(extraplane_t** dest, sector_t* sec, line_t* line, uint32_t flags, uint16_t alpha)
 {
 	extraplane_t* pl = *dest;
 	extraplane_t* new;
@@ -126,15 +124,14 @@ void add_ceiling_plane(extraplane_t** dest, sector_t* sec, line_t* line,
 //
 // extra planes
 
-visplane_t* e3d_find_plane(fixed_t height, uint32_t picnum, uint16_t light,
-                           uint16_t alpha)
+visplane_t* e3d_find_plane(fixed_t height, uint32_t picnum, uint16_t light, uint16_t alpha)
 {
 	visplane_t* check;
 
 	for (check = e3dplanes; check < cur_plane; check++)
 	{
-		if (height == check->height && picnum == check->picnum &&
-		    light == check->light && alpha == check->alpha)
+		if (height == check->height && picnum == check->picnum && light == check->light &&
+		    alpha == check->alpha)
 			break;
 	}
 
@@ -294,12 +291,10 @@ void e3d_update_planes(sector_t* src, uint32_t planes)
 					pr = &sec->exfloor;
 					while (pl->next)
 					{
-						if (*pl->height <
-						    *pl->next->height)
+						if (*pl->height < *pl->next->height)
 						{
 							// swap pair
-							extraplane_t* tmp =
-							    pl->next;
+							extraplane_t* tmp = pl->next;
 							pl->next = tmp->next;
 							tmp->next = pl;
 							*pr = tmp;
@@ -319,12 +314,10 @@ void e3d_update_planes(sector_t* src, uint32_t planes)
 					pr = &sec->exceiling;
 					while (pl->next)
 					{
-						if (*pl->height >
-						    *pl->next->height)
+						if (*pl->height > *pl->next->height)
 						{
 							// swap pair
-							extraplane_t* tmp =
-							    pl->next;
+							extraplane_t* tmp = pl->next;
 							pl->next = tmp->next;
 							tmp->next = pl;
 							*pr = tmp;
@@ -417,8 +410,7 @@ extraplane_t* e3d_check_inside(sector_t* sec, fixed_t z, uint32_t flags)
 	{
 		if (pl->flags & flags)
 		{
-			if (z < pl->source->ceilingheight &&
-			    z >= pl->source->floorheight)
+			if (z < pl->source->ceilingheight && z >= pl->source->floorheight)
 				return pl;
 		}
 		pl = pl->next;
@@ -446,9 +438,8 @@ void e3d_check_heights(mobj_t* mo, sector_t* sec, uint32_t no_step)
 	pl = sec->exfloor;
 	while (pl)
 	{
-		if (pl->flags & E3D_SOLID &&
-		    (!e3d_plane_move || mo->z > pl->source->floorheight ||
-		     pl->source->floorheight == pl->source->ceilingheight))
+		if (pl->flags & E3D_SOLID && (!e3d_plane_move || mo->z > pl->source->floorheight ||
+		                              pl->source->floorheight == pl->source->ceilingheight))
 		{
 			if (*pl->height <= z && *pl->height > tmextrafloor)
 				tmextrafloor = *pl->height;
@@ -495,8 +486,7 @@ void e3d_check_water(mobj_t* mo)
 	{
 		if (pl->flags & E3D_WATER)
 		{
-			if (mo->z < pl->source->ceilingheight &&
-			    zc >= pl->source->floorheight)
+			if (mo->z < pl->source->ceilingheight && zc >= pl->source->floorheight)
 			{
 				mo->waterlevel = 1;
 				if (zc < pl->source->ceilingheight)
@@ -551,8 +541,7 @@ void e3d_draw_height(fixed_t height)
 			// masked?
 			if (pl->picnum >= numflats)
 			{
-				ds_maskcolor =
-				    flattexture_mask[pl->picnum - numflats];
+				ds_maskcolor = flattexture_mask[pl->picnum - numflats];
 				if (spanfunc == R_DrawSpan)
 					spanfunc = R_DrawMaskedSpan;
 				else if (spanfunc == R_DrawSpanTint0)
@@ -627,8 +616,7 @@ void e3d_create()
 		side = sides + ln->sidenum[0];
 
 		if (side->textureoffset)
-			engine_error("EX3D",
-			             "Texture X offset is not supported!");
+			engine_error("EX3D", "Texture X offset is not supported!");
 
 		src = side->sector;
 
@@ -681,19 +669,13 @@ void e3d_create()
 
 			if (sec->tag == tag)
 			{
-				add_floor_plane(&sec->exfloor, src, ln, flags,
-				                alpha);
-				add_ceiling_plane(&sec->exceiling, src, ln,
-				                  flags, alpha);
+				add_floor_plane(&sec->exfloor, src, ln, flags, alpha);
+				add_ceiling_plane(&sec->exceiling, src, ln, flags, alpha);
 				if (flags & (E3D_WATER | E3D_DRAW_INISIDE))
 				{
-					add_floor_plane(&sec->exfloor, src, ln,
-					                E3D_SWAP_PLANES, alpha);
-					add_ceiling_plane(
-					    &sec->exceiling, src, ln,
-					    E3D_SWAP_PLANES |
-						(flags & E3D_WATER),
-					    alpha);
+					add_floor_plane(&sec->exfloor, src, ln, E3D_SWAP_PLANES, alpha);
+					add_ceiling_plane(&sec->exceiling, src, ln,
+					                  E3D_SWAP_PLANES | (flags & E3D_WATER), alpha);
 				}
 			}
 		}
@@ -756,20 +738,11 @@ void e3d_create()
 				{
 					if (pl->source == sec)
 					{
-						for (uint32_t k = 0;
-						     k < sectors[j].linecount;
-						     k++)
+						for (uint32_t k = 0; k < sectors[j].linecount; k++)
 						{
-							line_t* li =
-							    sectors[j].lines[k];
-							M_AddToBox(
-							    sec->extra->bbox,
-							    li->v1->x,
-							    li->v1->y);
-							M_AddToBox(
-							    sec->extra->bbox,
-							    li->v2->x,
-							    li->v2->y);
+							line_t* li = sectors[j].lines[k];
+							M_AddToBox(sec->extra->bbox, li->v1->x, li->v1->y);
+							M_AddToBox(sec->extra->bbox, li->v2->x, li->v2->y);
 						}
 						break;
 					}
@@ -777,27 +750,19 @@ void e3d_create()
 				}
 			}
 
-			block =
-			    (sec->extra->bbox[BOXTOP] - bmaporgy + MAXRADIUS) >>
-			    MAPBLOCKSHIFT;
+			block = (sec->extra->bbox[BOXTOP] - bmaporgy + MAXRADIUS) >> MAPBLOCKSHIFT;
 			block = block >= bmapheight ? bmapheight - 1 : block;
 			sec->blockbox[BOXTOP] = block;
 
-			block = (sec->extra->bbox[BOXBOTTOM] - bmaporgy -
-			         MAXRADIUS) >>
-			        MAPBLOCKSHIFT;
+			block = (sec->extra->bbox[BOXBOTTOM] - bmaporgy - MAXRADIUS) >> MAPBLOCKSHIFT;
 			block = block < 0 ? 0 : block;
 			sec->blockbox[BOXBOTTOM] = block;
 
-			block = (sec->extra->bbox[BOXRIGHT] - bmaporgx +
-			         MAXRADIUS) >>
-			        MAPBLOCKSHIFT;
+			block = (sec->extra->bbox[BOXRIGHT] - bmaporgx + MAXRADIUS) >> MAPBLOCKSHIFT;
 			block = block >= bmapwidth ? bmapwidth - 1 : block;
 			sec->blockbox[BOXRIGHT] = block;
 
-			block = (sec->extra->bbox[BOXLEFT] - bmaporgx -
-			         MAXRADIUS) >>
-			        MAPBLOCKSHIFT;
+			block = (sec->extra->bbox[BOXLEFT] - bmaporgx - MAXRADIUS) >> MAPBLOCKSHIFT;
 			block = block < 0 ? 0 : block;
 			sec->blockbox[BOXLEFT] = block;
 		}
@@ -854,10 +819,8 @@ void e3d_create()
 	extra_clip_count = top_count * SCREENWIDTH;
 	if (extra_clip_count)
 	{
-		e3d_floorclip = Z_Malloc(extra_clip_count * sizeof(int16_t),
-		                         PU_LEVEL_E3D, NULL);
-		e3d_ceilingclip = Z_Malloc(extra_clip_count * sizeof(int16_t),
-		                           PU_LEVEL_E3D, NULL);
+		e3d_floorclip = Z_Malloc(extra_clip_count * sizeof(int16_t), PU_LEVEL_E3D, NULL);
+		e3d_ceilingclip = Z_Malloc(extra_clip_count * sizeof(int16_t), PU_LEVEL_E3D, NULL);
 	}
 
 	// allocate extra heights
@@ -865,8 +828,7 @@ void e3d_create()
 	{
 		height_count++;
 		height_count *= 2;
-		e3d_heights = Z_Malloc(height_count * sizeof(extra_height_t),
-		                       PU_LEVEL_E3D, NULL);
+		e3d_heights = Z_Malloc(height_count * sizeof(extra_height_t), PU_LEVEL_E3D, NULL);
 	}
 }
 

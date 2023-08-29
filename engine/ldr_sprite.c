@@ -101,14 +101,12 @@ static void cb_s_parse(lumpinfo_t* li)
 //
 // hooks
 
-static __attribute((regparm(2), no_caller_saved_registers)) void*
-vissprite_cache_lump(uint32_t idx)
+static __attribute((regparm(2), no_caller_saved_registers)) void* vissprite_cache_lump(uint32_t idx)
 {
 	return W_CacheLumpNum(sprite_lump[idx], PU_CACHE);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void*
-precache_setup_sprites(uint8_t* buff)
+static __attribute((regparm(2), no_caller_saved_registers)) void* precache_setup_sprites(uint8_t* buff)
 {
 	// optionally, it is possible to precache every sprite used in any state
 	// but for now, let's do like Doom did
@@ -159,8 +157,7 @@ __attribute((regparm(2), no_caller_saved_registers)) void spr_init_data()
 //
 // hooks
 
-static const hook_t hooks[] __attribute__((used, section(".hooks"),
-                                           aligned(4))) = {
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
     // disable call to 'R_InitSpriteDefs' in 'R_InitSprites'
     {0x00037A4B, CODE_HOOK | HOOK_SET_NOPS, 5},
     // replace call to 'W_CacheLumpNum' in 'R_DrawVisSprite'

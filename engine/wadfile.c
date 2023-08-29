@@ -32,8 +32,7 @@ static void wad_add(uint8_t* name)
 	}
 
 	totalsize = strlen(name);
-	if (totalsize > 4 &&
-	    (*((uint32_t*)(name + totalsize - 4)) | 0x20202020) != 0x6461772E)
+	if (totalsize > 4 && (*((uint32_t*)(name + totalsize - 4)) | 0x20202020) != 0x6461772E)
 	{
 		// load entire file as a single lump
 		uint8_t *ptr, *dst;
@@ -72,8 +71,7 @@ static void wad_add(uint8_t* name)
 	}
 
 	tmp = doom_read(fd, &head, sizeof(wadhead_t));
-	if (tmp != sizeof(wadhead_t) ||
-	    (head.id != 0x44415749 && head.id != 0x44415750))
+	if (tmp != sizeof(wadhead_t) || (head.id != 0x44415749 && head.id != 0x44415750))
 	{
 		doom_printf("- invalid\n");
 		doom_close(fd);
@@ -323,8 +321,7 @@ void wad_handle_range(uint16_t ident, void (*cb)(lumpinfo_t*))
 	{
 		if (is_inside)
 		{
-			if (li->wame == range_defs[2].u64 ||
-			    li->wame == range_defs[3].u64)
+			if (li->wame == range_defs[2].u64 || li->wame == range_defs[3].u64)
 				is_inside = 0;
 			else
 				cb(li);
@@ -339,8 +336,7 @@ void wad_handle_range(uint16_t ident, void (*cb)(lumpinfo_t*))
 	}
 
 	if (is_inside)
-		engine_error("WAD", "Unclosed range %.8s / %.8s\n",
-		             range_defs[is_inside - 1].u8,
+		engine_error("WAD", "Unclosed range %.8s / %.8s\n", range_defs[is_inside - 1].u8,
 		             range_defs[is_inside + 1].u8);
 }
 
@@ -361,10 +357,9 @@ void wad_handle_lump(const uint8_t* name, void (*cb)(lumpinfo_t*))
 
 //
 // hooks
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// disable 'W_InitMultipleFiles'
-	{0x00038A30, CODE_HOOK | HOOK_UINT8, 0xC3},
-	// disable call to 'W_Reload' in 'P_SetupLevel'
-	{0x0002E858, CODE_HOOK | HOOK_SET_NOPS, 5},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // disable 'W_InitMultipleFiles'
+    {0x00038A30, CODE_HOOK | HOOK_UINT8, 0xC3},
+    // disable call to 'W_Reload' in 'P_SetupLevel'
+    {0x0002E858, CODE_HOOK | HOOK_SET_NOPS, 5},
 };

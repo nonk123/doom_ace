@@ -35,8 +35,7 @@ uint32_t sight_extra_3d_cover(sector_t* sec)
 	pl = sec->exfloor;
 	while (pl)
 	{
-		if (pl->flags & E3D_BLOCK_SIGHT &&
-		    pl->source->ceilingheight >= opentop &&
+		if (pl->flags & E3D_BLOCK_SIGHT && pl->source->ceilingheight >= opentop &&
 		    pl->source->floorheight <= openbottom)
 			return 1;
 		pl = pl->next;
@@ -76,10 +75,8 @@ static uint32_t PTR_SightTraverse(intercept_t* in)
 	pl = back->exfloor;
 	while (pl)
 	{
-		if (pl->flags & E3D_BLOCK_SIGHT &&
-		    pl->source->ceilingheight < sightzstart &&
-		    pl->source->ceilingheight >= openbottom &&
-		    pl->source->floorheight <= openbottom)
+		if (pl->flags & E3D_BLOCK_SIGHT && pl->source->ceilingheight < sightzstart &&
+		    pl->source->ceilingheight >= openbottom && pl->source->floorheight <= openbottom)
 		{
 			openbottom = pl->source->ceilingheight;
 			botplane = pl;
@@ -91,10 +88,8 @@ static uint32_t PTR_SightTraverse(intercept_t* in)
 	pl = back->exceiling;
 	while (pl)
 	{
-		if (pl->flags & E3D_BLOCK_SIGHT &&
-		    pl->source->floorheight > sightzstart &&
-		    pl->source->floorheight <= opentop &&
-		    pl->source->ceilingheight >= opentop)
+		if (pl->flags & E3D_BLOCK_SIGHT && pl->source->floorheight > sightzstart &&
+		    pl->source->floorheight <= opentop && pl->source->ceilingheight >= opentop)
 		{
 			opentop = pl->source->floorheight;
 			topplane = pl;
@@ -103,19 +98,16 @@ static uint32_t PTR_SightTraverse(intercept_t* in)
 		pl = pl->next;
 	}
 
-	force = li->frontsector->tag != li->backsector->tag &&
-	        (li->frontsector->exfloor || li->backsector->exfloor);
+	force = li->frontsector->tag != li->backsector->tag && (li->frontsector->exfloor || li->backsector->exfloor);
 
-	if (force ||
-	    li->frontsector->floorheight != li->backsector->floorheight)
+	if (force || li->frontsector->floorheight != li->backsector->floorheight)
 	{
 		slope = FixedDiv(openbottom - sightzstart, in->frac);
 		if (slope > botslope)
 			botslope = slope;
 	}
 
-	if (force ||
-	    li->frontsector->ceilingheight != li->backsector->ceilingheight)
+	if (force || li->frontsector->ceilingheight != li->backsector->ceilingheight)
 	{
 		slope = FixedDiv(opentop - sightzstart, in->frac);
 		if (slope < topslope)
@@ -128,8 +120,7 @@ static uint32_t PTR_SightTraverse(intercept_t* in)
 	return 1;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-P_SightLineCheck(line_t* ld)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t P_SightLineCheck(line_t* ld)
 {
 	int32_t s1, s2;
 	divline_t dl;
@@ -203,8 +194,7 @@ static uint32_t P_SightTraverseIntercepts()
 	return 1;
 }
 
-static uint32_t P_SightPathTraverse(fixed_t x1, fixed_t y1, fixed_t x2,
-                                    fixed_t y2)
+static uint32_t P_SightPathTraverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2)
 {
 	fixed_t xt1, yt1, xt2, yt2;
 	fixed_t xstep, ystep;
@@ -239,8 +229,8 @@ try_again:
 	xt2 = x2 >> MAPBLOCKSHIFT;
 	yt2 = y2 >> MAPBLOCKSHIFT;
 
-	if (xt1 < 0 || yt1 < 0 || xt1 >= bmapwidth || yt1 >= bmapheight ||
-	    xt2 < 0 || yt2 < 0 || xt2 >= bmapwidth || yt2 >= bmapheight)
+	if (xt1 < 0 || yt1 < 0 || xt1 >= bmapwidth || yt1 >= bmapheight || xt2 < 0 || yt2 < 0 || xt2 >= bmapwidth ||
+	    yt2 >= bmapheight)
 		return 0;
 
 	if (xt2 > xt1)
@@ -296,17 +286,14 @@ try_again:
 		{
 			for (count = 0; count < 64; count++)
 			{
-				if (!P_BlockLinesIterator(mapx, mapy,
-				                          P_SightLineCheck))
+				if (!P_BlockLinesIterator(mapx, mapy, P_SightLineCheck))
 					return 0;
 
 				if (mapx == xt2 && mapy == yt2)
 					break;
 
-				if (!P_BlockLinesIterator(mapx + mapxstep, mapy,
-				                          P_SightLineCheck) ||
-				    !P_BlockLinesIterator(mapx, mapy + mapystep,
-				                          P_SightLineCheck))
+				if (!P_BlockLinesIterator(mapx + mapxstep, mapy, P_SightLineCheck) ||
+				    !P_BlockLinesIterator(mapx, mapy + mapystep, P_SightLineCheck))
 					return 0;
 
 				mapx += mapxstep;
@@ -365,8 +352,7 @@ traverse:
 //
 // API
 
-__attribute((regparm(2), no_caller_saved_registers)) uint32_t
-P_CheckSight(mobj_t* t1, mobj_t* t2)
+__attribute((regparm(2), no_caller_saved_registers)) uint32_t P_CheckSight(mobj_t* t1, mobj_t* t2)
 {
 	extraplane_t* pl;
 
@@ -376,8 +362,8 @@ P_CheckSight(mobj_t* t1, mobj_t* t2)
 	if (!t2)
 		return 0;
 
-	if ((t2->render_style >= RS_INVISIBLE || t2->flags1 & MF1_NOTARGET) &&
-	    t1->flags1 & MF1_ISMONSTER && !(t1->flags & MF_CORPSE))
+	if ((t2->render_style >= RS_INVISIBLE || t2->flags1 & MF1_NOTARGET) && t1->flags1 & MF1_ISMONSTER &&
+	    !(t1->flags & MF_CORPSE))
 		// HACK: 'INVISIBLE' check should be in A_Chase
 		// HACK: 'NOTARGET' check should be in A_Chase
 		return 0;

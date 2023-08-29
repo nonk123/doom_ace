@@ -15,9 +15,7 @@ void utils_init()
 {
 	// this will install all hooks in '.hooks' section
 	// don't call this function if you don't use this section
-	utils_install_hooks(&_hooks_start,
-	                    ((void*)&_hooks_end - (void*)&_hooks_start) /
-	                        sizeof(hook_t));
+	utils_install_hooks(&_hooks_start, ((void*)&_hooks_end - (void*)&_hooks_start) / sizeof(hook_t));
 }
 
 void utils_install_hooks(const hook_t* table, uint32_t count)
@@ -52,8 +50,7 @@ void utils_install_hooks(const hook_t* table, uint32_t count)
 			*((uint8_t*)addr) = 0xE9;
 			addr++; // fall trough
 		reladdr_doom:
-			*((uint32_t*)(addr)) =
-			    (table->value + doom_code_segment) - (addr + 4);
+			*((uint32_t*)(addr)) = (table->value + doom_code_segment) - (addr + 4);
 			break;
 		case HOOK_UINT8:
 			*((uint8_t*)addr) = table->value;
@@ -74,8 +71,7 @@ void utils_install_hooks(const hook_t* table, uint32_t count)
 			memset((void*)addr, 0x90, table->value);
 			break;
 		case HOOK_MEM_COPY:
-			memcpy((void*)addr, (void*)table->value,
-			       (table->type >> 16) & 0x0FFF);
+			memcpy((void*)addr, (void*)table->value, (table->type >> 16) & 0x0FFF);
 			break;
 		// these modify ACE memory
 		case HOOK_IMPORT:
@@ -133,8 +129,7 @@ char* strcpy(char* __restrict __dest, const char* __restrict __src)
 	return __dest;
 }
 
-char* strncpy(char* __restrict __dest, const char* __restrict __src,
-              size_t count)
+char* strncpy(char* __restrict __dest, const char* __restrict __src, size_t count)
 {
 	char* dst = __dest;
 	while (count--)

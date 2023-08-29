@@ -114,9 +114,8 @@ static const uint8_t* menu_mode[] = {
     "deathmatch",
 };
 
-static const uint8_t* menu_flags[FLAG_COUNT] = {
-    "enable cheats", "friendly fire", "no monsters", "fastparm",
-    "keep keys",     "respawnparm",   "weapons stay"};
+static const uint8_t* menu_flags[FLAG_COUNT] = {"enable cheats", "friendly fire", "no monsters", "fastparm",
+                                                "keep keys",     "respawnparm",   "weapons stay"};
 
 static const uint8_t* menu_inventory[] = {
     "discard",
@@ -136,17 +135,12 @@ static net_menu_t net_menu[] = {
                         .type = TYPE_SIMPLE,
                         .options = menu_mode,
                         .maxsel = sizeof(menu_mode) / sizeof(uint8_t*)},
-    [MENU_ITEM_TIME] = {.title = "ITEM TIME",
-                        .type = TYPE_NUMERIC,
-                        .maxsel = 246},
+    [MENU_ITEM_TIME] = {.title = "ITEM TIME", .type = TYPE_NUMERIC, .maxsel = 246},
     [MENU_INVENTORY] = {.title = "INVENTORY",
                         .type = TYPE_SIMPLE,
                         .options = menu_inventory,
                         .maxsel = sizeof(menu_inventory) / sizeof(uint8_t*)},
-    [MENU_GAME_FLAGS] = {.title = "FLAGS",
-                         .type = TYPE_FLAGS,
-                         .options = menu_flags,
-                         .maxsel = FLAG_COUNT},
+    [MENU_GAME_FLAGS] = {.title = "FLAGS", .type = TYPE_FLAGS, .options = menu_flags, .maxsel = FLAG_COUNT},
 };
 
 //
@@ -191,13 +185,11 @@ static void draw_map_menu(net_setup_t* ns, int32_t mx)
 
 		font_color = ns->color_menu[idx];
 		if (!info->name || !ns->map_string)
-			text = lumpinfo[info->lump]
-			           .name; // this assumes info->fd < 16777216
+			text = lumpinfo[info->lump].name; // this assumes info->fd < 16777216
 		else
 			text = info->name;
 
-		font_center_text(mx, ns->menu_y0 + ns->menu_yh * (i + 1) + 5,
-		                 text, smallfont, 0);
+		font_center_text(mx, ns->menu_y0 + ns->menu_yh * (i + 1) + 5, text, smallfont, 0);
 
 		info++;
 	}
@@ -234,14 +226,11 @@ static void draw_class_menu(net_setup_t* ns, int32_t mx, uint32_t left)
 		font_color = ns->color_menu[idx];
 
 		if (left)
-			font_draw_text(
-			    mx, ns->menu_y0 + ns->menu_yh * (i + 1) + 5,
-			    mobjinfo[player_class[sel]].player.name, smallfont);
+			font_draw_text(mx, ns->menu_y0 + ns->menu_yh * (i + 1) + 5,
+			               mobjinfo[player_class[sel]].player.name, smallfont);
 		else
-			font_center_text(
-			    mx, ns->menu_y0 + ns->menu_yh * (i + 1) + 5,
-			    mobjinfo[player_class[sel]].player.name, smallfont,
-			    0);
+			font_center_text(mx, ns->menu_y0 + ns->menu_yh * (i + 1) + 5,
+			                 mobjinfo[player_class[sel]].player.name, smallfont, 0);
 	}
 }
 
@@ -257,8 +246,7 @@ static void menu_key(net_setup_t* ns)
 	{
 		// title
 		font_color = ns->color_title[ns->menu_now != mi];
-		font_center_text(mx, ns->menu_y0, net_menu[mi].title, smallfont,
-		                 0);
+		font_center_text(mx, ns->menu_y0, net_menu[mi].title, smallfont, 0);
 
 		// items
 		switch (net_menu[mi].type)
@@ -276,9 +264,8 @@ static void menu_key(net_setup_t* ns)
 				}
 
 				font_color = ns->color_menu[idx];
-				font_center_text(
-				    mx, ns->menu_y0 + ns->menu_yh * (i + 1) + 5,
-				    net_menu[mi].options[i], smallfont, 0);
+				font_center_text(mx, ns->menu_y0 + ns->menu_yh * (i + 1) + 5, net_menu[mi].options[i],
+				                 smallfont, 0);
 			}
 			break;
 		case TYPE_MAP:
@@ -299,16 +286,14 @@ static void menu_key(net_setup_t* ns)
 					idx |= 2;
 
 				font_color = ns->color_menu[idx];
-				font_center_text(
-				    mx, ns->menu_y0 + ns->menu_yh * (i + 1) + 5,
-				    net_menu[mi].options[i], smallfont, 0);
+				font_center_text(mx, ns->menu_y0 + ns->menu_yh * (i + 1) + 5, net_menu[mi].options[i],
+				                 smallfont, 0);
 			}
 			break;
 		case TYPE_NUMERIC:
 			font_color = ns->color_menu[(ns->menu_now == mi) << 1];
 			doom_sprintf(ns->text, "%u", ns->menu_sel[mi]);
-			font_center_text(mx, ns->menu_y0 + ns->menu_yh + 5,
-			                 ns->text, smallfont, 0);
+			font_center_text(mx, ns->menu_y0 + ns->menu_yh + 5, ns->text, smallfont, 0);
 			break;
 		}
 
@@ -326,8 +311,7 @@ static void menu_node(net_setup_t* ns)
 
 	// player class
 	font_color = ns->color_title[0];
-	font_draw_text(20, ns->menu_y0, net_menu[MENU_PLAYER_CLASS].title,
-	               smallfont);
+	font_draw_text(20, ns->menu_y0, net_menu[MENU_PLAYER_CLASS].title, smallfont);
 	draw_class_menu(ns, 2, 1);
 
 	// other options
@@ -357,17 +341,15 @@ static void menu_node(net_setup_t* ns)
 			case TYPE_MAP:
 			{
 				map_level_t* info = map_info;
-				for (uint32_t ii = 0;
-				     ii < ns->menu_sel[MENU_GAME_MAP];)
+				for (uint32_t ii = 0; ii < ns->menu_sel[MENU_GAME_MAP];)
 				{
 					if (info->lump >= 0)
 						ii++;
 					info++;
 				}
 				if (!info->name || !ns->map_string)
-					text = lumpinfo[info->lump]
-					           .name; // this assumes
-					                  // info->fd < 16777216
+					text = lumpinfo[info->lump].name; // this assumes
+					                                  // info->fd < 16777216
 				else
 					text = info->name;
 			}
@@ -389,9 +371,7 @@ static void menu_node(net_setup_t* ns)
 	for (uint32_t i = 0; i < FLAG_COUNT; i++)
 	{
 		font_color = ns->color_menu[!!(ns->menu_flags & (1 << i)) * 3];
-		font_draw_text(ns->flag_x[i],
-		               ns->menu_yf + (i / 3) * ns->menu_yh,
-		               menu_flags[i], smallfont);
+		font_draw_text(ns->flag_x[i], ns->menu_yf + (i / 3) * ns->menu_yh, menu_flags[i], smallfont);
 	}
 }
 
@@ -410,9 +390,7 @@ static void update_screen(net_setup_t* ns, uint32_t stage)
 		uint8_t* text;
 
 		if (player_info[i].playerclass < num_player_classes)
-			text =
-			    mobjinfo[player_class[player_info[i].playerclass]]
-				.player.name;
+			text = mobjinfo[player_class[player_info[i].playerclass]].player.name;
 		else if (player_info[i].playerclass == ERROR_DISCONNECT)
 			text = "disconnected";
 		else if (player_info[i].playerclass == ERROR_BAD_VERSION)
@@ -422,10 +400,8 @@ static void update_screen(net_setup_t* ns, uint32_t stage)
 		else
 			text = "  ----";
 
-		doom_sprintf(ns->text, "\x1C%cPlayer%u  \x1C%c%s",
-		             ns->player_state[i], i, ns->player_info[i], text);
-		font_center_text((SCREENWIDTH / 2), ns->menu_yh * i + 2,
-		                 ns->text, smallfont, 0);
+		doom_sprintf(ns->text, "\x1C%cPlayer%u  \x1C%c%s", ns->player_state[i], i, ns->player_info[i], text);
+		font_center_text((SCREENWIDTH / 2), ns->menu_yh * i + 2, ns->text, smallfont, 0);
 	}
 
 	if (stage)
@@ -446,15 +422,13 @@ skip:
 
 static void pkt_send(net_setup_t* ns, uint32_t stage)
 {
-	netbuffer->player =
-	    VERSION_MARK; // this is 'version' in old initialization
+	netbuffer->player = VERSION_MARK; // this is 'version' in old initialization
 
 	if (consoleplayer)
 	{
 		// sending client packet
 		netbuffer->starttic = 'N';
-		netbuffer->numtics =
-		    1 + ((sizeof(dc_net_node_t) - 1) / sizeof(ticcmd_t));
+		netbuffer->numtics = 1 + ((sizeof(dc_net_node_t) - 1) / sizeof(ticcmd_t));
 
 		// version
 		netbuffer->net_node.version = ns->version;
@@ -467,22 +441,18 @@ static void pkt_send(net_setup_t* ns, uint32_t stage)
 
 		// player info
 		netbuffer->net_node.pi = player_info[consoleplayer];
-		netbuffer->net_node.pi.playerclass =
-		    ns->menu_sel[MENU_PLAYER_CLASS];
+		netbuffer->net_node.pi.playerclass = ns->menu_sel[MENU_PLAYER_CLASS];
 	}
 	else
 	{
 		// sending server packet
 		netbuffer->starttic = 'K';
-		netbuffer->numtics =
-		    1 + ((sizeof(dc_net_key_t) - 1) / sizeof(ticcmd_t));
+		netbuffer->numtics = 1 + ((sizeof(dc_net_key_t) - 1) / sizeof(ticcmd_t));
 
 		// version
 		netbuffer->net_key.check = ns->key_check[0];
-		netbuffer->net_key.game_info =
-		    ns->menu_sel[MENU_GAME_SKILL] |
-		    (ns->menu_sel[MENU_GAME_MODE] << 3) |
-		    (ns->menu_sel[MENU_INVENTORY] << 5);
+		netbuffer->net_key.game_info = ns->menu_sel[MENU_GAME_SKILL] | (ns->menu_sel[MENU_GAME_MODE] << 3) |
+		                               (ns->menu_sel[MENU_INVENTORY] << 5);
 		netbuffer->net_key.respawn = ns->menu_sel[MENU_ITEM_TIME];
 		netbuffer->net_key.map_idx = ns->menu_sel[MENU_GAME_MAP];
 		netbuffer->net_key.menu_idx = ns->menu_now;
@@ -551,22 +521,16 @@ static void pkt_recv(net_setup_t* ns, uint32_t stage)
 			ns->key_check[idx] = netbuffer->net_node.key_check;
 
 			// update check
-			if (ns->node_check[idx] ==
-			    netbuffer->net_node.node_check)
+			if (ns->node_check[idx] == netbuffer->net_node.node_check)
 			{
-				if (ns->player_state[idx] !=
-				    COLOR_PSTATE_WAITING)
+				if (ns->player_state[idx] != COLOR_PSTATE_WAITING)
 					continue;
 				// only update state color
-				if (player_info[idx].playerclass <
-				        num_player_classes ||
-				    player_info[idx].playerclass ==
-				        UNKNOWN_PLAYER_CLASS)
-					ns->player_state[idx] =
-					    COLOR_PSTATE_READY;
+				if (player_info[idx].playerclass < num_player_classes ||
+				    player_info[idx].playerclass == UNKNOWN_PLAYER_CLASS)
+					ns->player_state[idx] = COLOR_PSTATE_READY;
 				else
-					ns->player_state[idx] =
-					    COLOR_PSTATE_ERROR;
+					ns->player_state[idx] = COLOR_PSTATE_ERROR;
 				ns->force_update = 1;
 				continue;
 			}
@@ -582,8 +546,7 @@ static void pkt_recv(net_setup_t* ns, uint32_t stage)
 			// check version
 			if (netbuffer->net_node.version != ns->version)
 			{
-				player_info[idx].playerclass =
-				    ERROR_BAD_VERSION;
+				player_info[idx].playerclass = ERROR_BAD_VERSION;
 				ns->player_state[idx] = COLOR_PSTATE_ERROR;
 				ns->player_info[idx] = COLOR_PINFO_ERROR;
 				continue;
@@ -605,8 +568,7 @@ static void pkt_recv(net_setup_t* ns, uint32_t stage)
 				ns->player_state[idx] = COLOR_PSTATE_READY;
 				ns->player_info[idx] = COLOR_PINFO_CLASS;
 			}
-			else if (player_info[idx].playerclass ==
-			         UNKNOWN_PLAYER_CLASS)
+			else if (player_info[idx].playerclass == UNKNOWN_PLAYER_CLASS)
 			{
 				ns->player_state[idx] = COLOR_PSTATE_READY;
 				ns->player_info[idx] = COLOR_PINFO_INITIAL;
@@ -632,16 +594,11 @@ static void pkt_recv(net_setup_t* ns, uint32_t stage)
 			ns->key_check[0] = netbuffer->net_key.check;
 
 			// game info
-			ns->menu_sel[MENU_GAME_MAP] =
-			    netbuffer->net_key.map_idx;
-			ns->menu_sel[MENU_GAME_SKILL] =
-			    netbuffer->net_key.game_info & 7;
-			ns->menu_sel[MENU_GAME_MODE] =
-			    (netbuffer->net_key.game_info >> 3) & 3;
-			ns->menu_sel[MENU_INVENTORY] =
-			    (netbuffer->net_key.game_info >> 5) & 3;
-			ns->menu_sel[MENU_ITEM_TIME] =
-			    netbuffer->net_key.respawn;
+			ns->menu_sel[MENU_GAME_MAP] = netbuffer->net_key.map_idx;
+			ns->menu_sel[MENU_GAME_SKILL] = netbuffer->net_key.game_info & 7;
+			ns->menu_sel[MENU_GAME_MODE] = (netbuffer->net_key.game_info >> 3) & 3;
+			ns->menu_sel[MENU_INVENTORY] = (netbuffer->net_key.game_info >> 5) & 3;
+			ns->menu_sel[MENU_ITEM_TIME] = netbuffer->net_key.respawn;
 			ns->start_check = netbuffer->net_key.menu_idx;
 			ns->menu_flags = netbuffer->net_key.flags;
 			ns->prng_idx = netbuffer->net_key.prng_idx;
@@ -650,32 +607,23 @@ static void pkt_recv(net_setup_t* ns, uint32_t stage)
 			for (uint32_t idx = 0; idx < doomcom->numplayers; idx++)
 			{
 				player_info[idx] = netbuffer->net_key.pi[idx];
-				if (player_info[idx].playerclass <
-				    num_player_classes)
+				if (player_info[idx].playerclass < num_player_classes)
 				{
-					ns->player_state[idx] =
-					    COLOR_PSTATE_READY;
-					ns->player_info[idx] =
-					    COLOR_PINFO_CLASS;
+					ns->player_state[idx] = COLOR_PSTATE_READY;
+					ns->player_info[idx] = COLOR_PINFO_CLASS;
 				}
-				else if (player_info[idx].playerclass ==
-				         UNKNOWN_PLAYER_CLASS)
+				else if (player_info[idx].playerclass == UNKNOWN_PLAYER_CLASS)
 				{
-					ns->player_state[idx] =
-					    COLOR_PSTATE_READY;
-					ns->player_info[idx] =
-					    COLOR_PINFO_INITIAL;
+					ns->player_state[idx] = COLOR_PSTATE_READY;
+					ns->player_info[idx] = COLOR_PINFO_INITIAL;
 				}
 				else
 				{
-					ns->player_state[idx] =
-					    COLOR_PSTATE_ERROR;
-					ns->player_info[idx] =
-					    COLOR_PINFO_ERROR;
+					ns->player_state[idx] = COLOR_PSTATE_ERROR;
+					ns->player_info[idx] = COLOR_PINFO_ERROR;
 				}
 				if (idx == consoleplayer)
-					ns->player_state[idx] =
-					    COLOR_PSTATE_ITSME;
+					ns->player_state[idx] = COLOR_PSTATE_ITSME;
 			}
 		}
 		else if (netbuffer->starttic == 'I')
@@ -688,11 +636,9 @@ static void pkt_recv(net_setup_t* ns, uint32_t stage)
 
 			len = 1 + (netbuffer->retransmitfrom & 63);
 
-			if (ptr + len <
-			    screen_buffer + SCREENWIDTH * SCREENHEIGHT * 2)
+			if (ptr + len < screen_buffer + SCREENWIDTH * SCREENHEIGHT * 2)
 			{
-				ns->force_update =
-				    netbuffer->retransmitfrom >> 7;
+				ns->force_update = netbuffer->retransmitfrom >> 7;
 				memcpy(ptr, netbuffer->net_px.data, len);
 			}
 		}
@@ -702,8 +648,7 @@ static void pkt_recv(net_setup_t* ns, uint32_t stage)
 //
 // new network init
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-D_ArbitrateNetStart()
+static __attribute((regparm(2), no_caller_saved_registers)) void D_ArbitrateNetStart()
 {
 	uint32_t utick;
 	net_setup_t ns;
@@ -717,8 +662,7 @@ D_ArbitrateNetStart()
 	menuactive = 1;
 
 	// fade the screen
-	for (uint8_t* ptr = (uint8_t*)0xA0000;
-	     ptr < (uint8_t*)0xA0000 + SCREENWIDTH * SCREENHEIGHT; ptr++)
+	for (uint8_t* ptr = (uint8_t*)0xA0000; ptr < (uint8_t*)0xA0000 + SCREENWIDTH * SCREENHEIGHT; ptr++)
 		*ptr = colormaps[*ptr + 256 * 28];
 	// and store for later
 	dwcopy(screen_buffer + SCREENWIDTH * SCREENHEIGHT, (void*)0xA0000,
@@ -755,17 +699,13 @@ D_ArbitrateNetStart()
 
 	// defaults
 	ns.menu_now = MENU_PLAYER_CLASS;
-	ns.menu_yh =
-	    mod_config.menu_font_height > 12 ? 12 : mod_config.menu_font_height;
+	ns.menu_yh = mod_config.menu_font_height > 12 ? 12 : mod_config.menu_font_height;
 	ns.menu_y0 = ns.menu_yh * 4 + ns.menu_yh / 2;
 	ns.menu_yf = SCREENHEIGHT - ns.menu_yh * (((FLAG_COUNT - 1) / 3) + 1);
 	ns.color_title[0] = &render_tables->fmap[FONT_COLOR_COUNT * FCOL_GOLD];
-	ns.color_title[1] =
-	    &render_tables->fmap[FONT_COLOR_COUNT * FCOL_DARKBROWN];
-	ns.color_menu[0] =
-	    &render_tables->fmap[FONT_COLOR_COUNT * FCOL_DARKGRAY];
-	ns.color_menu[1] =
-	    &render_tables->fmap[FONT_COLOR_COUNT * FCOL_DARKGREEN];
+	ns.color_title[1] = &render_tables->fmap[FONT_COLOR_COUNT * FCOL_DARKBROWN];
+	ns.color_menu[0] = &render_tables->fmap[FONT_COLOR_COUNT * FCOL_DARKGRAY];
+	ns.color_menu[1] = &render_tables->fmap[FONT_COLOR_COUNT * FCOL_DARKGREEN];
 	ns.color_menu[2] = &render_tables->fmap[FONT_COLOR_COUNT * FCOL_GRAY];
 	ns.color_menu[3] = &render_tables->fmap[FONT_COLOR_COUNT * FCOL_GREEN];
 	ns.menu_sel[MENU_PLAYER_CLASS] = 255;
@@ -801,8 +741,7 @@ D_ArbitrateNetStart()
 			uint32_t tmp = i % 3;
 
 			if (tmp)
-				ns.flag_x[i] = font_draw_text(
-				    0, 0, menu_flags[i], smallfont);
+				ns.flag_x[i] = font_draw_text(0, 0, menu_flags[i], smallfont);
 
 			switch (tmp)
 			{
@@ -820,8 +759,7 @@ D_ArbitrateNetStart()
 	}
 	else
 	{
-		ns.menu_flags = 3 | (!!nomonsters << 2) | (!!fastparm << 3) |
-		                (!!respawnparm << 5);
+		ns.menu_flags = 3 | (!!nomonsters << 2) | (!!fastparm << 3) | (!!respawnparm << 5);
 		ns.key_check[0] = 1;
 		player_info[0].playerclass = 0;
 		ns.player_info[0] = COLOR_PINFO_CLASS;
@@ -848,8 +786,7 @@ D_ArbitrateNetStart()
 
 		ns.force_update = 0;
 
-		for (; eventtail != eventhead;
-		     eventtail = (++eventtail) & (MAXEVENTS - 1))
+		for (; eventtail != eventhead; eventtail = (++eventtail) & (MAXEVENTS - 1))
 		{
 			event_t* ev = &events[eventtail];
 			if (ev->type == ev_keydown)
@@ -857,8 +794,7 @@ D_ArbitrateNetStart()
 				switch (ev->data1)
 				{
 				case 0xAD: // UP
-					if (ns.menu_sel[ns.menu_now] >=
-					    net_menu[ns.menu_now].maxsel)
+					if (ns.menu_sel[ns.menu_now] >= net_menu[ns.menu_now].maxsel)
 					{
 						ns.menu_sel[ns.menu_now] = 0;
 						update |= 3;
@@ -870,18 +806,12 @@ D_ArbitrateNetStart()
 					}
 					break;
 				case 0xAF: // DOWN
-					if (ns.menu_sel[ns.menu_now] >=
-					    net_menu[ns.menu_now].maxsel)
+					if (ns.menu_sel[ns.menu_now] >= net_menu[ns.menu_now].maxsel)
 					{
-						ns.menu_sel[ns.menu_now] =
-						    net_menu[ns.menu_now]
-							.maxsel -
-						    1;
+						ns.menu_sel[ns.menu_now] = net_menu[ns.menu_now].maxsel - 1;
 						update |= 3;
 					}
-					else if (ns.menu_sel[ns.menu_now] <
-					         net_menu[ns.menu_now].maxsel -
-					             1)
+					else if (ns.menu_sel[ns.menu_now] < net_menu[ns.menu_now].maxsel - 1)
 					{
 						ns.menu_sel[ns.menu_now]++;
 						update |= 3;
@@ -904,18 +834,15 @@ D_ArbitrateNetStart()
 					update |= 3;
 					break;
 				case ' ': // SPACE
-					if (consoleplayer ||
-					    ns.menu_now == MENU_GAME_MAP)
+					if (consoleplayer || ns.menu_now == MENU_GAME_MAP)
 					{
 						ns.map_string = !ns.map_string;
 						update |= 1;
 						break;
 					}
-					if (net_menu[ns.menu_now].type !=
-					    TYPE_FLAGS)
+					if (net_menu[ns.menu_now].type != TYPE_FLAGS)
 						break;
-					ns.menu_flags ^=
-					    1 << ns.menu_sel[ns.menu_now];
+					ns.menu_flags ^= 1 << ns.menu_sel[ns.menu_now];
 					update |= 3;
 					break;
 				case 0x0D: // ENTER
@@ -924,12 +851,9 @@ D_ArbitrateNetStart()
 					// start the game
 					update |= 4;
 					// check players (including self)
-					for (uint32_t i = 0;
-					     i < doomcom->numplayers; i++)
+					for (uint32_t i = 0; i < doomcom->numplayers; i++)
 					{
-						if (player_info[i]
-						        .playerclass >=
-						    num_player_classes)
+						if (player_info[i].playerclass >= num_player_classes)
 						{
 							// can't start
 							update &= ~4;
@@ -942,8 +866,7 @@ D_ArbitrateNetStart()
 					if (consoleplayer)
 					{
 						// set status
-						ns.menu_sel[MENU_PLAYER_CLASS] =
-						    ERROR_DISCONNECT;
+						ns.menu_sel[MENU_PLAYER_CLASS] = ERROR_DISCONNECT;
 						// increment check counter,
 						// avoid zero
 						ns.node_check[0]++;
@@ -953,8 +876,7 @@ D_ArbitrateNetStart()
 					else
 					{
 						// set status
-						player_info[0].playerclass =
-						    ERROR_DISCONNECT;
+						player_info[0].playerclass = ERROR_DISCONNECT;
 						// increment check counter,
 						// avoid zero
 						ns.key_check[0]++;
@@ -965,9 +887,7 @@ D_ArbitrateNetStart()
 					for (uint32_t i = 0; i < 16; i++)
 						pkt_send(&ns, 0);
 					// abort network game
-					engine_error(
-					    "NET",
-					    "Network game setup aborted!");
+					engine_error("NET", "Network game setup aborted!");
 					break;
 				}
 			}
@@ -999,8 +919,7 @@ D_ArbitrateNetStart()
 		else
 		{
 			// force playerclass
-			player_info[0].playerclass =
-			    ns.menu_sel[MENU_PLAYER_CLASS];
+			player_info[0].playerclass = ns.menu_sel[MENU_PLAYER_CLASS];
 
 			// check for update
 			if (update & 2)
@@ -1010,20 +929,16 @@ D_ArbitrateNetStart()
 				if (!ns.key_check[0])
 					ns.key_check[0]++;
 				// change all players color status
-				for (uint32_t i = 1; i < doomcom->numplayers;
-				     i++)
-					if (ns.player_state[i] ==
-					    COLOR_PSTATE_READY)
-						ns.player_state[i] =
-						    COLOR_PSTATE_WAITING;
+				for (uint32_t i = 1; i < doomcom->numplayers; i++)
+					if (ns.player_state[i] == COLOR_PSTATE_READY)
+						ns.player_state[i] = COLOR_PSTATE_WAITING;
 				// reset repeat ticker
 				utick = 0;
 			}
 			else if (utick > 15)
 			{
 				// scan nodes
-				for (uint32_t i = 1; i < doomcom->numplayers;
-				     i++)
+				for (uint32_t i = 1; i < doomcom->numplayers; i++)
 				{
 					if (ns.key_check[i] != ns.key_check[0])
 					{
@@ -1088,14 +1003,11 @@ D_ArbitrateNetStart()
 
 		while (ns.start_check != (1 << doomcom->numplayers) - 1)
 		{
-			for (; eventtail != eventhead;
-			     eventtail = (++eventtail) & (MAXEVENTS - 1))
+			for (; eventtail != eventhead; eventtail = (++eventtail) & (MAXEVENTS - 1))
 			{
 				event_t* ev = &events[eventtail];
 				if (ev->type == ev_keydown && ev->data1 == 0x1B)
-					engine_error(
-					    "NET",
-					    "Network game setup aborted!");
+					engine_error("NET", "Network game setup aborted!");
 			}
 
 			if (utick > 10)
@@ -1209,8 +1121,7 @@ static __attribute((regparm(2), no_caller_saved_registers)) void player_left()
 
 	if (net_inventory > 1)
 	{
-		for (thinker_t* th = thinkercap.next; th != &thinkercap;
-		     th = th->next)
+		for (thinker_t* th = thinkercap.next; th != &thinkercap; th = th->next)
 		{
 			mobj_t* mo;
 
@@ -1236,13 +1147,12 @@ static __attribute((regparm(2), no_caller_saved_registers)) void player_left()
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// replace call to 'D_ArbitrateNetStart' in 'I_InitNetwork'
-	{0x0001F685, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)D_ArbitrateNetStart},
-	// remove call to 'D_CheckNetGame' in 'D_DoomMain'
-	{0x0001E865, CODE_HOOK | HOOK_SET_NOPS, 5},
-	// modify disconnect behavior
-	{0x0001EFE9, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)player_left},
-	{0x0001EFEE, CODE_HOOK | HOOK_JMP_DOOM, 0x0001EF49},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // replace call to 'D_ArbitrateNetStart' in 'I_InitNetwork'
+    {0x0001F685, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)D_ArbitrateNetStart},
+    // remove call to 'D_CheckNetGame' in 'D_DoomMain'
+    {0x0001E865, CODE_HOOK | HOOK_SET_NOPS, 5},
+    // modify disconnect behavior
+    {0x0001EFE9, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)player_left},
+    {0x0001EFEE, CODE_HOOK | HOOK_JMP_DOOM, 0x0001EF49},
 };

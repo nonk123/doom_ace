@@ -6,17 +6,17 @@
 enum
 {
 	// hooks that modify Doom memory
-	HOOK_JMP_ACE,   // create a hook using 'jmp' opcode; destination is ACE
-	                // Engine
-	HOOK_JMP_DOOM,  // create a hook using 'jmp' opcode; destination is Doom
-	                // code
-	HOOK_CALL_ACE,  // create a hook using 'call' opcode; destination is ACE
-	                // Engine
-	HOOK_CALL_DOOM, // create a hook using 'call' opcode; destination is
-	                // Doom code
-	HOOK_UINT32,    // replace 32bit value
-	HOOK_UINT16,    // replace 16bit value
-	HOOK_UINT8,     // replace 8bit value
+	HOOK_JMP_ACE,      // create a hook using 'jmp' opcode; destination is ACE
+	                   // Engine
+	HOOK_JMP_DOOM,     // create a hook using 'jmp' opcode; destination is Doom
+	                   // code
+	HOOK_CALL_ACE,     // create a hook using 'call' opcode; destination is ACE
+	                   // Engine
+	HOOK_CALL_DOOM,    // create a hook using 'call' opcode; destination is
+	                   // Doom code
+	HOOK_UINT32,       // replace 32bit value
+	HOOK_UINT16,       // replace 16bit value
+	HOOK_UINT8,        // replace 8bit value
 	HOOK_ABSADDR_CODE, // replace 32bit pointer destination to Doom CODE
 	                   // segment
 	HOOK_ABSADDR_DATA, // replace 32bit pointer destination to Doom DATA

@@ -160,8 +160,7 @@ int main(int argc, void** argv)
 
 	while (spec->special)
 	{
-		printf("\t{%u, 0x%08X}, // %s\n", spec->special,
-		       tp_hash32(spec->name), spec->name);
+		printf("\t{%u, 0x%08X}, // %s\n", spec->special, tp_hash32(spec->name), spec->name);
 		spec++;
 	}
 

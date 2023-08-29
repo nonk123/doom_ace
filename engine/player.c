@@ -106,8 +106,7 @@ static void invis_start(mobj_t* mo, mobjinfo_t* info)
 			mo->render_alpha = alpha;
 	}
 	else
-		mo->render_alpha =
-		    255 - ((uint32_t)info->powerup.strength * 255) / 100;
+		mo->render_alpha = 255 - ((uint32_t)info->powerup.strength * 255) / 100;
 
 	if (!mo->render_alpha)
 		mo->render_style = RS_INVISIBLE;
@@ -126,10 +125,7 @@ static void invis_stop(mobj_t* mo)
 //
 // POWER: buddha
 
-static void buddha_start(mobj_t* mo, mobjinfo_t* info)
-{
-	mo->flags1 |= MF1_BUDDHA;
-}
+static void buddha_start(mobj_t* mo, mobjinfo_t* info) { mo->flags1 |= MF1_BUDDHA; }
 
 static void buddha_stop(mobj_t* mo)
 {
@@ -140,10 +136,7 @@ static void buddha_stop(mobj_t* mo)
 //
 // POWER: flight
 
-static void flight_start(mobj_t* mo, mobjinfo_t* info)
-{
-	mo->flags |= MF_NOGRAVITY;
-}
+static void flight_start(mobj_t* mo, mobjinfo_t* info) { mo->flags |= MF_NOGRAVITY; }
 
 static void flight_stop(mobj_t* mo)
 {
@@ -221,8 +214,7 @@ static inline void check_buttons(player_t* pl, ticcmd_t* cmd)
 	if (slot == BT_ACT_INV_USE)
 	{
 		if (pl->inv_sel >= 0)
-			mobj_use_item(pl->mo,
-			              pl->mo->inventory->slot + pl->inv_sel);
+			mobj_use_item(pl->mo, pl->mo->inventory->slot + pl->inv_sel);
 		return;
 	}
 
@@ -230,8 +222,7 @@ static inline void check_buttons(player_t* pl, ticcmd_t* cmd)
 	{
 		invitem_t* item;
 
-		item =
-		    inventory_find(pl->mo, player_info[pl - players].quick_inv);
+		item = inventory_find(pl->mo, player_info[pl - players].quick_inv);
 		if (!item)
 			return;
 
@@ -253,20 +244,15 @@ static inline void check_buttons(player_t* pl, ticcmd_t* cmd)
 		{
 			if (pl->mo->waterlevel)
 			{
-				if (pl->mo->momz <
-				    pl->mo->info->player.jump_z / 2)
-					pl->mo->momz +=
-					    pl->mo->info->player.jump_z / 2;
+				if (pl->mo->momz < pl->mo->info->player.jump_z / 2)
+					pl->mo->momz += pl->mo->info->player.jump_z / 2;
 			}
 			else if (pl->mo->momz < pl->mo->info->player.jump_z)
 			{
 				if (pl->mo->z <= pl->mo->floorz)
 				{
-					pl->mo->momz +=
-					    pl->mo->info->player.jump_z;
-					S_StartSound(
-					    pl->mo,
-					    pl->mo->info->player.sound.jump);
+					pl->mo->momz += pl->mo->info->player.jump_z;
+					S_StartSound(pl->mo, pl->mo->info->player.sound.jump);
 				}
 			}
 		}
@@ -341,8 +327,7 @@ void player_chat_char(uint32_t pidx)
 				if (netgame || demoplayback)
 				{
 					uint32_t slot = cb->data[0] & 3;
-					uint32_t magic =
-					    *((uint32_t*)(cb->data + 1));
+					uint32_t magic = *((uint32_t*)(cb->data + 1));
 
 					if (magic != netgame_check[pidx][slot])
 						is_net_desync = 2;
@@ -416,15 +401,13 @@ void player_chat_char(uint32_t pidx)
 //
 // player think
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-P_CalcHeight(player_t* player)
+static __attribute((regparm(2), no_caller_saved_registers)) void P_CalcHeight(player_t* player)
 {
 	uint32_t angle;
 	fixed_t bob, limit;
 	fixed_t viewheight = player->mo->info->player.view_height;
 
-	if (!onground &&
-	    (player->mo->flags & MF_NOGRAVITY || player->mo->waterlevel > 2))
+	if (!onground && (player->mo->flags & MF_NOGRAVITY || player->mo->waterlevel > 2))
 	{
 		player->viewheight = viewheight;
 		player->deltaviewheight = 0;
@@ -438,8 +421,7 @@ P_CalcHeight(player_t* player)
 		return;
 	}
 
-	player->bob = FixedMul(player->mo->momx, player->mo->momx) +
-	              FixedMul(player->mo->momy, player->mo->momy);
+	player->bob = FixedMul(player->mo->momx, player->mo->momx) + FixedMul(player->mo->momy, player->mo->momy);
 	player->bob >>= 2;
 
 	if (player->bob > MAXBOB)
@@ -502,8 +484,7 @@ static void player_sector_damage(player_t* pl, sector_extra_t* se)
 		return;
 	}
 
-	if (!(se->damage.type & 0x80) && pl->powers[pw_ironfeet] &&
-	    (!se->damage.leak || P_Random() >= se->damage.leak))
+	if (!(se->damage.type & 0x80) && pl->powers[pw_ironfeet] && (!se->damage.leak || P_Random() >= se->damage.leak))
 		return;
 
 	if ((se->damage.type & 0x7F) == DAMAGE_INSTANT)
@@ -558,8 +539,7 @@ static void player_terrain_damage(player_t* pl, int32_t flat, uint32_t is3d)
 	terrain_hit_splash(NULL, pl->mo->x, pl->mo->y, pl->mo->z, flat);
 }
 
-static void handle_sector_special(player_t* pl, sector_t* sec, uint32_t texture,
-                                  uint32_t is3d)
+static void handle_sector_special(player_t* pl, sector_t* sec, uint32_t texture, uint32_t is3d)
 {
 	if (sec->special & 1024)
 	{
@@ -630,12 +610,10 @@ void player_think(uint32_t idx)
 		cmd->angleturn = 0;
 		cmd->pitchturn = 0;
 		if (!(cmd->buttons & BT_SPECIAL))
-			cmd->buttons &=
-			    ~(BT_ATTACK | BT_ALTACK | BT_ACTIONMASK);
+			cmd->buttons &= ~(BT_ATTACK | BT_ALTACK | BT_ACTIONMASK);
 	}
 
-	if (pl->camera != pl->mo && pl->prop & (1 << PROP_CAMERA_MOVE) &&
-	    (cmd->forwardmove || cmd->sidemove))
+	if (pl->camera != pl->mo && pl->prop & (1 << PROP_CAMERA_MOVE) && (cmd->forwardmove || cmd->sidemove))
 	{
 		pl->prop &= ~(1 << PROP_CAMERA_MOVE);
 		pl->camera = pl->mo;
@@ -651,8 +629,7 @@ void player_think(uint32_t idx)
 
 	if (pl->state == PST_DEAD)
 	{
-		if (player_info[idx].flags & PLF_MOUSE_LOOK &&
-		    !(map_level_info->flags & MAP_FLAG_NO_FREELOOK) &&
+		if (player_info[idx].flags & PLF_MOUSE_LOOK && !(map_level_info->flags & MAP_FLAG_NO_FREELOOK) &&
 		    !(pl->flags & PF_IS_FROZEN))
 		{
 			int32_t pitch = pl->mo->pitch;
@@ -680,8 +657,7 @@ void player_think(uint32_t idx)
 
 		if (pl->flags & PF_IS_FROZEN)
 		{
-			pl->viewz =
-			    pl->mo->z + pl->mo->info->player.view_height;
+			pl->viewz = pl->mo->z + pl->mo->info->player.view_height;
 			pl->fixedpalette = 13;
 			if (pl == players + displayplayer)
 				r_fixed_palette(0x8400);
@@ -704,8 +680,7 @@ void player_think(uint32_t idx)
 
 		angle = pl->mo->angle >> ANGLETOFINESHIFT;
 
-		onground =
-		    (pl->mo->z <= pl->mo->floorz) && pl->mo->waterlevel <= 1;
+		onground = (pl->mo->z <= pl->mo->floorz) && pl->mo->waterlevel <= 1;
 
 		if (pl->health < pl->mo->info->player.run_health)
 		{
@@ -730,35 +705,27 @@ void player_think(uint32_t idx)
 
 				if (pl->mo->pitch)
 				{
-					angle_t pitch =
-					    pl->mo->pitch >> ANGLETOFINESHIFT;
-					pl->mo->momz +=
-					    FixedMul(power, finesine[pitch]);
-					power =
-					    FixedMul(power, finecosine[pitch]);
+					angle_t pitch = pl->mo->pitch >> ANGLETOFINESHIFT;
+					pl->mo->momz += FixedMul(power, finesine[pitch]);
+					power = FixedMul(power, finecosine[pitch]);
 				}
 
-				pl->mo->momx +=
-				    FixedMul(power, finecosine[angle]);
-				pl->mo->momy +=
-				    FixedMul(power, finesine[angle]);
+				pl->mo->momx += FixedMul(power, finecosine[angle]);
+				pl->mo->momy += FixedMul(power, finesine[angle]);
 			}
 		}
 		else
 		{
 			if (onground || flight)
-				scale =
-				    (2048 * pl->mo->info->speed) >> FRACBITS;
+				scale = (2048 * pl->mo->info->speed) >> FRACBITS;
 			else
 				scale = 8;
 
 			if (cmd->forwardmove)
 			{
 				fixed_t power = cmd->forwardmove * scale;
-				pl->mo->momx +=
-				    FixedMul(power, finecosine[angle]);
-				pl->mo->momy +=
-				    FixedMul(power, finesine[angle]);
+				pl->mo->momx += FixedMul(power, finecosine[angle]);
+				pl->mo->momy += FixedMul(power, finesine[angle]);
 			}
 		}
 
@@ -769,17 +736,14 @@ void player_think(uint32_t idx)
 			pl->mo->momy -= FixedMul(power, finecosine[angle]);
 		}
 
-		if ((cmd->forwardmove || cmd->sidemove) &&
-		    pl->mo->animation == ANIM_SPAWN && pl->mo->info->state_see)
+		if ((cmd->forwardmove || cmd->sidemove) && pl->mo->animation == ANIM_SPAWN && pl->mo->info->state_see)
 			mobj_set_animation(pl->mo, ANIM_SEE);
 
-		if (player_info[idx].flags & PLF_MOUSE_LOOK &&
-		    !(map_level_info->flags & MAP_FLAG_NO_FREELOOK))
+		if (player_info[idx].flags & PLF_MOUSE_LOOK && !(map_level_info->flags & MAP_FLAG_NO_FREELOOK))
 		{
 			if (cmd->pitchturn)
 			{
-				int32_t pitch = pl->mo->pitch +
-				                (int32_t)(cmd->pitchturn << 16);
+				int32_t pitch = pl->mo->pitch + (int32_t)(cmd->pitchturn << 16);
 				if (pitch > PLAYER_LOOK_TOP)
 					pitch = PLAYER_LOOK_TOP;
 				if (pitch < PLAYER_LOOK_BOT)
@@ -818,9 +782,7 @@ void player_think(uint32_t idx)
 		else if (!(leveltime & 31))
 		{
 			mobj_damage(pl->mo, NULL, NULL,
-			            DAMAGE_WITH_TYPE(-pl->mo->player->airsupply,
-			                             DAMAGE_DROWN) |
-			                DAMAGE_SKIP_ARMOR,
+			            DAMAGE_WITH_TYPE(-pl->mo->player->airsupply, DAMAGE_DROWN) | DAMAGE_SKIP_ARMOR,
 			            NULL);
 			pl->mo->player->airsupply--;
 		}
@@ -837,12 +799,10 @@ void player_think(uint32_t idx)
 			if (special == 9 && !pl->mo->subsector->sector->special)
 			{
 				pl->message = "Secret!";
-				S_StartSound(SOUND_CONSOLEPLAYER(pl),
-				             SFX_SECRET);
+				S_StartSound(SOUND_CONSOLEPLAYER(pl), SFX_SECRET);
 			}
 			if (pl->mo->z <= pl->mo->subsector->sector->floorheight)
-				player_terrain_damage(
-				    pl, pl->mo->subsector->sector->floorpic, 0);
+				player_terrain_damage(pl, pl->mo->subsector->sector->floorpic, 0);
 		}
 	}
 	else
@@ -858,13 +818,10 @@ void player_think(uint32_t idx)
 		pp = sec->exfloor;
 		while (pp)
 		{
-			if (!(pp->flags & E3D_SWAP_PLANES) &&
-			    pl->mo->z + pl->mo->height >
-			        pp->source->floorheight &&
+			if (!(pp->flags & E3D_SWAP_PLANES) && pl->mo->z + pl->mo->height > pp->source->floorheight &&
 			    pl->mo->z <= pp->source->ceilingheight)
 			{
-				handle_sector_special(
-				    pl, pp->source, pp->source->ceilingpic, 1);
+				handle_sector_special(pl, pp->source, pp->source->ceilingpic, 1);
 				// ZDoom takes only the first extra floor
 				break;
 			}
@@ -916,28 +873,22 @@ void player_think(uint32_t idx)
 				mobjinfo_t* info = mobjinfo + pl->power_mobj[i];
 				uint16_t color = info->powerup.colorstuff;
 
-				if (color &&
-				    (info->eflags &
-				         MFE_INVENTORY_NOSCREENBLINK ||
-				     pl->powers[i] > 128 || pl->powers[i] & 8))
+				if (color && (info->eflags & MFE_INVENTORY_NOSCREENBLINK || pl->powers[i] > 128 ||
+				              pl->powers[i] & 8))
 				{
 					if (color & 0xF000)
 					{
 						if (!pl->fixedpalette)
 						{
 							pl->fixedpalette = 13;
-							if (pl ==
-							    players +
-							        displayplayer)
-								r_fixed_palette(
-								    color);
+							if (pl == players + displayplayer)
+								r_fixed_palette(color);
 						}
 					}
 					else
 					{
 						if (!pl->fixedcolormap)
-							pl->fixedcolormap =
-							    color & 63;
+							pl->fixedcolormap = color & 63;
 					}
 				}
 			}
@@ -962,8 +913,7 @@ static void send_data_packet(uint8_t type, void* data, uint32_t len)
 		HU_queueChatChar(ptr[i]);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-build_ticcmd(ticcmd_t* cmd)
+__attribute((regparm(2), no_caller_saved_registers)) static void build_ticcmd(ticcmd_t* cmd)
 {
 	static uint8_t mouse_inv_use;
 
@@ -978,8 +928,7 @@ build_ticcmd(ticcmd_t* cmd)
 	G_BuildTiccmd(cmd);
 
 	// data transfers
-	if ((!demorecording || (!paused && !(menuactive && !netgame))) &&
-	    leveltime)
+	if ((!demorecording || (!paused && !(menuactive && !netgame))) && leveltime)
 		cmd->chatchar = HU_dequeueChatChar();
 
 	// packet transfers
@@ -1008,8 +957,7 @@ build_ticcmd(ticcmd_t* cmd)
 				player_class_change = -1;
 			}
 
-			send_data_packet(TIC_DATA_PLAYER_INFO, &info,
-			                 sizeof(player_info_t));
+			send_data_packet(TIC_DATA_PLAYER_INFO, &info, sizeof(player_info_t));
 
 			player_info_changed = 0;
 		}
@@ -1028,8 +976,7 @@ build_ticcmd(ticcmd_t* cmd)
 			else
 				magic = netgame_check[consoleplayer][slot];
 
-			send_data_packet(TIC_DATA_CHECK0 | slot, &magic,
-			                 sizeof(uint32_t));
+			send_data_packet(TIC_DATA_CHECK0 | slot, &magic, sizeof(uint32_t));
 		}
 	}
 
@@ -1080,8 +1027,7 @@ build_ticcmd(ticcmd_t* cmd)
 		gamekeydown[key_inv_quick] = 0;
 		cmd->buttons |= BT_ACT_INV_QUICK << BT_ACTIONSHIFT;
 	}
-	else if (gamekeydown[key_inv_use] ||
-	         (!mouse_inv_use && mousebuttons[mouseb_inv_use]))
+	else if (gamekeydown[key_inv_use] || (!mouse_inv_use && mousebuttons[mouseb_inv_use]))
 	{
 		mouse_inv_use = 1;
 		gamekeydown[key_inv_use] = 0;
@@ -1148,17 +1094,14 @@ void player_check_info(player_info_t* info)
 //
 // hooks
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-spawn_player(mapthing_t* mt)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t spawn_player(mapthing_t* mt)
 {
 	uint32_t angle;
 	angle = (ANG45 / 45) * mt->angle;
-	mobj_spawn_player(mt->type - 1, mt->x * FRACUNIT, mt->y * FRACUNIT,
-	                  angle);
+	mobj_spawn_player(mt->type - 1, mt->x * FRACUNIT, mt->y * FRACUNIT, angle);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-respawn_check(uint32_t idx)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t respawn_check(uint32_t idx)
 {
 	if (map_level_info->flags & MAP_FLAG_ALLOW_RESPAWN)
 	{
@@ -1182,8 +1125,7 @@ respawn_check(uint32_t idx)
 			pl->state = PST_SPECTATE;
 			pl->mo->player = NULL;
 
-			mo = P_SpawnMobj(pl->mo->x, pl->mo->y, pl->mo->z,
-			                 MOBJ_IDX_ICE_CHUNK_HEAD);
+			mo = P_SpawnMobj(pl->mo->x, pl->mo->y, pl->mo->z, MOBJ_IDX_ICE_CHUNK_HEAD);
 			mo->flags |= MF_NOGRAVITY | MF_NOCLIP;
 			mo->flags2 |= MF2_DONTSPLASH;
 			mo->render_style = RS_INVISIBLE;
@@ -1215,18 +1157,15 @@ respawn_check(uint32_t idx)
 				reborn_inventory_hack = 2;
 
 				if (inv)
-					for (uint32_t i = 0; i < inv->numslots;
-					     i++)
+					for (uint32_t i = 0; i < inv->numslots; i++)
 					{
 						invitem_t* item = inv->slot + i;
-						mobjinfo_t* info =
-						    mobjinfo + item->type;
+						mobjinfo_t* info = mobjinfo + item->type;
 
 						if (!item->type)
 							continue;
 
-						if (info->extra_type ==
-						    ETYPE_KEY)
+						if (info->extra_type == ETYPE_KEY)
 							continue;
 
 						item->type = 0;
@@ -1249,33 +1188,32 @@ respawn_check(uint32_t idx)
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// replace 'P_SpawnPlayer'
-	{0x000317F0, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)spawn_player},
-	// replace call to 'P_CalcHeight' in 'P_DeathThink'
-	{0x000332BF, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)P_CalcHeight},
-	// replace netgame check in 'G_DoReborn'
-	{0x00020C57, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)respawn_check},
-	{0x00020C5C, CODE_HOOK | HOOK_UINT16, 0xC085},
-	{0x00020C60, CODE_HOOK | HOOK_UINT16, 0x08EB},
-	{0x00020C71, CODE_HOOK | HOOK_UINT8, 0xF5},
-	// replace call to 'G_BuildTiccmd'
-	{0x0001D5B2, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)build_ticcmd},
-	{0x0001F220, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)build_ticcmd},
-	// disable 'mousey' in 'G_BuildTiccmd'
-	{0x0001FF60, CODE_HOOK | HOOK_SET_NOPS, 7},
-	{0x0001FF94, CODE_HOOK | HOOK_SET_NOPS, 5},
-	// disable 'HU_dequeueChatChar' in 'G_BuildTiccmd'
-	{0x0001FD81, CODE_HOOK | HOOK_SET_NOPS, 8},
-	// disable 'consistancy' check in 'G_Ticker'
-	{0x000206BB, CODE_HOOK | HOOK_UINT16, 0x7CEB},
-	// change 'BT_SPECIAL' check in 'G_Ticker'
-	{0x0002079A, CODE_HOOK | HOOK_UINT8, BT_SPECIALMASK},
-	// use 'fixedpalette' in 'ST_doPaletteStuff'
-	{0x0003A475, CODE_HOOK | HOOK_UINT16, 0x9B8B},
-	{0x0003A477, CODE_HOOK | HOOK_UINT32, offsetof(player_t, fixedpalette)},
-	{0x0003A47B, CODE_HOOK | HOOK_UINT16, 0x10EB},
-	// PU_STATIC palette chache in 'ST_doPaletteStuff'
-	{0x0003A496, CODE_HOOK | HOOK_UINT8, PU_STATIC},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // replace 'P_SpawnPlayer'
+    {0x000317F0, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)spawn_player},
+    // replace call to 'P_CalcHeight' in 'P_DeathThink'
+    {0x000332BF, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)P_CalcHeight},
+    // replace netgame check in 'G_DoReborn'
+    {0x00020C57, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)respawn_check},
+    {0x00020C5C, CODE_HOOK | HOOK_UINT16, 0xC085},
+    {0x00020C60, CODE_HOOK | HOOK_UINT16, 0x08EB},
+    {0x00020C71, CODE_HOOK | HOOK_UINT8, 0xF5},
+    // replace call to 'G_BuildTiccmd'
+    {0x0001D5B2, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)build_ticcmd},
+    {0x0001F220, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)build_ticcmd},
+    // disable 'mousey' in 'G_BuildTiccmd'
+    {0x0001FF60, CODE_HOOK | HOOK_SET_NOPS, 7},
+    {0x0001FF94, CODE_HOOK | HOOK_SET_NOPS, 5},
+    // disable 'HU_dequeueChatChar' in 'G_BuildTiccmd'
+    {0x0001FD81, CODE_HOOK | HOOK_SET_NOPS, 8},
+    // disable 'consistancy' check in 'G_Ticker'
+    {0x000206BB, CODE_HOOK | HOOK_UINT16, 0x7CEB},
+    // change 'BT_SPECIAL' check in 'G_Ticker'
+    {0x0002079A, CODE_HOOK | HOOK_UINT8, BT_SPECIALMASK},
+    // use 'fixedpalette' in 'ST_doPaletteStuff'
+    {0x0003A475, CODE_HOOK | HOOK_UINT16, 0x9B8B},
+    {0x0003A477, CODE_HOOK | HOOK_UINT32, offsetof(player_t, fixedpalette)},
+    {0x0003A47B, CODE_HOOK | HOOK_UINT16, 0x10EB},
+    // PU_STATIC palette chache in 'ST_doPaletteStuff'
+    {0x0003A496, CODE_HOOK | HOOK_UINT8, PU_STATIC},
 };

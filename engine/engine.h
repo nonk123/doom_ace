@@ -230,8 +230,7 @@ typedef struct menuitem_s
 		uint8_t name[10];
 		uint8_t* text;
 	} __attribute__((packed));
-	void (*func)(uint32_t)
-	    __attribute((regparm(2), no_caller_saved_registers));
+	void (*func)(uint32_t) __attribute((regparm(2), no_caller_saved_registers));
 	uint8_t key;
 } __attribute__((packed)) menuitem_t;
 
@@ -311,8 +310,7 @@ typedef struct thinker_s
 	union
 	{
 		void* function;
-		void (*func)(struct thinker_s*)
-		    __attribute((regparm(2), no_caller_saved_registers));
+		void (*func)(struct thinker_s*) __attribute((regparm(2), no_caller_saved_registers));
 	};
 } thinker_t;
 
@@ -1603,8 +1601,7 @@ void I_FinishUpdate();
 #include "doom_vars.h"
 
 // math
-fixed_t FixedDiv(fixed_t, fixed_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+fixed_t FixedDiv(fixed_t, fixed_t) __attribute((regparm(2), no_caller_saved_registers));
 #define FixedMul(a, b) ((int32_t)(((int64_t)(a) * (int64_t)(b)) >> FRACBITS))
 
 // main.c
@@ -1625,34 +1622,27 @@ void I_StartTic() __attribute((regparm(2), no_caller_saved_registers));
 void AM_Stop() __attribute((regparm(2), no_caller_saved_registers));
 void AM_doFollowPlayer() __attribute((regparm(2), no_caller_saved_registers));
 void AM_drawGrid(uint32_t) __attribute((regparm(2), no_caller_saved_registers));
-uint32_t AM_clipMline(void*, void*)
-    __attribute((regparm(2), no_caller_saved_registers));
-void AM_drawFline(void*, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+uint32_t AM_clipMline(void*, void*) __attribute((regparm(2), no_caller_saved_registers));
+void AM_drawFline(void*, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
 
 // d_net
 void D_CheckNetGame() __attribute((regparm(2), no_caller_saved_registers));
-void HSendPacket(uint32_t, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+void HSendPacket(uint32_t, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
 uint32_t HGetPacket() __attribute((regparm(2), no_caller_saved_registers));
 
 // f_finale
 void F_StartCast() __attribute((regparm(2), no_caller_saved_registers));
 
 // g_game
-void G_DeferedInitNew(uint32_t, uint32_t, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-void G_BuildTiccmd(ticcmd_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+void G_DeferedInitNew(uint32_t, uint32_t, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
+void G_BuildTiccmd(ticcmd_t*) __attribute((regparm(2), no_caller_saved_registers));
 void G_CheckDemoStatus() __attribute((regparm(2), no_caller_saved_registers));
-void G_DeathMatchSpawnPlayer(uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+void G_DeathMatchSpawnPlayer(uint32_t) __attribute((regparm(2), no_caller_saved_registers));
 
 // i_video
 void I_InitGraphics() __attribute((regparm(2), no_caller_saved_registers));
 void I_UpdateNoBlit() __attribute((regparm(2), no_caller_saved_registers));
-void I_SetPalette(uint8_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+void I_SetPalette(uint8_t*) __attribute((regparm(2), no_caller_saved_registers));
 uint32_t I_GetTime() __attribute((regparm(2), no_caller_saved_registers));
 void I_WaitVBL(uint32_t) __attribute((regparm(2), no_caller_saved_registers));
 
@@ -1660,13 +1650,11 @@ void I_WaitVBL(uint32_t) __attribute((regparm(2), no_caller_saved_registers));
 void I_StartupSound() __attribute((regparm(2), no_caller_saved_registers));
 
 // m_argv
-uint32_t M_CheckParm(uint8_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+uint32_t M_CheckParm(uint8_t*) __attribute((regparm(2), no_caller_saved_registers));
 
 // m_bbox
 void M_ClearBox(fixed_t*) __attribute((regparm(2), no_caller_saved_registers));
-void M_AddToBox(fixed_t*, fixed_t, fixed_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+void M_AddToBox(fixed_t*, fixed_t, fixed_t) __attribute((regparm(2), no_caller_saved_registers));
 
 // m_random
 int32_t P_Random() __attribute((regparm(2), no_caller_saved_registers));
@@ -1674,16 +1662,13 @@ int32_t P_Random() __attribute((regparm(2), no_caller_saved_registers));
 // st_stuff
 void ST_Init() __attribute((regparm(2), no_caller_saved_registers));
 void ST_Start() __attribute((regparm(2), no_caller_saved_registers));
-void ST_Drawer(uint32_t, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+void ST_Drawer(uint32_t, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
 void ST_doPaletteStuff() __attribute((regparm(2), no_caller_saved_registers));
 
 // hu_stuff
 void HU_Start() __attribute((regparm(2), no_caller_saved_registers));
-uint8_t HU_dequeueChatChar()
-    __attribute((regparm(2), no_caller_saved_registers));
-void HU_queueChatChar(uint8_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+uint8_t HU_dequeueChatChar() __attribute((regparm(2), no_caller_saved_registers));
+void HU_queueChatChar(uint8_t) __attribute((regparm(2), no_caller_saved_registers));
 
 // hu_lib
 void HUlib_drawTextLine(hu_textline_t* l, uint32_t cursor);
@@ -1691,224 +1676,150 @@ void HUlib_drawTextLine(hu_textline_t* l, uint32_t cursor);
 // m_menu
 void M_Drawer() __attribute((regparm(2), no_caller_saved_registers));
 void M_ClearMenus() __attribute((regparm(2), no_caller_saved_registers));
-void M_StartMessage(uint8_t*, void*, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+void M_StartMessage(uint8_t*, void*, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
 
 // m_misc
 void M_LoadDefaults() __attribute((regparm(2), no_caller_saved_registers));
 
 // p_ceiling
-void P_AddActiveCeiling(ceiling_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+void P_AddActiveCeiling(ceiling_t*) __attribute((regparm(2), no_caller_saved_registers));
 
 // p_door
-uint32_t EV_DoDoor(line_t*, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+uint32_t EV_DoDoor(line_t*, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
 
 // p_enemy
 void doom_A_Chase(mobj_t*) __attribute((regparm(2), no_caller_saved_registers));
-void doom_A_VileChase(mobj_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-void doom_A_BrainAwake(mobj_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-void doom_A_BrainSpit(mobj_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-void doom_A_SpawnFly(mobj_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-void P_NoiseAlert(mobj_t*, mobj_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-uint32_t P_LookForPlayers(mobj_t*, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+void doom_A_VileChase(mobj_t*) __attribute((regparm(2), no_caller_saved_registers));
+void doom_A_BrainAwake(mobj_t*) __attribute((regparm(2), no_caller_saved_registers));
+void doom_A_BrainSpit(mobj_t*) __attribute((regparm(2), no_caller_saved_registers));
+void doom_A_SpawnFly(mobj_t*) __attribute((regparm(2), no_caller_saved_registers));
+void P_NoiseAlert(mobj_t*, mobj_t*) __attribute((regparm(2), no_caller_saved_registers));
+uint32_t P_LookForPlayers(mobj_t*, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
 
 // p_map
-uint32_t P_TryMove(mobj_t*, fixed_t, fixed_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+uint32_t P_TryMove(mobj_t*, fixed_t, fixed_t) __attribute((regparm(2), no_caller_saved_registers));
 void P_UseLines(player_t*) __attribute((regparm(2), no_caller_saved_registers));
-fixed_t doom_P_AimLineAttack(mobj_t*, angle_t, fixed_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-void P_LineAttack(mobj_t*, angle_t, fixed_t, fixed_t, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+fixed_t doom_P_AimLineAttack(mobj_t*, angle_t, fixed_t) __attribute((regparm(2), no_caller_saved_registers));
+void P_LineAttack(mobj_t*, angle_t, fixed_t, fixed_t, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
 void P_SlideMove(mobj_t*) __attribute((regparm(2), no_caller_saved_registers));
-void P_HitSlideLine(line_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-uint32_t P_CheckPosition(mobj_t*, fixed_t, fixed_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-uint32_t P_TeleportMove(mobj_t*, fixed_t, fixed_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+void P_HitSlideLine(line_t*) __attribute((regparm(2), no_caller_saved_registers));
+uint32_t P_CheckPosition(mobj_t*, fixed_t, fixed_t) __attribute((regparm(2), no_caller_saved_registers));
+uint32_t P_TeleportMove(mobj_t*, fixed_t, fixed_t) __attribute((regparm(2), no_caller_saved_registers));
 
 // p_maputl
-void P_SetThingPosition(mobj_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-void P_UnsetThingPosition(mobj_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-void P_LineOpening(line_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-uint32_t P_TraverseIntercepts(void*, fixed_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-uint32_t P_BlockThingsIterator(int32_t, int32_t, void*)
-    __attribute((regparm(2), no_caller_saved_registers));
-fixed_t P_InterceptVector(divline_t*, divline_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-uint32_t P_PointOnDivlineSide(fixed_t, fixed_t, divline_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-uint32_t P_PointOnLineSide(fixed_t, fixed_t, line_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-uint32_t P_BoxOnLineSide(fixed_t*, line_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+void P_SetThingPosition(mobj_t*) __attribute((regparm(2), no_caller_saved_registers));
+void P_UnsetThingPosition(mobj_t*) __attribute((regparm(2), no_caller_saved_registers));
+void P_LineOpening(line_t*) __attribute((regparm(2), no_caller_saved_registers));
+uint32_t P_TraverseIntercepts(void*, fixed_t) __attribute((regparm(2), no_caller_saved_registers));
+uint32_t P_BlockThingsIterator(int32_t, int32_t, void*) __attribute((regparm(2), no_caller_saved_registers));
+fixed_t P_InterceptVector(divline_t*, divline_t*) __attribute((regparm(2), no_caller_saved_registers));
+uint32_t P_PointOnDivlineSide(fixed_t, fixed_t, divline_t*) __attribute((regparm(2), no_caller_saved_registers));
+uint32_t P_PointOnLineSide(fixed_t, fixed_t, line_t*) __attribute((regparm(2), no_caller_saved_registers));
+uint32_t P_BoxOnLineSide(fixed_t*, line_t*) __attribute((regparm(2), no_caller_saved_registers));
 
 // p_mobj
-mobj_t* P_SpawnMobj(fixed_t, fixed_t, fixed_t, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-void P_SpawnPlayerMissile(mobj_t*, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-void P_NightmareRespawn(mobj_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-void P_MobjThinker(mobj_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+mobj_t* P_SpawnMobj(fixed_t, fixed_t, fixed_t, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
+void P_SpawnPlayerMissile(mobj_t*, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
+void P_NightmareRespawn(mobj_t*) __attribute((regparm(2), no_caller_saved_registers));
+void P_MobjThinker(mobj_t*) __attribute((regparm(2), no_caller_saved_registers));
 
 // p_plat
-void P_AddActivePlat(plat_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+void P_AddActivePlat(plat_t*) __attribute((regparm(2), no_caller_saved_registers));
 
 // p_pspr
-void P_BulletSlope(mobj_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+void P_BulletSlope(mobj_t*) __attribute((regparm(2), no_caller_saved_registers));
 
 // p_inter
-void P_KillMobj(mobj_t*, mobj_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+void P_KillMobj(mobj_t*, mobj_t*) __attribute((regparm(2), no_caller_saved_registers));
 
 // p_setup
 void P_GroupLines() __attribute((regparm(2), no_caller_saved_registers));
-void P_LoadBlockMap(int32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-void P_LoadSectors(int32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-void P_LoadSideDefs(int32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-void P_LoadSubsectors(int32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+void P_LoadBlockMap(int32_t) __attribute((regparm(2), no_caller_saved_registers));
+void P_LoadSectors(int32_t) __attribute((regparm(2), no_caller_saved_registers));
+void P_LoadSideDefs(int32_t) __attribute((regparm(2), no_caller_saved_registers));
+void P_LoadSubsectors(int32_t) __attribute((regparm(2), no_caller_saved_registers));
 void P_LoadNodes(int32_t) __attribute((regparm(2), no_caller_saved_registers));
 void P_LoadSegs(int32_t) __attribute((regparm(2), no_caller_saved_registers));
-void doom_LoadLineDefs(int32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+void doom_LoadLineDefs(int32_t) __attribute((regparm(2), no_caller_saved_registers));
 
 // p_spec
-void P_PlayerInSpecialSector(player_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+void P_PlayerInSpecialSector(player_t*) __attribute((regparm(2), no_caller_saved_registers));
 void P_SpawnSpecials() __attribute((regparm(2), no_caller_saved_registers));
-void P_ShootSpecialLine(mobj_t*, line_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-fixed_t P_FindLowestCeilingSurrounding(sector_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-fixed_t P_FindLowestFloorSurrounding(sector_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+void P_ShootSpecialLine(mobj_t*, line_t*) __attribute((regparm(2), no_caller_saved_registers));
+fixed_t P_FindLowestCeilingSurrounding(sector_t*) __attribute((regparm(2), no_caller_saved_registers));
+fixed_t P_FindLowestFloorSurrounding(sector_t*) __attribute((regparm(2), no_caller_saved_registers));
 
 // p_tick
 void P_InitThinkers() __attribute((regparm(2), no_caller_saved_registers));
 void P_RunThinkers() __attribute((regparm(2), no_caller_saved_registers));
-void P_AddThinker(thinker_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-void P_RemoveThinker(thinker_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+void P_AddThinker(thinker_t*) __attribute((regparm(2), no_caller_saved_registers));
+void P_RemoveThinker(thinker_t*) __attribute((regparm(2), no_caller_saved_registers));
 
 // p_user
-void P_DeathThink(player_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+void P_DeathThink(player_t*) __attribute((regparm(2), no_caller_saved_registers));
 
 // r_bsp
 void R_AddLine(seg_t*) __attribute((regparm(2), no_caller_saved_registers));
-void R_ClipPassWallSegment(int32_t, int32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-void R_ClipSolidWallSegment(int32_t, int32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-subsector_t* R_PointInSubsector(int32_t, int32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+void R_ClipPassWallSegment(int32_t, int32_t) __attribute((regparm(2), no_caller_saved_registers));
+void R_ClipSolidWallSegment(int32_t, int32_t) __attribute((regparm(2), no_caller_saved_registers));
+subsector_t* R_PointInSubsector(int32_t, int32_t) __attribute((regparm(2), no_caller_saved_registers));
 
 // r_data
-void R_GenerateComposite(uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-void R_GenerateLookup(uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+void R_GenerateComposite(uint32_t) __attribute((regparm(2), no_caller_saved_registers));
+void R_GenerateLookup(uint32_t) __attribute((regparm(2), no_caller_saved_registers));
 void R_PrecacheLevel() __attribute((regparm(2), no_caller_saved_registers));
 
 // r_main
-void R_ExecuteSetViewSize()
-    __attribute((regparm(2), no_caller_saved_registers));
-void R_RenderPlayerView(player_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-angle_t R_PointToAngle(fixed_t, fixed_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-angle_t R_PointToAngle2(fixed_t, fixed_t, fixed_t, fixed_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-void R_SetupFrame(player_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-fixed_t R_ScaleFromGlobalAngle(angle_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-fixed_t R_PointToDist(fixed_t, fixed_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+void R_ExecuteSetViewSize() __attribute((regparm(2), no_caller_saved_registers));
+void R_RenderPlayerView(player_t*) __attribute((regparm(2), no_caller_saved_registers));
+angle_t R_PointToAngle(fixed_t, fixed_t) __attribute((regparm(2), no_caller_saved_registers));
+angle_t R_PointToAngle2(fixed_t, fixed_t, fixed_t, fixed_t) __attribute((regparm(2), no_caller_saved_registers));
+void R_SetupFrame(player_t*) __attribute((regparm(2), no_caller_saved_registers));
+fixed_t R_ScaleFromGlobalAngle(angle_t) __attribute((regparm(2), no_caller_saved_registers));
+fixed_t R_PointToDist(fixed_t, fixed_t) __attribute((regparm(2), no_caller_saved_registers));
 
 // r_plane
-visplane_t* R_FindPlane(fixed_t, uint32_t, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-void R_MakeSpans(int32_t, int32_t, int32_t, int32_t, int32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+visplane_t* R_FindPlane(fixed_t, uint32_t, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
+void R_MakeSpans(int32_t, int32_t, int32_t, int32_t, int32_t) __attribute((regparm(2), no_caller_saved_registers));
 
 // r_things
-void R_InstallSpriteLump(uint32_t, uint32_t, uint32_t, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-void R_DrawSprite(vissprite_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+void R_InstallSpriteLump(uint32_t, uint32_t, uint32_t, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
+void R_DrawSprite(vissprite_t*) __attribute((regparm(2), no_caller_saved_registers));
 void R_SortVisSprites() __attribute((regparm(2), no_caller_saved_registers));
-void R_DrawPSprite(pspdef_t*, fixed_t, fixed_t) __attribute((
-    regparm(1),
-    no_caller_saved_registers)); // modified for two arguments on stack!
+void R_DrawPSprite(pspdef_t*, fixed_t, fixed_t)
+    __attribute((regparm(1),
+                 no_caller_saved_registers)); // modified for two arguments on stack!
 
 // s_sound.c
 void S_Start() __attribute((regparm(2), no_caller_saved_registers));
-void S_StartSound(mobj_t*, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-void doom_S_StopSound(mobj_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+void S_StartSound(mobj_t*, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
+void doom_S_StopSound(mobj_t*) __attribute((regparm(2), no_caller_saved_registers));
 void S_ResumeSound() __attribute((regparm(2), no_caller_saved_registers));
 void S_StopMusic() __attribute((regparm(2), no_caller_saved_registers));
-void S_ChangeMusic(uint32_t, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+void S_ChangeMusic(uint32_t, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
 
 // v_video
-void V_DrawPatch(int32_t, int32_t, uint32_t, patch_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
-void V_MarkRect(int32_t, int32_t, int32_t, int32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+void V_DrawPatch(int32_t, int32_t, uint32_t, patch_t*) __attribute((regparm(2), no_caller_saved_registers));
+void V_MarkRect(int32_t, int32_t, int32_t, int32_t) __attribute((regparm(2), no_caller_saved_registers));
 void V_CopyRect(int32_t, int32_t, int32_t, int32_t, int32_t, int32_t, int32_t,
                 int32_t); // this one is nasty
 
 // w_wad
-int32_t W_CheckNumForName(uint8_t* name)
-    __attribute((regparm(2), no_caller_saved_registers));
-int32_t W_GetNumForName(uint8_t* name)
-    __attribute((regparm(2), no_caller_saved_registers));
-void* W_CacheLumpName(uint8_t* name, uint32_t tag)
-    __attribute((regparm(2), no_caller_saved_registers));
-void* W_CacheLumpNum(int32_t lump, uint32_t tag)
-    __attribute((regparm(2), no_caller_saved_registers));
-uint32_t W_LumpLength(int32_t lump)
-    __attribute((regparm(2), no_caller_saved_registers));
-void W_ReadLump(int32_t lump, void* dst)
-    __attribute((regparm(2), no_caller_saved_registers));
+int32_t W_CheckNumForName(uint8_t* name) __attribute((regparm(2), no_caller_saved_registers));
+int32_t W_GetNumForName(uint8_t* name) __attribute((regparm(2), no_caller_saved_registers));
+void* W_CacheLumpName(uint8_t* name, uint32_t tag) __attribute((regparm(2), no_caller_saved_registers));
+void* W_CacheLumpNum(int32_t lump, uint32_t tag) __attribute((regparm(2), no_caller_saved_registers));
+uint32_t W_LumpLength(int32_t lump) __attribute((regparm(2), no_caller_saved_registers));
+void W_ReadLump(int32_t lump, void* dst) __attribute((regparm(2), no_caller_saved_registers));
 
 // wi_stuff
-void WI_Start(wbstartstruct_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+void WI_Start(wbstartstruct_t*) __attribute((regparm(2), no_caller_saved_registers));
 
 // z_zone
-void* Z_Malloc(uint32_t size, uint32_t tag, void* owner)
-    __attribute((regparm(2), no_caller_saved_registers));
+void* Z_Malloc(uint32_t size, uint32_t tag, void* owner) __attribute((regparm(2), no_caller_saved_registers));
 void Z_Free(void* ptr) __attribute((regparm(2), no_caller_saved_registers));
-void Z_FreeTags(uint32_t, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
-void Z_ChangeTag2(void*, uint32_t)
-    __attribute((regparm(2), no_caller_saved_registers));
+void Z_FreeTags(uint32_t, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
+void Z_ChangeTag2(void*, uint32_t) __attribute((regparm(2), no_caller_saved_registers));
 
 // extra inline
 

@@ -35,8 +35,7 @@ void animate_step();
 void clear_buttons();
 
 // buttons
-void do_line_switch(line_t* ln, uint32_t repeat)
-    __attribute((regparm(2), no_caller_saved_registers));
+void do_line_switch(line_t* ln, uint32_t repeat) __attribute((regparm(2), no_caller_saved_registers));
 
 // save
 uint16_t anim_switch_type(switch_t* slot);

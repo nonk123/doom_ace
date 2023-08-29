@@ -66,21 +66,16 @@ typedef struct
 
 //
 
-generic_mover_t* generic_ceiling(sector_t* sec, uint32_t dir, uint32_t def_seq,
-                                 uint32_t is_fast);
+generic_mover_t* generic_ceiling(sector_t* sec, uint32_t dir, uint32_t def_seq, uint32_t is_fast);
 generic_mover_t* generic_ceiling_by_sector(sector_t* sec);
 
-generic_mover_t* generic_floor(sector_t* sec, uint32_t dir, uint32_t def_seq,
-                               uint32_t is_fast);
+generic_mover_t* generic_floor(sector_t* sec, uint32_t dir, uint32_t def_seq, uint32_t is_fast);
 generic_mover_t* generic_floor_by_sector(sector_t* sec);
 
 generic_light_t* generic_light(sector_t* sec);
 generic_light_t* generic_light_by_sector(sector_t* sec);
 
 //
-void think_ceiling(generic_mover_t* gm)
-    __attribute((regparm(2), no_caller_saved_registers));
-void think_floor(generic_mover_t* gm)
-    __attribute((regparm(2), no_caller_saved_registers));
-void think_light(generic_light_t* gl)
-    __attribute((regparm(2), no_caller_saved_registers));
+void think_ceiling(generic_mover_t* gm) __attribute((regparm(2), no_caller_saved_registers));
+void think_floor(generic_mover_t* gm) __attribute((regparm(2), no_caller_saved_registers));
+void think_light(generic_light_t* gl) __attribute((regparm(2), no_caller_saved_registers));

@@ -77,46 +77,35 @@ static uint32_t fullbright_map[256 / 4];
 // light scale shade
 static uint8_t shade_table[MAXLIGHTSCALE] = {
     // TODO: calculate; depends on viewwidth
-    0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0E, 0x10, 0x12, 0x14, 0x16,
-    0x18, 0x1A, 0x1C, 0x1E, 0x20, 0x22, 0x24, 0x26, 0x28, 0x2A, 0x2C, 0x2E,
-    0x30, 0x32, 0x34, 0x36, 0x38, 0x3A, 0x3C, 0x3E, 0x40, 0x42, 0x44, 0x46,
-    0x48, 0x4A, 0x4C, 0x4E, 0x50, 0x52, 0x54, 0x56, 0x58, 0x5A, 0x5C, 0x5E,
+    0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0E, 0x10, 0x12, 0x14, 0x16, 0x18, 0x1A, 0x1C, 0x1E,
+    0x20, 0x22, 0x24, 0x26, 0x28, 0x2A, 0x2C, 0x2E, 0x30, 0x32, 0x34, 0x36, 0x38, 0x3A, 0x3C, 0x3E,
+    0x40, 0x42, 0x44, 0x46, 0x48, 0x4A, 0x4C, 0x4E, 0x50, 0x52, 0x54, 0x56, 0x58, 0x5A, 0x5C, 0x5E,
 };
 
 // light start table
 static const uint8_t light_start[256] = {
-    0xF3, 0xF2, 0xF1, 0xF0, 0xEF, 0xEE, 0xED, 0xEC, 0xEB, 0xEA, 0xE9, 0xE8,
-    0xE7, 0xE6, 0xE5, 0xE4, 0xE3, 0xE2, 0xE1, 0xE0, 0xDF, 0xDE, 0xDD, 0xDC,
-    0xDB, 0xDA, 0xD9, 0xD8, 0xD7, 0xD6, 0xD5, 0xD4, 0xD3, 0xD2, 0xD1, 0xD0,
-    0xCF, 0xCE, 0xCD, 0xCC, 0xCB, 0xCA, 0xC9, 0xC8, 0xC7, 0xC6, 0xC5, 0xC4,
-    0xC3, 0xC2, 0xC1, 0xC0, 0xBF, 0xBE, 0xBD, 0xBC, 0xBB, 0xBA, 0xB9, 0xB8,
-    0xB7, 0xB6, 0xB5, 0xB4, 0xB3, 0xB2, 0xB1, 0xB0, 0xAF, 0xAE, 0xAD, 0xAC,
-    0xAB, 0xAA, 0xA9, 0xA8, 0xA7, 0xA6, 0xA5, 0xA4, 0xA3, 0xA2, 0xA1, 0xA0,
-    0x9F, 0x9E, 0x9D, 0x9C, 0x9B, 0x9A, 0x99, 0x98, 0x97, 0x96, 0x95, 0x94,
-    0x93, 0x92, 0x91, 0x90, 0x8F, 0x8E, 0x8D, 0x8C, 0x8B, 0x8A, 0x89, 0x88,
-    0x87, 0x86, 0x85, 0x84, 0x83, 0x82, 0x81, 0x80, 0x7F, 0x7E, 0x7D, 0x7C,
-    0x7B, 0x7A, 0x79, 0x78, 0x77, 0x76, 0x75, 0x74, 0x73, 0x72, 0x71, 0x70,
-    0x6F, 0x6E, 0x6D, 0x6C, 0x6B, 0x6A, 0x69, 0x68, 0x67, 0x66, 0x65, 0x64,
-    0x63, 0x62, 0x61, 0x60, 0x5F, 0x5E, 0x5D, 0x5C, 0x5B, 0x5A, 0x59, 0x58,
-    0x57, 0x56, 0x55, 0x54, 0x53, 0x52, 0x51, 0x50, 0x4F, 0x4E, 0x4D, 0x4C,
-    0x4B, 0x4A, 0x49, 0x48, 0x47, 0x46, 0x45, 0x44, 0x43, 0x42, 0x41, 0x40,
-    0x3F, 0x3E, 0x3D, 0x3C, 0x3B, 0x3A, 0x39, 0x38, 0x37, 0x36, 0x35, 0x34,
-    0x33, 0x32, 0x31, 0x30, 0x2F, 0x2E, 0x2D, 0x2C, 0x2B, 0x2A, 0x29, 0x28,
-    0x27, 0x26, 0x25, 0x24, 0x23, 0x22, 0x21, 0x20, 0x1F, 0x1E, 0x1D, 0x1C,
-    0x1B, 0x1A, 0x19, 0x18, 0x17, 0x16, 0x15, 0x14, 0x13, 0x12, 0x11, 0x10,
-    0x0F, 0x0E, 0x0D, 0x0C, 0x0B, 0x0A, 0x09, 0x08, 0x07, 0x06, 0x05, 0x04,
-    0x03, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00};
+    0xF3, 0xF2, 0xF1, 0xF0, 0xEF, 0xEE, 0xED, 0xEC, 0xEB, 0xEA, 0xE9, 0xE8, 0xE7, 0xE6, 0xE5, 0xE4, 0xE3, 0xE2, 0xE1,
+    0xE0, 0xDF, 0xDE, 0xDD, 0xDC, 0xDB, 0xDA, 0xD9, 0xD8, 0xD7, 0xD6, 0xD5, 0xD4, 0xD3, 0xD2, 0xD1, 0xD0, 0xCF, 0xCE,
+    0xCD, 0xCC, 0xCB, 0xCA, 0xC9, 0xC8, 0xC7, 0xC6, 0xC5, 0xC4, 0xC3, 0xC2, 0xC1, 0xC0, 0xBF, 0xBE, 0xBD, 0xBC, 0xBB,
+    0xBA, 0xB9, 0xB8, 0xB7, 0xB6, 0xB5, 0xB4, 0xB3, 0xB2, 0xB1, 0xB0, 0xAF, 0xAE, 0xAD, 0xAC, 0xAB, 0xAA, 0xA9, 0xA8,
+    0xA7, 0xA6, 0xA5, 0xA4, 0xA3, 0xA2, 0xA1, 0xA0, 0x9F, 0x9E, 0x9D, 0x9C, 0x9B, 0x9A, 0x99, 0x98, 0x97, 0x96, 0x95,
+    0x94, 0x93, 0x92, 0x91, 0x90, 0x8F, 0x8E, 0x8D, 0x8C, 0x8B, 0x8A, 0x89, 0x88, 0x87, 0x86, 0x85, 0x84, 0x83, 0x82,
+    0x81, 0x80, 0x7F, 0x7E, 0x7D, 0x7C, 0x7B, 0x7A, 0x79, 0x78, 0x77, 0x76, 0x75, 0x74, 0x73, 0x72, 0x71, 0x70, 0x6F,
+    0x6E, 0x6D, 0x6C, 0x6B, 0x6A, 0x69, 0x68, 0x67, 0x66, 0x65, 0x64, 0x63, 0x62, 0x61, 0x60, 0x5F, 0x5E, 0x5D, 0x5C,
+    0x5B, 0x5A, 0x59, 0x58, 0x57, 0x56, 0x55, 0x54, 0x53, 0x52, 0x51, 0x50, 0x4F, 0x4E, 0x4D, 0x4C, 0x4B, 0x4A, 0x49,
+    0x48, 0x47, 0x46, 0x45, 0x44, 0x43, 0x42, 0x41, 0x40, 0x3F, 0x3E, 0x3D, 0x3C, 0x3B, 0x3A, 0x39, 0x38, 0x37, 0x36,
+    0x35, 0x34, 0x33, 0x32, 0x31, 0x30, 0x2F, 0x2E, 0x2D, 0x2C, 0x2B, 0x2A, 0x29, 0x28, 0x27, 0x26, 0x25, 0x24, 0x23,
+    0x22, 0x21, 0x20, 0x1F, 0x1E, 0x1D, 0x1C, 0x1B, 0x1A, 0x19, 0x18, 0x17, 0x16, 0x15, 0x14, 0x13, 0x12, 0x11, 0x10,
+    0x0F, 0x0E, 0x0D, 0x0C, 0x0B, 0x0A, 0x09, 0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 // plane light table
 static const uint8_t plane_light[] = {
-    0x20, 0x1C, 0x1A, 0x14, 0x10, 0x0D, 0x0B, 0x0A, 0x08, 0x08, 0x07, 0x06,
-    0x06, 0x05, 0x05, 0x05, 0x04, 0x04, 0x04, 0x04, 0x03, 0x03, 0x03, 0x03,
-    0x03, 0x03, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
-    0x02, 0x02, 0x02, 0x02, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-    0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-    0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-    0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+    0x20, 0x1C, 0x1A, 0x14, 0x10, 0x0D, 0x0B, 0x0A, 0x08, 0x08, 0x07, 0x06, 0x06, 0x05, 0x05, 0x05,
+    0x04, 0x04, 0x04, 0x04, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
+    0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+    0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+    0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
 };
 
 // mouselook scale
@@ -148,8 +137,7 @@ static uint32_t add_sector_color(uint16_t color, uint16_t fade)
 
 	for (uint32_t i = 1; i < sector_light_count; i++)
 	{
-		if (sector_light[i].color == color &&
-		    sector_light[i].fade == fade)
+		if (sector_light[i].color == color && sector_light[i].fade == fade)
 			return i;
 	}
 
@@ -323,8 +311,7 @@ void draw_masked_column(column_t* column, int32_t fc, int32_t cc)
 			dc_yl = top;
 			dc_yh = bot;
 			dc_source = (uint8_t*)column + 3;
-			dc_texturemid =
-			    basetexturemid - (column->topdelta << FRACBITS);
+			dc_texturemid = basetexturemid - (column->topdelta << FRACBITS);
 			colfunc();
 		}
 		column = (column_t*)((uint8_t*)column + column->length + 4);
@@ -333,8 +320,7 @@ void draw_masked_column(column_t* column, int32_t fc, int32_t cc)
 	dc_texturemid = basetexturemid;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-R_RenderMaskedSegRange(drawseg_t* ds, int32_t x1, int32_t x2)
+__attribute((regparm(2), no_caller_saved_registers)) void R_RenderMaskedSegRange(drawseg_t* ds, int32_t x1, int32_t x2)
 {
 	int32_t scalestep;
 	int32_t height;
@@ -363,15 +349,13 @@ R_RenderMaskedSegRange(drawseg_t* ds, int32_t x1, int32_t x2)
 		pl = backsector->exfloor;
 		while (pl)
 		{
-			if (pl->alpha && *pl->texture &&
-			    clip_height_top <= pl->source->ceilingheight &&
+			if (pl->alpha && *pl->texture && clip_height_top <= pl->source->ceilingheight &&
 			    clip_height_top > pl->source->floorheight &&
 			    pl->source->floorheight < backsector->ceilingheight)
 			{
 				extra_offset = *pl->rowoffset;
 				texnum = texturetranslation[*pl->texture];
-				dc_texturemid =
-				    pl->source->ceilingheight - viewz;
+				dc_texturemid = pl->source->ceilingheight - viewz;
 				source = pl->source;
 				height = -1;
 				e3d_top = source->ceilingheight;
@@ -391,32 +375,22 @@ R_RenderMaskedSegRange(drawseg_t* ds, int32_t x1, int32_t x2)
 			pl = frontsector->exfloor;
 			while (pl)
 			{
-				if (pl->alpha && *pl->texture &&
-				    clip_height_top <=
-				        pl->source->ceilingheight &&
+				if (pl->alpha && *pl->texture && clip_height_top <= pl->source->ceilingheight &&
 				    clip_height_top > pl->source->floorheight)
 				{
 					if (source == pl->source ||
-					    (no_inside &&
-					     (pl->alpha != 255 ||
-					      pl->flags & E3D_WATER)))
+					    (no_inside && (pl->alpha != 255 || pl->flags & E3D_WATER)))
 					{
 						extra_offset = 0;
 						texnum = 0;
 					}
-					else if (!texnum &&
-					         pl->flags & E3D_DRAW_INISIDE)
+					else if (!texnum && pl->flags & E3D_DRAW_INISIDE)
 					{
 						extra_offset = *pl->rowoffset;
-						texnum = texturetranslation
-						    [*pl->texture];
-						dc_texturemid =
-						    pl->source->ceilingheight -
-						    viewz;
-						e3d_top =
-						    pl->source->ceilingheight;
-						e3d_bot =
-						    pl->source->floorheight;
+						texnum = texturetranslation[*pl->texture];
+						dc_texturemid = pl->source->ceilingheight - viewz;
+						e3d_top = pl->source->ceilingheight;
+						e3d_bot = pl->source->floorheight;
 						height = -1;
 						setup_colfunc_tint(pl->alpha);
 						break;
@@ -435,17 +409,14 @@ R_RenderMaskedSegRange(drawseg_t* ds, int32_t x1, int32_t x2)
 		{
 			if (seg->linedef->flags & ML_DONTPEGBOTTOM)
 			{
-				fixed_t mid = frontsector->floorheight >
-				                      backsector->floorheight
+				fixed_t mid = frontsector->floorheight > backsector->floorheight
 				                  ? frontsector->floorheight
 				                  : backsector->floorheight;
-				dc_texturemid =
-				    mid + textureheight[texnum] - viewz;
+				dc_texturemid = mid + textureheight[texnum] - viewz;
 			}
 			else
 			{
-				fixed_t mid = frontsector->ceilingheight <
-				                      backsector->ceilingheight
+				fixed_t mid = frontsector->ceilingheight < backsector->ceilingheight
 				                  ? frontsector->ceilingheight
 				                  : backsector->ceilingheight;
 				dc_texturemid = mid - viewz;
@@ -463,10 +434,8 @@ R_RenderMaskedSegRange(drawseg_t* ds, int32_t x1, int32_t x2)
 		// there is no texture to draw
 
 		// check for fog
-		if (!fixedcolormap && backsector &&
-		    sector_light[frontsector->lightlevel >> 9].fade != 0x0000 &&
-		    sector_light[frontsector->lightlevel >> 9].fade !=
-		        sector_light[backsector->lightlevel >> 9].fade)
+		if (!fixedcolormap && backsector && sector_light[frontsector->lightlevel >> 9].fade != 0x0000 &&
+		    sector_light[frontsector->lightlevel >> 9].fade != sector_light[backsector->lightlevel >> 9].fade)
 		{
 			// this is not ideal as it totally disregards extra
 			// floors on both sides
@@ -546,8 +515,7 @@ R_RenderMaskedSegRange(drawseg_t* ds, int32_t x1, int32_t x2)
 			if (!fixedcolormap)
 				calculate_shade(spryscale);
 
-			sprtopscreen =
-			    centeryfrac - FixedMul(dc_texturemid, spryscale);
+			sprtopscreen = centeryfrac - FixedMul(dc_texturemid, spryscale);
 			dc_iscale = 0xFFFFFFFF / (uint32_t)spryscale;
 
 			mfc = mfloorclip[dc_x];
@@ -562,25 +530,19 @@ R_RenderMaskedSegRange(drawseg_t* ds, int32_t x1, int32_t x2)
 
 			if (clip_height_top < ONCEILINGZ)
 			{
-				int32_t tmp =
-				    ((topfrac + HEIGHTUNIT - 1) >> HEIGHTBITS) -
-				    1;
+				int32_t tmp = ((topfrac + HEIGHTUNIT - 1) >> HEIGHTBITS) - 1;
 				if (tmp > mcc)
 					mcc = tmp;
 			}
 
 			if (texnum >= 0)
 			{
-				data = texture_get_column(texnum,
-				                          tcol[dc_x] & 0x7FFF);
+				data = texture_get_column(texnum, tcol[dc_x] & 0x7FFF);
 				if (tex_was_composite ||
-				    (height < 0 && !data[-3] &&
-				     data[-2] >= textures[texnum]->height))
-					draw_solid_column(data, mfc, mcc,
-					                  height);
+				    (height < 0 && !data[-3] && data[-2] >= textures[texnum]->height))
+					draw_solid_column(data, mfc, mcc, height);
 				else if (height >= 0)
-					draw_masked_column(
-					    (column_t*)(data - 3), mfc, mcc);
+					draw_masked_column((column_t*)(data - 3), mfc, mcc);
 				else
 				{
 					// extra steps for 3D floors
@@ -590,17 +552,10 @@ R_RenderMaskedSegRange(drawseg_t* ds, int32_t x1, int32_t x2)
 					fixed_t texturez = e3d_top;
 					while (texturez > e3d_bot)
 					{
-						draw_masked_column(
-						    (column_t*)(data - 3), mfc,
-						    mcc);
-						texturez -=
-						    textureheight[texnum];
-						dc_texturemid -=
-						    textureheight[texnum];
-						sprtopscreen =
-						    centeryfrac -
-						    FixedMul(dc_texturemid,
-						             spryscale);
+						draw_masked_column((column_t*)(data - 3), mfc, mcc);
+						texturez -= textureheight[texnum];
+						dc_texturemid -= textureheight[texnum];
+						sprtopscreen = centeryfrac - FixedMul(dc_texturemid, spryscale);
 					}
 					dc_texturemid = texturemid;
 				}
@@ -619,8 +574,7 @@ R_RenderMaskedSegRange(drawseg_t* ds, int32_t x1, int32_t x2)
 	}
 }
 
-static void R_RenderSegStripe(uint32_t texture, fixed_t top, fixed_t bot,
-                              int32_t light)
+static void R_RenderSegStripe(uint32_t texture, fixed_t top, fixed_t bot, int32_t light)
 {
 	fixed_t tfrac;
 	fixed_t tstep;
@@ -653,8 +607,7 @@ static void R_RenderSegStripe(uint32_t texture, fixed_t top, fixed_t bot,
 			dc_yh = floorclip[x] - 1;
 
 		angle = (rw_centerangle + xtoviewangle[x]) >> ANGLETOFINESHIFT;
-		texturecolumn =
-		    rw_offset - FixedMul(finetangent[angle], rw_distance);
+		texturecolumn = rw_offset - FixedMul(finetangent[angle], rw_distance);
 		texturecolumn >>= FRACBITS;
 
 		calculate_shade(scalefrac);
@@ -716,17 +669,14 @@ static void render_striped_seg(uint32_t texture, fixed_t ht, fixed_t hb)
 	}
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-R_RenderSegLoop()
+__attribute((regparm(2), no_caller_saved_registers)) static void R_RenderSegLoop()
 {
 	if (!fixedcolormap && segtextured && frontsector->exfloor)
 	{
 		if (midtexture)
 		{
 			dc_texturemid = rw_midtexturemid;
-			render_striped_seg(midtexture,
-			                   frontsector->ceilingheight,
-			                   frontsector->floorheight);
+			render_striped_seg(midtexture, frontsector->ceilingheight, frontsector->floorheight);
 		}
 		else
 		{
@@ -817,11 +767,8 @@ R_RenderSegLoop()
 		{
 			angle_t angle;
 
-			angle = (rw_centerangle + xtoviewangle[x]) >>
-			        ANGLETOFINESHIFT;
-			texturecolumn =
-			    rw_offset -
-			    FixedMul(finetangent[angle & 4095], rw_distance);
+			angle = (rw_centerangle + xtoviewangle[x]) >> ANGLETOFINESHIFT;
+			texturecolumn = rw_offset - FixedMul(finetangent[angle & 4095], rw_distance);
 			texturecolumn >>= FRACBITS;
 
 			dc_x = x;
@@ -838,8 +785,7 @@ R_RenderSegLoop()
 				dc_yl = yl;
 				dc_yh = yh;
 				dc_texturemid = rw_midtexturemid;
-				dc_source = texture_get_column(midtexture,
-				                               texturecolumn);
+				dc_source = texture_get_column(midtexture, texturecolumn);
 				colfunc();
 			}
 			ceilingclip[x] = viewheight;
@@ -861,10 +807,8 @@ R_RenderSegLoop()
 					{
 						dc_yl = yl;
 						dc_yh = mid;
-						dc_texturemid =
-						    rw_toptexturemid;
-						dc_source = texture_get_column(
-						    toptexture, texturecolumn);
+						dc_texturemid = rw_toptexturemid;
+						dc_source = texture_get_column(toptexture, texturecolumn);
 						set_column_height(toptexture);
 						colfunc();
 					}
@@ -881,8 +825,7 @@ R_RenderSegLoop()
 
 			if (bottomtexture)
 			{
-				int32_t mid =
-				    (pixlow + HEIGHTUNIT - 1) >> HEIGHTBITS;
+				int32_t mid = (pixlow + HEIGHTUNIT - 1) >> HEIGHTBITS;
 				pixlow += pixlowstep;
 
 				if (mid <= ceilingclip[x])
@@ -894,13 +837,9 @@ R_RenderSegLoop()
 					{
 						dc_yl = mid;
 						dc_yh = yh;
-						dc_texturemid =
-						    rw_bottomtexturemid;
-						dc_source = texture_get_column(
-						    bottomtexture,
-						    texturecolumn);
-						set_column_height(
-						    bottomtexture);
+						dc_texturemid = rw_bottomtexturemid;
+						dc_source = texture_get_column(bottomtexture, texturecolumn);
+						set_column_height(bottomtexture);
 						colfunc();
 					}
 					floorclip[x] = mid;
@@ -924,8 +863,7 @@ R_RenderSegLoop()
 	}
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-R_DrawVisSprite(vissprite_t* vis)
+static __attribute((regparm(2), no_caller_saved_registers)) void R_DrawVisSprite(vissprite_t* vis)
 {
 	column_t* column;
 	int32_t texturecolumn;
@@ -938,15 +876,12 @@ R_DrawVisSprite(vissprite_t* vis)
 
 	r_dc_mask.u32 = 0x180808; // 256px column
 
-	if (vis->ptr >= (void*)players &&
-	    vis->ptr < (void*)(players + MAXPLAYERS))
+	if (vis->ptr >= (void*)players && vis->ptr < (void*)(players + MAXPLAYERS))
 	{
 		colfunc = R_DrawColumn;
 
-		if ((viewplayer->mo->render_style == RS_FUZZ ||
-		     viewplayer->mo->render_style == RS_INVISIBLE) &&
-		    (viewplayer->powers[pw_invisibility] > 4 * 32 ||
-		     viewplayer->powers[pw_invisibility] & 8))
+		if ((viewplayer->mo->render_style == RS_FUZZ || viewplayer->mo->render_style == RS_INVISIBLE) &&
+		    (viewplayer->powers[pw_invisibility] > 4 * 32 || viewplayer->powers[pw_invisibility] & 8))
 		{
 			if (viewplayer->mo->render_style == RS_INVISIBLE)
 			{
@@ -962,8 +897,7 @@ R_DrawVisSprite(vissprite_t* vis)
 
 			if (fixedcolormap)
 				dc_colormap = fixedcolormap;
-			else if (vis->psp->state->frame & FF_FULLBRIGHT &&
-			         !sec->exfloor &&
+			else if (vis->psp->state->frame & FF_FULLBRIGHT && !sec->exfloor &&
 			         !sector_light[sec->lightlevel >> 9].fmap)
 				dc_colormap = colormaps;
 			else
@@ -978,28 +912,20 @@ R_DrawVisSprite(vissprite_t* vis)
 					pl = pl->next;
 				}
 
-				if (!(vis->psp->state->frame & FF_FULLBRIGHT) ||
-				    sector_light[lightnum >> 9].fmap)
+				if (!(vis->psp->state->frame & FF_FULLBRIGHT) || sector_light[lightnum >> 9].fmap)
 				{
 					calculate_lightnum(lightnum, NULL);
-					if (vis->psp->state->frame &
-					        FF_FULLBRIGHT &&
-					    sector_light[lightnum >> 9].fmap)
-						lightmap =
-						    sector_light[lightnum >> 9]
-							.fmap;
-					calculate_shade((MAXLIGHTSCALE - 1)
-					                << LIGHTSCALESHIFT);
+					if (vis->psp->state->frame & FF_FULLBRIGHT && sector_light[lightnum >> 9].fmap)
+						lightmap = sector_light[lightnum >> 9].fmap;
+					calculate_shade((MAXLIGHTSCALE - 1) << LIGHTSCALESHIFT);
 				}
 				else
 					dc_colormap = colormaps;
 			}
 
 			if (viewplayer->mo->render_style == RS_TRANSLUCENT &&
-			    (viewplayer->powers[pw_invisibility] > 4 * 32 ||
-			     viewplayer->powers[pw_invisibility] & 8))
-				setup_colfunc_tint(
-				    viewplayer->mo->render_alpha);
+			    (viewplayer->powers[pw_invisibility] > 4 * 32 || viewplayer->powers[pw_invisibility] & 8))
+				setup_colfunc_tint(viewplayer->mo->render_alpha);
 		}
 
 		spryscale = vis->scale;
@@ -1012,8 +938,7 @@ R_DrawVisSprite(vissprite_t* vis)
 			colfunc = R_DrawFuzzColumn;
 		else if (fixedcolormap)
 			dc_colormap = fixedcolormap;
-		else if (vis->mo->frame & FF_FULLBRIGHT && !sec->exfloor &&
-		         !sector_light[sec->lightlevel >> 9].fmap)
+		else if (vis->mo->frame & FF_FULLBRIGHT && !sec->exfloor && !sector_light[sec->lightlevel >> 9].fmap)
 			dc_colormap = colormaps;
 		else
 		{
@@ -1027,14 +952,11 @@ R_DrawVisSprite(vissprite_t* vis)
 				pl = pl->next;
 			}
 
-			if (!(vis->mo->frame & FF_FULLBRIGHT) ||
-			    sector_light[lightnum >> 9].fmap)
+			if (!(vis->mo->frame & FF_FULLBRIGHT) || sector_light[lightnum >> 9].fmap)
 			{
 				calculate_lightnum(lightnum, NULL);
-				if (vis->mo->frame & FF_FULLBRIGHT &&
-				    sector_light[lightnum >> 9].fmap)
-					lightmap =
-					    sector_light[lightnum >> 9].fmap;
+				if (vis->mo->frame & FF_FULLBRIGHT && sector_light[lightnum >> 9].fmap)
+					lightmap = sector_light[lightnum >> 9].fmap;
 				calculate_shade(vis->scale);
 			}
 			else
@@ -1082,8 +1004,7 @@ R_DrawVisSprite(vissprite_t* vis)
 	sprtopscreen = centeryfrac - FixedMul(dc_texturemid, spryscale);
 
 	fc = clip_height_bot;
-	if (vis->mo && vis->mo->e3d_floorz > ONFLOORZ &&
-	    vis->mo->e3d_floorz < viewz)
+	if (vis->mo && vis->mo->e3d_floorz > ONFLOORZ && vis->mo->e3d_floorz < viewz)
 	{
 		if (vis->mo->e3d_floorz >= clip_height_top)
 			return;
@@ -1093,10 +1014,7 @@ R_DrawVisSprite(vissprite_t* vis)
 
 	if (fc > ONFLOORZ)
 	{
-		fc = (((centeryfrac >> 4) -
-		       FixedMul((fc - viewz) >> 4, vis->scale)) +
-		      HEIGHTUNIT - 1) >>
-		     HEIGHTBITS;
+		fc = (((centeryfrac >> 4) - FixedMul((fc - viewz) >> 4, vis->scale)) + HEIGHTUNIT - 1) >> HEIGHTBITS;
 		if (fc < 0)
 			return;
 	}
@@ -1105,9 +1023,7 @@ R_DrawVisSprite(vissprite_t* vis)
 
 	if (clip_height_top < ONCEILINGZ)
 	{
-		cc = (((centeryfrac >> 4) -
-		       FixedMul((clip_height_top - viewz) >> 4, vis->scale)) +
-		      HEIGHTUNIT - 1) >>
+		cc = (((centeryfrac >> 4) - FixedMul((clip_height_top - viewz) >> 4, vis->scale)) + HEIGHTUNIT - 1) >>
 		     HEIGHTBITS;
 		cc--;
 		if (cc >= SCREENHEIGHT)
@@ -1129,8 +1045,7 @@ R_DrawVisSprite(vissprite_t* vis)
 			mfc = fc;
 
 		texturecolumn = frac >> FRACBITS;
-		column =
-		    (column_t*)((uint8_t*)patch + patch->offs[texturecolumn]);
+		column = (column_t*)((uint8_t*)patch + patch->offs[texturecolumn]);
 		draw_masked_column(column, mfc, mcc);
 	}
 }
@@ -1148,12 +1063,10 @@ static inline void draw_player_sprites()
 	mfloorclip = screenheightarray;
 	mceilingclip = negonearray;
 
-	sx = (fixed_t)(viewplayer->psprites[0].sx + viewplayer->psprites[1].sx)
-	     << FRACBITS;
+	sx = (fixed_t)(viewplayer->psprites[0].sx + viewplayer->psprites[1].sx) << FRACBITS;
 	sx -= 160 * FRACUNIT;
 	sy = (BASEYCENTER << FRACBITS) + (FRACUNIT / 2) -
-	     ((fixed_t)(viewplayer->psprites[0].sy + viewplayer->psprites[1].sy)
-	      << FRACBITS);
+	     ((fixed_t)(viewplayer->psprites[0].sy + viewplayer->psprites[1].sy) << FRACBITS);
 
 	if (viewplayer->psprites[0].state)
 		R_DrawPSprite(viewplayer->psprites + 0, sx, sy);
@@ -1174,8 +1087,7 @@ static void draw_masked()
 
 	if (vissprite_p > vissprites)
 	{
-		for (spr = vsprsortedhead.next; spr != &vsprsortedhead;
-		     spr = spr->next)
+		for (spr = vsprsortedhead.next; spr != &vsprsortedhead; spr = spr->next)
 			R_DrawSprite(spr);
 	}
 
@@ -1239,8 +1151,7 @@ static inline void draw_masked_range()
 	if (e3d_dbg)
 	{
 		e3d_dbg = 0;
-		doom_sprintf(exitmsg, "sp: %u pv: %u pt: %u",
-		             e3d_dbg_splitcount, e3d_dbg_planecount,
+		doom_sprintf(exitmsg, "sp: %u pv: %u pt: %u", e3d_dbg_splitcount, e3d_dbg_planecount,
 		             e3d_count_planes());
 		message_is_important = 1;
 		players[consoleplayer].message = exitmsg;
@@ -1274,8 +1185,7 @@ void r_draw_plane(visplane_t* pl)
 		ds_source = flat_generate_composite(pl->picnum - numflats);
 	else
 		// regular flat
-		ds_source = W_CacheLumpNum(
-		    flatlump[flattranslation[pl->picnum]], PU_CACHE);
+		ds_source = W_CacheLumpNum(flatlump[flattranslation[pl->picnum]], PU_CACHE);
 
 	planeheight = abs(pl->height - viewz);
 
@@ -1287,8 +1197,7 @@ void r_draw_plane(visplane_t* pl)
 
 	stop = pl->maxx + 1;
 	for (int32_t x = pl->minx; x <= stop; x++)
-		R_MakeSpans(x, pl->top[x - 1], pl->bottom[x - 1], pl->top[x],
-		            pl->bottom[x]);
+		R_MakeSpans(x, pl->top[x - 1], pl->bottom[x - 1], pl->top[x], pl->bottom[x]);
 
 	if (oldfunc)
 		spanfunc = oldfunc;
@@ -1310,13 +1219,9 @@ static void R_DrawPlanes()
 				dc_yh = pl->bottom[x];
 				if (dc_yl <= dc_yh)
 				{
-					uint32_t angle =
-					    (viewangle + xtoviewangle[x]) >>
-					    ANGLETOSKYSHIFT;
+					uint32_t angle = (viewangle + xtoviewangle[x]) >> ANGLETOSKYSHIFT;
 					dc_x = x;
-					dc_source = texture_get_column(
-					    texturetranslation[skytexture],
-					    angle);
+					dc_source = texture_get_column(texturetranslation[skytexture], angle);
 					colfunc();
 				}
 			}
@@ -1356,10 +1261,7 @@ static void store_fake_range(int32_t start, int32_t stop)
 	scale = R_ScaleFromGlobalAngle(viewangle + xtoviewangle[start]);
 
 	if (stop > start)
-		scalestep =
-		    (R_ScaleFromGlobalAngle(viewangle + xtoviewangle[stop]) -
-		     scale) /
-		    (stop - start);
+		scalestep = (R_ScaleFromGlobalAngle(viewangle + xtoviewangle[stop]) - scale) / (stop - start);
 
 	world = *fakesource->height - viewz;
 	world >>= 4;
@@ -1396,8 +1298,7 @@ static void store_fake_range(int32_t start, int32_t stop)
 	}
 	else if (fakeplane_ceiling)
 	{
-		fakeplane_ceiling =
-		    e3d_check_plane(fakeplane_ceiling, start, stop);
+		fakeplane_ceiling = e3d_check_plane(fakeplane_ceiling, start, stop);
 		if (!fakeplane_ceiling)
 			return;
 
@@ -1522,11 +1423,9 @@ static
 	    backsector->floorheight != frontsector->floorheight)
 		goto clippass;
 
-	if (backsector->ceilingpic == frontsector->ceilingpic &&
-	    backsector->floorpic == frontsector->floorpic &&
-	    backsector->lightlevel == frontsector->lightlevel &&
-	    line->sidedef->midtexture == 0 && !frontsector->exfloor &&
-	    !backsector->exfloor)
+	if (backsector->ceilingpic == frontsector->ceilingpic && backsector->floorpic == frontsector->floorpic &&
+	    backsector->lightlevel == frontsector->lightlevel && line->sidedef->midtexture == 0 &&
+	    !frontsector->exfloor && !backsector->exfloor)
 		return;
 
 clippass:
@@ -1537,8 +1436,7 @@ clipsolid:
 	R_ClipSolidWallSegment(x1, x2 - 1);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-R_Subsector(uint32_t num)
+static __attribute((regparm(2), no_caller_saved_registers)) void R_Subsector(uint32_t num)
 {
 	uint32_t count, idx;
 	seg_t* line;
@@ -1580,8 +1478,7 @@ R_Subsector(uint32_t num)
 		}
 
 		fakesource = pl;
-		fakeplane_floor =
-		    e3d_find_plane(*pl->height, *pl->pic, light, pl->alpha);
+		fakeplane_floor = e3d_find_plane(*pl->height, *pl->pic, light, pl->alpha);
 		if (fakeplane_floor)
 		{
 			count = sub->numlines;
@@ -1651,8 +1548,7 @@ R_Subsector(uint32_t num)
 		}
 
 		fakesource = pl;
-		fakeplane_ceiling =
-		    e3d_find_plane(*pl->height, *pl->pic, light, pl->alpha);
+		fakeplane_ceiling = e3d_find_plane(*pl->height, *pl->pic, light, pl->alpha);
 		if (fakeplane_ceiling)
 		{
 			count = sub->numlines;
@@ -1688,20 +1584,17 @@ R_Subsector(uint32_t num)
 		pl = frontsector->exfloor;
 		while (pl)
 		{
-			if (pl->light &&
-			    *pl->height >= frontsector->floorheight)
+			if (pl->light && *pl->height >= frontsector->floorheight)
 				light = *pl->light;
 			pl = pl->next;
 		}
 
-		floorplane = R_FindPlane(frontsector->floorheight,
-		                         frontsector->floorpic, light);
+		floorplane = R_FindPlane(frontsector->floorheight, frontsector->floorpic, light);
 	}
 	else
 		floorplane = NULL;
 
-	if (frontsector->ceilingheight > viewz ||
-	    frontsector->ceilingpic == skyflatnum)
+	if (frontsector->ceilingheight > viewz || frontsector->ceilingpic == skyflatnum)
 	{
 		// find correct light in extra3D
 		light = frontsector->lightlevel;
@@ -1713,14 +1606,12 @@ R_Subsector(uint32_t num)
 
 		while (pl)
 		{
-			if (pl->light &&
-			    *pl->height >= frontsector->ceilingheight)
+			if (pl->light && *pl->height >= frontsector->ceilingheight)
 				light = *pl->light;
 			pl = pl->next;
 		}
 
-		ceilingplane = R_FindPlane(frontsector->ceilingheight,
-		                           frontsector->ceilingpic, light);
+		ceilingplane = R_FindPlane(frontsector->ceilingheight, frontsector->ceilingpic, light);
 	}
 	else
 		ceilingplane = NULL;
@@ -1730,20 +1621,16 @@ R_Subsector(uint32_t num)
 		frontsector->validcount = validcount;
 		for (mobj_t* mo = frontsector->thinglist; mo; mo = mo->snext)
 		{
-			if (mo != viewplayer->mo && mo->sprite != sprite_tnt1 &&
-			    mo->render_style < RS_INVISIBLE &&
+			if (mo != viewplayer->mo && mo->sprite != sprite_tnt1 && mo->render_style < RS_INVISIBLE &&
 			    (mo->render_alpha ||
-			     (mo->render_style != RS_TRANSLUCENT &&
-			      mo->render_style != RS_ADDITIVE)))
+			     (mo->render_style != RS_TRANSLUCENT && mo->render_style != RS_ADDITIVE)))
 			{
 				// check for floor "overdraw"
 				extraplane_t* pl = frontsector->exfloor;
 				mo->e3d_floorz = ONFLOORZ;
 				while (pl)
 				{
-					if (pl->alpha == 255 &&
-					    pl->flags & E3D_SOLID &&
-					    *pl->height <= mo->z)
+					if (pl->alpha == 255 && pl->flags & E3D_SOLID && *pl->height <= mo->z)
 					{
 						mo->e3d_floorz = *pl->height;
 						break;
@@ -1776,13 +1663,9 @@ R_Subsector(uint32_t num)
 			{
 				fakesource = pl;
 
-				if (pl->alpha &&
-				    *pl->height >=
-				        line->backsector->floorheight &&
-				    *pl->height < viewz)
+				if (pl->alpha && *pl->height >= line->backsector->floorheight && *pl->height < viewz)
 				{
-					e_floorclip =
-					    e3d_floorclip + idx * SCREENWIDTH;
+					e_floorclip = e3d_floorclip + idx * SCREENWIDTH;
 					R_AddLine(line);
 					idx++;
 				}
@@ -1797,13 +1680,9 @@ R_Subsector(uint32_t num)
 			{
 				fakesource = pl;
 
-				if (pl->alpha &&
-				    *pl->height <=
-				        line->backsector->ceilingheight &&
-				    *pl->height > viewz)
+				if (pl->alpha && *pl->height <= line->backsector->ceilingheight && *pl->height > viewz)
 				{
-					e_ceilingclip =
-					    e3d_ceilingclip + idx * SCREENWIDTH;
+					e_ceilingclip = e3d_ceilingclip + idx * SCREENWIDTH;
 					R_AddLine(line);
 					idx++;
 				}
@@ -1964,11 +1843,9 @@ void R_ProjectSprite(mobj_t* thing)
 	vis->patch = lump;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-extra_mark_check()
+static __attribute((regparm(2), no_caller_saved_registers)) void extra_mark_check()
 {
-	if (frontsector->exfloor || backsector->exfloor ||
-	    backsector->ceilingheight <= frontsector->floorheight ||
+	if (frontsector->exfloor || backsector->exfloor || backsector->ceilingheight <= frontsector->floorheight ||
 	    backsector->floorheight >= frontsector->ceilingheight)
 	{
 		markceiling = 1;
@@ -1976,8 +1853,7 @@ extra_mark_check()
 	}
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-masked_side_check(side_t* side)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t masked_side_check(side_t* side)
 {
 	if (side->midtexture)
 		return 1;
@@ -1993,17 +1869,14 @@ masked_side_check(side_t* side)
 			return 1;
 	}
 
-	if (backsector &&
-	    sector_light[frontsector->lightlevel >> 9].fade != 0x0000 &&
-	    sector_light[frontsector->lightlevel >> 9].fade !=
-	        sector_light[backsector->lightlevel >> 9].fade)
+	if (backsector && sector_light[frontsector->lightlevel >> 9].fade != 0x0000 &&
+	    sector_light[frontsector->lightlevel >> 9].fade != sector_light[backsector->lightlevel >> 9].fade)
 		return 1;
 
 	return 0;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint8_t*
-set_plane_light(uint32_t distance)
+static __attribute((regparm(2), no_caller_saved_registers)) uint8_t* set_plane_light(uint32_t distance)
 {
 	int32_t shade;
 	uint8_t* ret;
@@ -2029,8 +1902,7 @@ set_plane_light(uint32_t distance)
 static uint8_t channel_mix(uint8_t back, uint8_t front, uint16_t alpha)
 {
 	// close enough
-	return (((uint16_t)front * alpha) >> 8) +
-	       (((uint16_t)back * (256 - alpha)) >> 8);
+	return (((uint16_t)front * alpha) >> 8) + (((uint16_t)back * (256 - alpha)) >> 8);
 }
 
 static void generate_translucent(uint8_t* dest, uint8_t alpha)
@@ -2147,8 +2019,7 @@ static void generate_empty_range(uint8_t* dest)
 		dest[i] = i;
 }
 
-static void generate_translation(uint8_t* dest, uint8_t first, uint8_t last,
-                                 uint8_t r0, uint8_t r1)
+static void generate_translation(uint8_t* dest, uint8_t first, uint8_t last, uint8_t r0, uint8_t r1)
 {
 	int32_t step;
 	uint32_t now = r0 << 16;
@@ -2188,8 +2059,7 @@ static void generate_sector_light(uint8_t* dest, uint16_t color, uint16_t fade)
 	}
 
 	if (color & 0xF000 && (color & 0xF000) != 0xF000)
-		engine_error("RENDER", "Unable to generate desaturation %u!\n",
-		             (color >> 8) & 0xF000);
+		engine_error("RENDER", "Unable to generate desaturation %u!\n", (color >> 8) & 0xF000);
 
 	doom_printf("[RENDER] generating %s\n", name);
 
@@ -2215,27 +2085,20 @@ static void generate_sector_light(uint8_t* dest, uint16_t color, uint16_t fade)
 			uint8_t rr, gg, bb;
 			uint32_t fg = 32 - level;
 			uint32_t bg = level * 17;
-			uint32_t fullbright =
-			    fullbright_map[i / 32] & (1 << (i & 31));
+			uint32_t fullbright = fullbright_map[i / 32] & (1 << (i & 31));
 
 			if (color & 0xF000 && !fullbright)
 			{
 				// desaturate
 				rr = ((uint32_t)pal->l * (color & 0x000F)) / 15;
-				gg = ((uint32_t)pal->l *
-				      ((color & 0x00F0) >> 4)) /
-				     15;
-				bb = ((uint32_t)pal->l *
-				      ((color & 0x0F00) >> 8)) /
-				     15;
+				gg = ((uint32_t)pal->l * ((color & 0x00F0) >> 4)) / 15;
+				bb = ((uint32_t)pal->l * ((color & 0x0F00) >> 8)) / 15;
 			}
 			else if (color != 0x0FFF && !fullbright)
 			{
 				// multiply
 				rr = ((uint32_t)pal->r * (color & 0x000F)) / 15;
-				gg = ((uint32_t)pal->g *
-				      ((color & 0x00F0) >> 4)) /
-				     15;
+				gg = ((uint32_t)pal->g * ((color & 0x00F0) >> 4)) / 15;
 				bb = ((uint32_t)pal->b * (color >> 8)) / 15;
 			}
 			else
@@ -2252,8 +2115,7 @@ static void generate_sector_light(uint8_t* dest, uint16_t color, uint16_t fade)
 				rr += ((uint32_t)(fade & 0x000F) * bg) / 32;
 
 				gg = ((uint32_t)gg * fg) / 32;
-				gg += ((uint32_t)((fade >> 4) & 0x000F) * bg) /
-				      32;
+				gg += ((uint32_t)((fade >> 4) & 0x000F) * bg) / 32;
 
 				bb = ((uint32_t)bb * fg) / 32;
 				bb += ((uint32_t)(fade >> 8) * bg) / 32;
@@ -2298,8 +2160,7 @@ static void cb_count_translations(lumpinfo_t* li)
 	while (1)
 	{
 		i = translation_count++;
-		translation_alias = ldr_realloc(
-		    translation_alias, translation_count * sizeof(uint64_t));
+		translation_alias = ldr_realloc(translation_alias, translation_count * sizeof(uint64_t));
 		translation_alias[i] = tp_hash64(kw);
 
 		kw = tp_get_keyword();
@@ -2359,15 +2220,10 @@ static void cb_parse_translations(lumpinfo_t* li)
 			if (!kw)
 				return;
 
-			if (doom_sscanf(kw, "%u:%u=%u:%u", &t0, &t1, &t2,
-			                &t3) != 4 ||
-			    (t0 | t1 | t2 | t3) > 255)
-				engine_error("TRNSLATE",
-				             "Unsupported translation '%s'!\n",
-				             kw);
+			if (doom_sscanf(kw, "%u:%u=%u:%u", &t0, &t1, &t2, &t3) != 4 || (t0 | t1 | t2 | t3) > 255)
+				engine_error("TRNSLATE", "Unsupported translation '%s'!\n", kw);
 
-			generate_translation(render_translation + i * 256, t0,
-			                     t1, t2, t3);
+			generate_translation(render_translation + i * 256, t0, t1, t2, t3);
 
 			// check for end
 			kw = tp_get_keyword();
@@ -2529,8 +2385,7 @@ void r_fixed_palette(uint16_t fade)
 void* r_generate_player_color(uint32_t idx)
 {
 	player_info_t* pi = player_info + idx;
-	ei_player_t* pc =
-	    &mobjinfo[player_class[player_info[idx].playerclass]].player;
+	ei_player_t* pc = &mobjinfo[player_class[player_info[idx].playerclass]].player;
 	uint8_t* dest = render_translation + (TRANSLATION_PLAYER0 + idx) * 256;
 	int32_t count = 1 + pc->color_last - pc->color_first;
 	uint32_t i;
@@ -2645,15 +2500,11 @@ void init_render()
 	// drawseg limit
 	if (mod_config.drawseg_count > 256)
 	{
-		doom_printf("[RENDER] New drawseg limit %u\n",
-		            mod_config.drawseg_count);
+		doom_printf("[RENDER] New drawseg limit %u\n", mod_config.drawseg_count);
 		// allocate new memory
-		ptr_drawsegs =
-		    ldr_malloc(mod_config.drawseg_count * sizeof(drawseg_t));
+		ptr_drawsegs = ldr_malloc(mod_config.drawseg_count * sizeof(drawseg_t));
 		// update values in hooks
-		hook_drawseg[0].value =
-		    (uint32_t)ptr_drawsegs +
-		    mod_config.drawseg_count * sizeof(drawseg_t);
+		hook_drawseg[0].value = (uint32_t)ptr_drawsegs + mod_config.drawseg_count * sizeof(drawseg_t);
 		for (int i = 1; i <= 3; i++)
 			hook_drawseg[i].value = (uint32_t)ptr_drawsegs;
 		// install hooks
@@ -2665,13 +2516,10 @@ void init_render()
 	// visplane limit
 	if (mod_config.visplane_count > 128)
 	{
-		doom_printf("[RENDER] New visplane limit %u\n",
-		            mod_config.visplane_count);
+		doom_printf("[RENDER] New visplane limit %u\n", mod_config.visplane_count);
 		// allocate new memory
-		ptr_visplanes =
-		    ldr_malloc(mod_config.visplane_count * sizeof(visplane_t));
-		memset(ptr_visplanes, 0,
-		       mod_config.visplane_count * sizeof(visplane_t));
+		ptr_visplanes = ldr_malloc(mod_config.visplane_count * sizeof(visplane_t));
+		memset(ptr_visplanes, 0, mod_config.visplane_count * sizeof(visplane_t));
 		// update values in hooks
 		for (int i = 0; i <= 2; i++)
 			hook_visplane[i].value = (uint32_t)ptr_visplanes;
@@ -2688,11 +2536,9 @@ void init_render()
 	// vissprite limit
 	if (mod_config.vissprite_count > 128)
 	{
-		doom_printf("[RENDER] New vissprite limit %u\n",
-		            mod_config.vissprite_count);
+		doom_printf("[RENDER] New vissprite limit %u\n", mod_config.vissprite_count);
 		// allocate new memory
-		vissprites = ldr_malloc(mod_config.vissprite_count *
-		                        sizeof(vissprite_t));
+		vissprites = ldr_malloc(mod_config.vissprite_count * sizeof(vissprite_t));
 		// update values in hooks
 		for (int i = 0; i <= 4; i++)
 			hook_vissprite[i].value = (uint32_t)vissprites;
@@ -2714,37 +2560,30 @@ void init_render()
 	//
 	// PASS 1
 
-	translation_alias =
-	    ldr_malloc(sizeof(uint64_t) * NUM_EXTRA_TRANSLATIONS);
+	translation_alias = ldr_malloc(sizeof(uint64_t) * NUM_EXTRA_TRANSLATIONS);
 	wad_handle_lump("TRNSLATE", cb_count_translations);
 
 	//
 	// PASS 2
 
 	// initialize render style AND translation tables
-	ptr = ldr_malloc(sizeof(render_tables_t) + COLORMAP_SIZE +
-	                 translation_count * 256 + 256);
-	ptr = (void*)(((uint32_t)ptr + 255) &
-	              ~255); // align for ASM optimisations
+	ptr = ldr_malloc(sizeof(render_tables_t) + COLORMAP_SIZE + translation_count * 256 + 256);
+	ptr = (void*)(((uint32_t)ptr + 255) & ~255); // align for ASM optimisations
 
 	render_translation = ptr + COLORMAP_SIZE + sizeof(render_tables_t);
 
 	// extra translations
 	generate_empty_range(render_translation + TRANSLATION_DEHPLR2 * 256);
-	generate_translation(render_translation + TRANSLATION_DEHPLR2 * 256,
-	                     112, 127, 96, 111);
+	generate_translation(render_translation + TRANSLATION_DEHPLR2 * 256, 112, 127, 96, 111);
 	generate_empty_range(render_translation + TRANSLATION_DEHPLR3 * 256);
-	generate_translation(render_translation + TRANSLATION_DEHPLR3 * 256,
-	                     112, 127, 64, 79);
+	generate_translation(render_translation + TRANSLATION_DEHPLR3 * 256, 112, 127, 64, 79);
 	generate_empty_range(render_translation + TRANSLATION_DEHPLR4 * 256);
-	generate_translation(render_translation + TRANSLATION_DEHPLR4 * 256,
-	                     112, 127, 32, 47);
+	generate_translation(render_translation + TRANSLATION_DEHPLR4 * 256, 112, 127, 32, 47);
 	generate_empty_range(render_translation + TRANSLATION_PLAYER0 * 256);
 	generate_empty_range(render_translation + TRANSLATION_PLAYER1 * 256);
 	generate_empty_range(render_translation + TRANSLATION_PLAYER2 * 256);
 	generate_empty_range(render_translation + TRANSLATION_PLAYER3 * 256);
-	generate_color2(render_translation + TRANSLATION_ICE * 256, 148, 148,
-	                172);
+	generate_color2(render_translation + TRANSLATION_ICE * 256, 148, 148, 172);
 
 	translation_alias[TRANSLATION_ICE] = 0x00000000000258E9;
 
@@ -2790,8 +2629,7 @@ void init_render()
 		// tables are provided in WAD file
 		// beware: tables are based on palette!
 		doom_printf("[RENDER] %s tables ...\n", "Loading");
-		wad_read_lump(render_tables, render_tables_lump,
-		              sizeof(render_tables_t));
+		wad_read_lump(render_tables, render_tables_lump, sizeof(render_tables_t));
 	}
 
 	// default sector color
@@ -2801,10 +2639,8 @@ void init_render()
 	// optional export
 	if (M_CheckParm("-dumptables"))
 	{
-		ldr_dump_buffer("ace_rndr.lmp", render_tables,
-		                sizeof(render_tables_t));
-		engine_error("", "Tables were dumped to '%s' ...",
-		             "ace_rndr.lmp");
+		ldr_dump_buffer("ace_rndr.lmp", render_tables, sizeof(render_tables_t));
+		engine_error("", "Tables were dumped to '%s' ...", "ace_rndr.lmp");
 	}
 }
 
@@ -2816,14 +2652,12 @@ void render_generate_blood()
 		return;
 
 	ptr = ldr_malloc(blood_color_count * 256 + 256);
-	blood_translation = (void*)(((uint32_t)ptr + 255) &
-	                            ~255); // align for ASM optimisations
+	blood_translation = (void*)(((uint32_t)ptr + 255) & ~255); // align for ASM optimisations
 
 	for (uint32_t i = 0; i < blood_color_count; i++)
 	{
 		uint32_t color = BLOOD_COLOR_STORAGE[i];
-		generate_color(blood_translation + i * 256, color, color >> 8,
-		               color >> 16);
+		generate_color(blood_translation + i * 256, color, color >> 8, color >> 16);
 	}
 }
 
@@ -2862,12 +2696,8 @@ uint32_t render_setup_light_color(uint32_t from_save)
 		{
 			sector_t* sec = sectors + i;
 
-			if (sec->extra->color != 0x0FFF ||
-			    sec->extra->fade != 0x0000)
-				sec->lightlevel |=
-				    add_sector_color(sec->extra->color,
-				                     sec->extra->fade)
-				    << 9;
+			if (sec->extra->color != 0x0FFF || sec->extra->fade != 0x0000)
+				sec->lightlevel |= add_sector_color(sec->extra->color, sec->extra->fade) << 9;
 		}
 	}
 
@@ -2885,8 +2715,7 @@ uint32_t render_setup_light_color(uint32_t from_save)
 
 	// allocate memory
 	tables = Z_Malloc(count * (256 * 32) + 255, PU_LEVEL, NULL);
-	tables = (void*)(((uint32_t)tables + 255) &
-	                 ~255); // align for ASM optimisations
+	tables = (void*)(((uint32_t)tables + 255) & ~255); // align for ASM optimisations
 
 	// generate colormap tables
 	for (uint32_t i = 1; i < sector_light_count; i++)
@@ -2935,8 +2764,7 @@ void render_player_view(player_t* pl)
 				fake_player.viewz += cam->height / 2;
 
 			if (fake_player.viewz > cam->ceilingz - 4 * FRACUNIT)
-				fake_player.viewz =
-				    cam->ceilingz - 4 * FRACUNIT;
+				fake_player.viewz = cam->ceilingz - 4 * FRACUNIT;
 
 			if (fake_player.viewz < cam->floorz + 8 * FRACUNIT)
 				fake_player.viewz = cam->floorz + 8 * FRACUNIT;
@@ -2962,8 +2790,7 @@ void render_player_view(player_t* pl)
 //
 // hooks
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-custom_SetupFrame(player_t* pl)
+static __attribute((regparm(2), no_caller_saved_registers)) void custom_SetupFrame(player_t* pl)
 {
 	fixed_t pn;
 	int32_t div;
@@ -2976,8 +2803,7 @@ custom_SetupFrame(player_t* pl)
 	if (extra_config.mouse_look > 1)
 		pn = 0;
 	else
-		pn = finetangent[(pl->mo->pitch + ANG90) >> ANGLETOFINESHIFT] /
-		     div;
+		pn = finetangent[(pl->mo->pitch + ANG90) >> ANGLETOFINESHIFT] / div;
 
 	if (mlook_pitch != pn)
 	{
@@ -3011,8 +2837,7 @@ custom_SetupFrame(player_t* pl)
 	R_SetupFrame(pl);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-hook_RenderPlayerView(player_t* pl)
+static __attribute((regparm(2), no_caller_saved_registers)) void hook_RenderPlayerView(player_t* pl)
 {
 	if (demoplayback)
 		am_cheating = 2;
@@ -3029,8 +2854,7 @@ hook_RenderPlayerView(player_t* pl)
 	if (pl->text.text)
 	{
 		font_color = NULL; // TODO: 'bold' text has different color
-		font_center_text(SCREENWIDTH / 2, SCREENHEIGHT / 2,
-		                 pl->text.text, font_load(pl->text.font),
+		font_center_text(SCREENWIDTH / 2, SCREENHEIGHT / 2, pl->text.text, font_load(pl->text.font),
 		                 pl->text.lines);
 	}
 
@@ -3038,13 +2862,11 @@ hook_RenderPlayerView(player_t* pl)
 	if (is_net_desync && leveltime & 16)
 	{
 		font_color = &render_tables->fmap[FCOL_RED * FONT_COLOR_COUNT];
-		font_center_text(SCREENWIDTH / 2, 32, "DESYNCHRONIZED!",
-		                 smallfont, 0);
+		font_center_text(SCREENWIDTH / 2, 32, "DESYNCHRONIZED!", smallfont, 0);
 	}
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-execute_setViewSize()
+static __attribute((regparm(2), no_caller_saved_registers)) void execute_setViewSize()
 {
 	// no lowres mode
 	r_setdetail = 0;
@@ -3095,8 +2917,7 @@ static hook_t hook_vissprite[] = {
 
 //
 // hooks
-static const hook_t hooks[] __attribute__((used, section(".hooks"),
-                                           aligned(4))) = {
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
     // disable 'R_InitTranslationTables' in 'R_Init'
     {0x00035E08, CODE_HOOK | HOOK_SET_NOPS, 5},
     // replace call to 'R_RenderPlayerView' in 'D_Display'
@@ -3135,8 +2956,7 @@ static const hook_t hooks[] __attribute__((used, section(".hooks"),
     {0x00038123, CODE_HOOK | HOOK_UINT32, 0x5C031A8B},
     {0x00038127, CODE_HOOK | HOOK_UINT32, 0x05EB6424},
     // skip 'vis->colormap' in 'R_DrawPSprite'; set vis->psp
-    {0x000381B2, CODE_HOOK | HOOK_UINT32,
-     0x7089 | (offsetof(vissprite_t, psp) << 16)},
+    {0x000381B2, CODE_HOOK | HOOK_UINT32, 0x7089 | (offsetof(vissprite_t, psp) << 16)},
     {0x000381B5, CODE_HOOK | HOOK_UINT16, 0x41EB},
     // relace call to 'R_ExecuteSetViewSize' in 'D_Display'
     {0x0001D1FE, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)execute_setViewSize},

@@ -301,8 +301,7 @@ try_again:
 	else
 	{
 		// skip whitespaces and newlines
-		while (*ptr == ' ' || *ptr == '\t' || *ptr == '\r' ||
-		       *ptr == '\n')
+		while (*ptr == ' ' || *ptr == '\t' || *ptr == '\r' || *ptr == '\n')
 			ptr++;
 	}
 
@@ -431,11 +430,9 @@ try_again:
 				break;
 			}
 
-			if (*ptr == ' ' || *ptr == '\t' || *ptr == '\r' ||
-			    *ptr == '\n')
+			if (*ptr == ' ' || *ptr == '\t' || *ptr == '\r' || *ptr == '\n')
 			{
-				if (tp_enable_newline &&
-				    (*ptr == '\r' || *ptr == '\n'))
+				if (tp_enable_newline && (*ptr == '\r' || *ptr == '\n'))
 					backup_char = '\n';
 				// terminate string
 				*ptr++ = 0;
@@ -537,10 +534,8 @@ uint32_t tp_skip_code_block(uint32_t depth)
 void tp_load_lump(lumpinfo_t* li)
 {
 	if (li->size > TP_MEMORY_SIZE)
-		engine_error(
-		    "SCRIPT",
-		    "Lump '%.8s' is too large! Limit is %u but size is %u.\n",
-		    li->name, TP_MEMORY_SIZE, li->size);
+		engine_error("SCRIPT", "Lump '%.8s' is too large! Limit is %u but size is %u.\n", li->name,
+		             TP_MEMORY_SIZE, li->size);
 
 	tp_text_ptr = TP_MEMORY_ADDR;
 	tp_text_ptr[li->size] = 0;

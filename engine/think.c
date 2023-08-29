@@ -40,8 +40,7 @@ static __attribute((regparm(2), no_caller_saved_registers)) void P_Ticker()
 	if (paused)
 		return;
 
-	if (!netgame && menuactive && !is_title_map && !demoplayback &&
-	    leveltime)
+	if (!netgame && menuactive && !is_title_map && !demoplayback && leveltime)
 		return;
 
 	// player thinkers
@@ -110,8 +109,7 @@ static __attribute((regparm(2), no_caller_saved_registers)) void P_Ticker()
 			if (lump >= 0)
 			{
 				vesa_copy();
-				V_DrawPatchDirect(
-				    0, 0, W_CacheLumpNum(lump, PU_CACHE));
+				V_DrawPatchDirect(0, 0, W_CacheLumpNum(lump, PU_CACHE));
 				vesa_update();
 			}
 			save_auto(0);
@@ -140,8 +138,7 @@ void think_add(thinker_t* th)
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// replace call to 'P_Ticker' in 'G_Ticker'
-	{0x0002081A, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)P_Ticker},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // replace call to 'P_Ticker' in 'G_Ticker'
+    {0x0002081A, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)P_Ticker},
 };

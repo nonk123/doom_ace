@@ -5,10 +5,8 @@
 #define PLAYER_SOUND_SLOT_LEN 12
 
 // SOUND_CHAN_VOICE is the default
-#define SOUND_CHAN_BODY(mo)                                                    \
-	((void*)(mo) + offsetof(mobj_t, sound_body) - sizeof(thinker_t))
-#define SOUND_CHAN_WEAPON(mo)                                                  \
-	((void*)(mo) + offsetof(mobj_t, sound_weapon) - sizeof(thinker_t))
+#define SOUND_CHAN_BODY(mo) ((void*)(mo) + offsetof(mobj_t, sound_body) - sizeof(thinker_t))
+#define SOUND_CHAN_WEAPON(mo) ((void*)(mo) + offsetof(mobj_t, sound_weapon) - sizeof(thinker_t))
 #define SOUND_CONSOLEPLAYER(pl) ((void*)(((pl)-players) + 1))
 
 // SNDSEQ

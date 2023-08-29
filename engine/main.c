@@ -28,8 +28,7 @@
 
 extern void init_ribbit();
 
-#define LDR_ENGINE_COUNT                                                       \
-	6 // sndinfo, decorate, texure-init, flat-init, sprite-init, other-text
+#define LDR_ENGINE_COUNT 6 // sndinfo, decorate, texure-init, flat-init, sprite-init, other-text
 
 typedef struct
 {
@@ -104,8 +103,7 @@ void* ldr_malloc(uint32_t size)
 
 	ret = doom_malloc(size);
 	if (!ret)
-		engine_error("LOADER", "%s memory allocation failed! (%uB)",
-		             ldr_alloc_message, size);
+		engine_error("LOADER", "%s memory allocation failed! (%uB)", ldr_alloc_message, size);
 
 	return ret;
 }
@@ -116,8 +114,7 @@ void* ldr_realloc(void* ptr, uint32_t size)
 
 	ret = doom_realloc(ptr, size);
 	if (!ret)
-		engine_error("LOADER", "%s memory allocation failed! (%uB)",
-		             ldr_alloc_message, size);
+		engine_error("LOADER", "%s memory allocation failed! (%uB)", ldr_alloc_message, size);
 
 	return ret;
 }
@@ -138,8 +135,7 @@ void ldr_get_patch_header(int32_t lump, patch_t* patch)
 {
 	wad_read_lump(patch, lump, sizeof(patch_t));
 	if (*((uint64_t*)patch) == 0xA1A0A0D474E5089)
-		engine_error("LOADER", "Patch '%.8s' is a PNG!",
-		             lumpinfo[lump].name);
+		engine_error("LOADER", "Patch '%.8s' is a PNG!", lumpinfo[lump].name);
 }
 
 //
@@ -286,8 +282,7 @@ uint32_t ace_main()
 		uint32_t new_max;
 
 		// GFX stuff count
-		loading->gfx_max =
-		    loading->count_texture + loading->count_sprite;
+		loading->gfx_max = loading->count_texture + loading->count_sprite;
 
 		// render tables; it is slooow on old PCs
 		if (render_tables_lump < 0)
@@ -295,16 +290,13 @@ uint32_t ace_main()
 
 		// reserve 15% for engine stuff
 		new_max = (loading->gfx_max * 115) / 100;
-		loading->gfx_ace =
-		    (new_max - loading->gfx_max) / LDR_ENGINE_COUNT;
+		loading->gfx_ace = (new_max - loading->gfx_max) / LDR_ENGINE_COUNT;
 
 		// fix rounding error
-		loading->gfx_max =
-		    loading->gfx_ace * LDR_ENGINE_COUNT + loading->gfx_max;
+		loading->gfx_max = loading->gfx_ace * LDR_ENGINE_COUNT + loading->gfx_max;
 
 		// progress bar step size
-		loading->gfx_step =
-		    ((uint32_t)loading->gfx_width << 16) / loading->gfx_max;
+		loading->gfx_step = ((uint32_t)loading->gfx_width << 16) / loading->gfx_max;
 	}
 
 	//
@@ -433,15 +425,13 @@ __attribute((noreturn)) void bluescreen()
 
 	doom_printf("[%s] %s\n", error_module, text);
 
-	for (uint16_t* dst = (uint16_t*)0xB8000; dst < (uint16_t*)0xB8FA0;
-	     dst++)
+	for (uint16_t* dst = (uint16_t*)0xB8000; dst < (uint16_t*)0xB8FA0; dst++)
 		*dst = 0x1720;
 
 	ace_wad_type = 0x7100;
 	bs_puts(34, 8, " ACE Engine ");
 	ace_wad_type = 0x1F00;
-	bs_puts(12, 10,
-	        "An error has occurred. There is not much you can do now.");
+	bs_puts(12, 10, "An error has occurred. There is not much you can do now.");
 	bs_puts(12, 12, "Module that caused this error is");
 	bs_puts(23, 20, "Type 'cls' to clear the screen ...");
 	bs_puts(45, 12, error_module);
@@ -485,9 +475,7 @@ void zone_info()
 		used += sizeof(memblock_t);
 
 		if (block->next->prev != block)
-			engine_error(
-			    "ZONE",
-			    "Next block doesn't have proper back link.");
+			engine_error("ZONE", "Next block doesn't have proper back link.");
 
 		if (!block->user && !block->next->user)
 			engine_error("ZONE", "Two consecutive free blocks.");
@@ -496,16 +484,13 @@ void zone_info()
 			break;
 
 		if ((void*)block + block->size != (void*)block->next)
-			engine_error(
-			    "ZONE",
-			    "Block size does not touch the next block.");
+			engine_error("ZONE", "Block size does not touch the next block.");
 	}
 
 	doom_printf("[ZONE] %u / %u B\n", used, left + used);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void*
-zone_alloc(uint32_t* psz)
+static __attribute((regparm(2), no_caller_saved_registers)) void* zone_alloc(uint32_t* psz)
 {
 	uint32_t size;
 	void* ptr = NULL;
@@ -734,41 +719,40 @@ static const hook_t restore_loader[] = {
     {0x0001B830, CODE_HOOK | HOOK_UINT8, 0xE8},
 };
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// save old zone size - passed by loader in 'drawsegs'
-	{0x0002D0A0, DATA_HOOK | HOOK_READ32, (uint32_t)&old_zone_size},
-	// data init stuff; 'R_InitData' was overwritten by the exploit
-	{0x00035D83, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)data_init},
-	// late init stuff
-	{0x0001E950, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)late_init},
-	// replace call to 'Z_Init' in 'D_DoomMain'
-	{0x0001E4BE, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)Z_Init},
-	// modify 'I_ZoneBase' to only report available memory
-	{0x0001AC7C, CODE_HOOK | HOOK_UINT16, 0xD089},
-	{0x0001AC7E, CODE_HOOK | HOOK_JMP_DOOM, 0x0001AD36},
-	// restore stuff, hook 'I_StartupSound'
-	{0x0001AA7A, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)ldr_restore},
-	// add custom loading, skip "commercial" text and PWAD warning
-	{0x0001E4DA, CODE_HOOK | HOOK_JMP_DOOM, 0x0001E70C},
-	// disable title text update
-	{0x0001D8D0, CODE_HOOK | HOOK_UINT8, 0xC3},
-	// disable call to 'I_InitGraphics' in 'D_DoomLoop'
-	{0x0001D56D, CODE_HOOK | HOOK_SET_NOPS, 5},
-	// replace call to 'W_CacheLumpName' in 'I_InitGraphics'
-	{0x0001A0F5, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)load_palette},
-	// disable call to 'I_InitDiskFlash' in 'I_InitGraphics'
-	{0x0001A0FF, CODE_HOOK | HOOK_SET_NOPS, 5},
-	// disable disk flash; 'grmode = 1' in 'I_InitGraphics'
-	{0x0001A041, CODE_HOOK | HOOK_SET_NOPS, 6},
-	// place 'loading' structure into 'vissprites' + 1024
-	{0x0005A610, DATA_HOOK | HOOK_IMPORT, (uint32_t)&loading},
-	// early 'I_Error' fix
-	{0x0001B830, CODE_HOOK | HOOK_UINT8, 0xC3},
-	// bluescreen 'I_Error' update
-	{0x0001AB32, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)hook_bluescreen},
-	// read stuff
-	{0x0002B6E0, DATA_HOOK | HOOK_READ32, (uint32_t)&ace_wad_name},
-	{0x0002C150, DATA_HOOK | HOOK_READ32, (uint32_t)&ace_wad_type},
-	{0x00074FC4, DATA_HOOK | HOOK_READ32, (uint32_t)&screen_buffer},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // save old zone size - passed by loader in 'drawsegs'
+    {0x0002D0A0, DATA_HOOK | HOOK_READ32, (uint32_t)&old_zone_size},
+    // data init stuff; 'R_InitData' was overwritten by the exploit
+    {0x00035D83, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)data_init},
+    // late init stuff
+    {0x0001E950, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)late_init},
+    // replace call to 'Z_Init' in 'D_DoomMain'
+    {0x0001E4BE, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)Z_Init},
+    // modify 'I_ZoneBase' to only report available memory
+    {0x0001AC7C, CODE_HOOK | HOOK_UINT16, 0xD089},
+    {0x0001AC7E, CODE_HOOK | HOOK_JMP_DOOM, 0x0001AD36},
+    // restore stuff, hook 'I_StartupSound'
+    {0x0001AA7A, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)ldr_restore},
+    // add custom loading, skip "commercial" text and PWAD warning
+    {0x0001E4DA, CODE_HOOK | HOOK_JMP_DOOM, 0x0001E70C},
+    // disable title text update
+    {0x0001D8D0, CODE_HOOK | HOOK_UINT8, 0xC3},
+    // disable call to 'I_InitGraphics' in 'D_DoomLoop'
+    {0x0001D56D, CODE_HOOK | HOOK_SET_NOPS, 5},
+    // replace call to 'W_CacheLumpName' in 'I_InitGraphics'
+    {0x0001A0F5, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)load_palette},
+    // disable call to 'I_InitDiskFlash' in 'I_InitGraphics'
+    {0x0001A0FF, CODE_HOOK | HOOK_SET_NOPS, 5},
+    // disable disk flash; 'grmode = 1' in 'I_InitGraphics'
+    {0x0001A041, CODE_HOOK | HOOK_SET_NOPS, 6},
+    // place 'loading' structure into 'vissprites' + 1024
+    {0x0005A610, DATA_HOOK | HOOK_IMPORT, (uint32_t)&loading},
+    // early 'I_Error' fix
+    {0x0001B830, CODE_HOOK | HOOK_UINT8, 0xC3},
+    // bluescreen 'I_Error' update
+    {0x0001AB32, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)hook_bluescreen},
+    // read stuff
+    {0x0002B6E0, DATA_HOOK | HOOK_READ32, (uint32_t)&ace_wad_name},
+    {0x0002C150, DATA_HOOK | HOOK_READ32, (uint32_t)&ace_wad_type},
+    {0x00074FC4, DATA_HOOK | HOOK_READ32, (uint32_t)&screen_buffer},
 };

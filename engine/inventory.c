@@ -18,8 +18,7 @@ int32_t inv_player_next(mobj_t* mo)
 	if (!mo->inventory)
 		return 0;
 
-	for (int32_t i = mo->player->inv_sel + 1; i < mo->inventory->numslots;
-	     i++)
+	for (int32_t i = mo->player->inv_sel + 1; i < mo->inventory->numslots; i++)
 	{
 		mobjinfo_t* info = mobjinfo + mo->inventory->slot[i].type;
 		if (info->inventory.icon && info->eflags & MFE_INVENTORY_INVBAR)
@@ -50,8 +49,7 @@ int32_t inv_player_prev(mobj_t* mo)
 	return 0;
 }
 
-static void inv_check_player(mobj_t* mo, mobjinfo_t* info, invitem_t* item,
-                             uint32_t flags)
+static void inv_check_player(mobj_t* mo, mobjinfo_t* info, invitem_t* item, uint32_t flags)
 {
 	// update player status bar
 	// update player inventory bar
@@ -77,10 +75,8 @@ static void inv_check_player(mobj_t* mo, mobjinfo_t* info, invitem_t* item,
 			pl->stbar_update |= STU_AMMO;
 
 			// extra check for old stbar
-			if (type == (uint32_t)mod_config.ammo_bullet ||
-			    type == (uint32_t)mod_config.ammo_shell ||
-			    type == (uint32_t)mod_config.ammo_rocket ||
-			    type == (uint32_t)mod_config.ammo_cell)
+			if (type == (uint32_t)mod_config.ammo_bullet || type == (uint32_t)mod_config.ammo_shell ||
+			    type == (uint32_t)mod_config.ammo_rocket || type == (uint32_t)mod_config.ammo_cell)
 				pl->stbar_update |= STU_AMMO_SBAR;
 		}
 
@@ -149,8 +145,7 @@ static invitem_t* create_slot(mobj_t* mo)
 	{
 		count = mo->player ? INV_SLOT_PLAYER : INV_SLOT_MOBJ;
 
-		inv = Z_Malloc(sizeof(inventory_t) + sizeof(invitem_t) * count,
-		               PU_LEVEL_INV, NULL);
+		inv = Z_Malloc(sizeof(inventory_t) + sizeof(invitem_t) * count, PU_LEVEL_INV, NULL);
 		inv->numslots = count;
 		mo->inventory = inv;
 
@@ -173,8 +168,7 @@ static invitem_t* create_slot(mobj_t* mo)
 	count += mo->player ? INV_SLOT_PLAYER : INV_SLOT_MOBJ;
 
 	// add new slots
-	inn = Z_Malloc(sizeof(inventory_t) + sizeof(invitem_t) * count,
-	               PU_LEVEL_INV, NULL);
+	inn = Z_Malloc(sizeof(inventory_t) + sizeof(invitem_t) * count, PU_LEVEL_INV, NULL);
 	inn->numslots = count;
 	mo->inventory = inn;
 
@@ -204,25 +198,18 @@ static invitem_t* create_slot(mobj_t* mo)
 
 uint32_t inventory_is_valid(mobjinfo_t* info)
 {
-	return info->extra_type == ETYPE_INVENTORY ||
-	       info->extra_type == ETYPE_INVENTORY_CUSTOM ||
-	       info->extra_type == ETYPE_WEAPON ||
-	       info->extra_type == ETYPE_AMMO ||
-	       info->extra_type == ETYPE_AMMO_LINK ||
-	       info->extra_type == ETYPE_KEY ||
-	       info->extra_type == ETYPE_ARMOR ||
-	       info->extra_type == ETYPE_ARMOR_BONUS ||
-	       info->extra_type == ETYPE_POWERUP ||
-	       info->extra_type == ETYPE_HEALTH_PICKUP;
+	return info->extra_type == ETYPE_INVENTORY || info->extra_type == ETYPE_INVENTORY_CUSTOM ||
+	       info->extra_type == ETYPE_WEAPON || info->extra_type == ETYPE_AMMO ||
+	       info->extra_type == ETYPE_AMMO_LINK || info->extra_type == ETYPE_KEY ||
+	       info->extra_type == ETYPE_ARMOR || info->extra_type == ETYPE_ARMOR_BONUS ||
+	       info->extra_type == ETYPE_POWERUP || info->extra_type == ETYPE_HEALTH_PICKUP;
 }
 
 uint32_t inventory_is_usable(mobjinfo_t* info)
 {
 	return info->inventory.icon && info->eflags & MFE_INVENTORY_INVBAR &&
-	       (info->extra_type == ETYPE_INVENTORY_CUSTOM ||
-	        info->extra_type == ETYPE_ARMOR ||
-	        info->extra_type == ETYPE_ARMOR_BONUS ||
-	        info->extra_type == ETYPE_POWERUP ||
+	       (info->extra_type == ETYPE_INVENTORY_CUSTOM || info->extra_type == ETYPE_ARMOR ||
+	        info->extra_type == ETYPE_ARMOR_BONUS || info->extra_type == ETYPE_POWERUP ||
 	        info->extra_type == ETYPE_HEALTH_PICKUP);
 }
 
@@ -262,8 +249,7 @@ uint32_t inventory_give(mobj_t* mo, uint16_t type, uint16_t count)
 		engine_error("ACE", "Invalid inventory item!");
 
 	// backpack hack
-	if (info->extra_type == ETYPE_AMMO && mo->player &&
-	    mo->player->backpack)
+	if (info->extra_type == ETYPE_AMMO && mo->player && mo->player->backpack)
 		max_count = info->ammo.max_count;
 	else
 		max_count = info->inventory.max_count;
@@ -365,8 +351,7 @@ uint32_t inventory_take(mobj_t* mo, uint16_t type, uint16_t count)
 		count = item->count;
 		item->count = 0;
 
-		if (info->extra_type != ETYPE_AMMO &&
-		    !(info->eflags & MFE_INVENTORY_KEEPDEPLETED))
+		if (info->extra_type != ETYPE_AMMO && !(info->eflags & MFE_INVENTORY_KEEPDEPLETED))
 		{
 			// delete from inventory
 			// but keep 'ammo' for status bar

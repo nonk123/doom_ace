@@ -245,10 +245,8 @@ void poly_update_position(polyobj_t* poly)
 	}
 
 	// update sound origin
-	poly->soundorg.x =
-	    poly->box[BOXLEFT] + (poly->box[BOXRIGHT] - poly->box[BOXLEFT]) / 2;
-	poly->soundorg.y = poly->box[BOXBOTTOM] +
-	                   (poly->box[BOXTOP] - poly->box[BOXBOTTOM]) / 2;
+	poly->soundorg.x = poly->box[BOXLEFT] + (poly->box[BOXRIGHT] - poly->box[BOXLEFT]) / 2;
+	poly->soundorg.y = poly->box[BOXBOTTOM] + (poly->box[BOXTOP] - poly->box[BOXBOTTOM]) / 2;
 
 	// add MAXRADIUS
 	poly->box[BOXLEFT] -= MAXRADIUS;
@@ -258,16 +256,14 @@ void poly_update_position(polyobj_t* poly)
 
 	// convert to BLOCKMAP units
 	poly->box[BOXLEFT] = (poly->box[BOXLEFT] - bmaporgx) >> MAPBLOCKSHIFT;
-	poly->box[BOXBOTTOM] =
-	    (poly->box[BOXBOTTOM] - bmaporgy) >> MAPBLOCKSHIFT;
+	poly->box[BOXBOTTOM] = (poly->box[BOXBOTTOM] - bmaporgy) >> MAPBLOCKSHIFT;
 	poly->box[BOXRIGHT] = (poly->box[BOXRIGHT] - bmaporgx) >> MAPBLOCKSHIFT;
 	poly->box[BOXTOP] = (poly->box[BOXTOP] - bmaporgy) >> MAPBLOCKSHIFT;
 
 	// limit block range
 	poly->box[BOXLEFT] = blockminmax(poly->box[BOXLEFT], bmapwidth - 1);
 	poly->box[BOXRIGHT] = blockminmax(poly->box[BOXRIGHT], bmapwidth - 1);
-	poly->box[BOXBOTTOM] =
-	    blockminmax(poly->box[BOXBOTTOM], bmapheight - 1);
+	poly->box[BOXBOTTOM] = blockminmax(poly->box[BOXBOTTOM], bmapheight - 1);
 	poly->box[BOXTOP] = blockminmax(poly->box[BOXTOP], bmapheight - 1);
 
 	// add to blockmap
@@ -342,27 +338,20 @@ void poly_create()
 			seg->linedef->arg0 = 0;
 
 			if (poly->segs)
-				engine_error("POLY", "Duplicate polyobject %u!",
-				             id);
+				engine_error("POLY", "Duplicate polyobject %u!", id);
 
 			if (!poly->subsec)
-				engine_error("POLY",
-				             "Polyobject %u has no start spot!",
-				             id);
+				engine_error("POLY", "Polyobject %u has no start spot!", id);
 
 			// count segs
-			segcount =
-			    seg_search(seg, seg->v1->x, seg->v1->y, NULL);
+			segcount = seg_search(seg, seg->v1->x, seg->v1->y, NULL);
 			if (segcount > 255)
-				engine_error("POLY", "Too many segs in %u!",
-				             id);
+				engine_error("POLY", "Too many segs in %u!", id);
 
 			// allocate memory
 			poly->segcount = segcount;
-			poly->segs =
-			    Z_Malloc(segcount * sizeof(seg_t*), PU_LEVEL, NULL);
-			poly->origin = Z_Malloc(segcount * sizeof(vertex_t),
-			                        PU_LEVEL, NULL);
+			poly->segs = Z_Malloc(segcount * sizeof(seg_t*), PU_LEVEL, NULL);
+			poly->origin = Z_Malloc(segcount * sizeof(vertex_t), PU_LEVEL, NULL);
 
 			// fill segs
 			seg_search(seg, seg->v1->x, seg->v1->y, poly->segs);
@@ -378,8 +367,7 @@ void poly_create()
 
 				s->linedef->frontsector = poly->subsec->sector;
 				if (s->linedef->backsector)
-					s->linedef->backsector =
-					    poly->subsec->sector;
+					s->linedef->backsector = poly->subsec->sector;
 
 				s->linedef->iflags |= MLI_IS_POLY;
 
@@ -419,8 +407,8 @@ uint32_t poly_BlockLinesIterator(int32_t x, int32_t y, line_func_t func)
 		if (poly->validcount == validcount)
 			continue;
 
-		if (x >= poly->box[BOXLEFT] && x <= poly->box[BOXRIGHT] &&
-		    y >= poly->box[BOXBOTTOM] && y <= poly->box[BOXTOP])
+		if (x >= poly->box[BOXLEFT] && x <= poly->box[BOXRIGHT] && y >= poly->box[BOXBOTTOM] &&
+		    y <= poly->box[BOXTOP])
 		{
 			poly->validcount = validcount;
 
@@ -464,14 +452,12 @@ static void thrust_and_damage(mobj_t* mo, seg_t* seg)
 
 	if (poly_check->type > 0)
 	{
-		if (poly_check->type == 2 ||
-		    !P_CheckPosition(mo, mo->x + mo->momx, mo->y + mo->momy))
+		if (poly_check->type == 2 || !P_CheckPosition(mo, mo->x + mo->momx, mo->y + mo->momy))
 			mobj_damage(mo, NULL, NULL, 3, NULL);
 	}
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-check_blocking(mobj_t* mo)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t check_blocking(mobj_t* mo)
 {
 	fixed_t box[4];
 	uint32_t is_solid;
@@ -491,10 +477,8 @@ check_blocking(mobj_t* mo)
 		seg_t* seg = poly_check->segs[i];
 		line_t* line = seg->linedef;
 
-		if (box[BOXRIGHT] <= line->bbox[BOXLEFT] ||
-		    box[BOXLEFT] >= line->bbox[BOXRIGHT] ||
-		    box[BOXTOP] <= line->bbox[BOXBOTTOM] ||
-		    box[BOXBOTTOM] >= line->bbox[BOXTOP])
+		if (box[BOXRIGHT] <= line->bbox[BOXLEFT] || box[BOXLEFT] >= line->bbox[BOXRIGHT] ||
+		    box[BOXTOP] <= line->bbox[BOXBOTTOM] || box[BOXBOTTOM] >= line->bbox[BOXTOP])
 			continue;
 
 		if (P_BoxOnLineSide(box, line) != -1)
@@ -512,8 +496,7 @@ check_blocking(mobj_t* mo)
 //
 // poly move
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-think_poly_move(poly_move_t* pm)
+__attribute((regparm(2), no_caller_saved_registers)) void think_poly_move(poly_move_t* pm)
 {
 	fixed_t ox, oy;
 	fixed_t dx, dy;
@@ -535,8 +518,7 @@ think_poly_move(poly_move_t* pm)
 				seq = pm->up_seq;
 			if (seq && seq->start)
 			{
-				S_StartSound((mobj_t*)&poly->soundorg,
-				             seq->start);
+				S_StartSound((mobj_t*)&poly->soundorg, seq->start);
 				pm->sndwait = seq->delay;
 			}
 		}
@@ -615,10 +597,8 @@ think_poly_move(poly_move_t* pm)
 	poly_check = poly;
 	poly_thrust = pm->thrust;
 
-	for (uint32_t y = poly->box[BOXBOTTOM];
-	     y <= poly->box[BOXTOP] && !poly_blocked; y++)
-		for (uint32_t x = poly->box[BOXLEFT];
-		     x <= poly->box[BOXRIGHT] && !poly_blocked; x++)
+	for (uint32_t y = poly->box[BOXBOTTOM]; y <= poly->box[BOXTOP] && !poly_blocked; y++)
+		for (uint32_t x = poly->box[BOXLEFT]; x <= poly->box[BOXRIGHT] && !poly_blocked; x++)
 			P_BlockThingsIterator(x, y, check_blocking);
 
 	if (poly_blocked)
@@ -648,8 +628,7 @@ think_poly_move(poly_move_t* pm)
 			if (seq)
 			{
 				if (seq->stop)
-					S_StartSound((mobj_t*)&poly->soundorg,
-					             seq->stop);
+					S_StartSound((mobj_t*)&poly->soundorg, seq->stop);
 				else if (!(seq->repeat & SSQ_NO_STOP))
 					S_StopSound((mobj_t*)&poly->soundorg);
 			}
@@ -689,8 +668,7 @@ poly_move_t* poly_mover(polyobj_t* poly)
 		pm->dn_seq = &seq->norm_close;
 		if (pm->up_seq->start && !map_skip_stuff)
 		{
-			S_StartSound((mobj_t*)&poly->soundorg,
-			             pm->up_seq->start);
+			S_StartSound((mobj_t*)&poly->soundorg, pm->up_seq->start);
 			pm->sndwait = pm->up_seq->delay;
 		}
 	}
@@ -706,8 +684,7 @@ poly_move_t* poly_mover(polyobj_t* poly)
 //
 // poly rotate
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-think_poly_rotate(poly_rotate_t* pr)
+__attribute((regparm(2), no_caller_saved_registers)) void think_poly_rotate(poly_rotate_t* pr)
 {
 	int32_t oa, dst, spd;
 	polyobj_t* poly = pr->poly;
@@ -728,8 +705,7 @@ think_poly_rotate(poly_rotate_t* pr)
 				seq = pr->up_seq;
 			if (seq && seq->start)
 			{
-				S_StartSound((mobj_t*)&poly->soundorg,
-				             seq->start);
+				S_StartSound((mobj_t*)&poly->soundorg, seq->start);
 				pr->sndwait = seq->delay;
 			}
 		}
@@ -790,10 +766,8 @@ think_poly_rotate(poly_rotate_t* pr)
 	poly_check = poly;
 	poly_thrust = pr->thrust;
 
-	for (uint32_t y = poly->box[BOXBOTTOM];
-	     y <= poly->box[BOXTOP] && !poly_blocked; y++)
-		for (uint32_t x = poly->box[BOXLEFT];
-		     x <= poly->box[BOXRIGHT] && !poly_blocked; x++)
+	for (uint32_t y = poly->box[BOXBOTTOM]; y <= poly->box[BOXTOP] && !poly_blocked; y++)
+		for (uint32_t x = poly->box[BOXLEFT]; x <= poly->box[BOXRIGHT] && !poly_blocked; x++)
 			P_BlockThingsIterator(x, y, check_blocking);
 
 	if (poly_blocked)
@@ -823,8 +797,7 @@ think_poly_rotate(poly_rotate_t* pr)
 			if (seq)
 			{
 				if (seq->stop)
-					S_StartSound((mobj_t*)&poly->soundorg,
-					             seq->stop);
+					S_StartSound((mobj_t*)&poly->soundorg, seq->stop);
 				else if (!(seq->repeat & SSQ_NO_STOP))
 					S_StopSound((mobj_t*)&poly->soundorg);
 			}
@@ -864,8 +837,7 @@ poly_rotate_t* poly_rotater(polyobj_t* poly)
 		pr->dn_seq = &seq->norm_close;
 		if (pr->up_seq->start && !map_skip_stuff)
 		{
-			S_StartSound((mobj_t*)&poly->soundorg,
-			             pr->up_seq->start);
+			S_StartSound((mobj_t*)&poly->soundorg, pr->up_seq->start);
 			pr->sndwait = pr->up_seq->delay;
 		}
 	}

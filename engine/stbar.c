@@ -26,9 +26,7 @@
 #define INVBAR_STEP 32
 #define INVBAR_COUNT 7
 #define INVBAR_CENTER (SCREENWIDTH / 2)
-#define INVBAR_START                                                           \
-	((INVBAR_CENTER - ((INVBAR_COUNT * INVBAR_STEP) / 2)) +                \
-	 (INVBAR_STEP / 2))
+#define INVBAR_START ((INVBAR_CENTER - ((INVBAR_COUNT * INVBAR_STEP) / 2)) + (INVBAR_STEP / 2))
 #define INVBAR_END (INVBAR_START + INVBAR_COUNT * INVBAR_STEP)
 
 #define NOT_A_NUMBER 0x7FFFFFFF
@@ -91,8 +89,7 @@ static xhair_patch_t xhair_data = {
     .dB = {0x01, 0x01, 0x04, 0x04, 0x04, 0xFF},
     .dC = {0x02, 0x01, 0x04, 0x04, 0x04, 0xFF},
     .dD = {0x00, 0x01, 0x04, 0x04, 0x04, 0x02, 0x01, 0x04, 0x04, 0x04, 0xFF},
-    .dE = {0x00, 0x02, 0x04, 0x04, 0x04, 0x04, 0x03, 0x02, 0x04, 0x04, 0x04,
-           0x04, 0xFF},
+    .dE = {0x00, 0x02, 0x04, 0x04, 0x04, 0x04, 0x03, 0x02, 0x04, 0x04, 0x04, 0x04, 0xFF},
     .dF = {0x01, 0x01, 0x04, 0x04, 0x04, 0x03, 0x01, 0x04, 0x04, 0x04, 0xFF},
     .dG = {0x00, 0x01, 0x04, 0x04, 0x04, 0x04, 0x01, 0x04, 0x04, 0x04, 0xFF},
 };
@@ -113,8 +110,7 @@ patch_t* stbar_icon_ptr(int32_t lump)
 //
 // draw
 
-static void stbar_draw_number_r(int32_t x, int32_t y, int32_t value,
-                                int32_t digits, patch_t** numfont)
+static void stbar_draw_number_r(int32_t x, int32_t y, int32_t value, int32_t digits, patch_t** numfont)
 {
 	if (digits < 0)
 		// negative digit count means also show zero
@@ -153,14 +149,11 @@ static void stbar_draw_center(int32_t x, int32_t y, int32_t lump)
 	patch->y = oy;
 }
 
-static void sbar_draw_invslot(int32_t x, int32_t y, mobjinfo_t* info,
-                              invitem_t* item)
+static void sbar_draw_invslot(int32_t x, int32_t y, mobjinfo_t* info, invitem_t* item)
 {
 	stbar_draw_center(x, y, info->inventory.icon);
 	if (!item->count || info->inventory.max_count > 1)
-		stbar_draw_number_r(x + (INVBAR_STEP / 2) - 1,
-		                    y - shortnum[0]->height +
-		                        (INVBAR_STEP / 2) - 2,
+		stbar_draw_number_r(x + (INVBAR_STEP / 2) - 1, y - shortnum[0]->height + (INVBAR_STEP / 2) - 2,
 		                    item->count, 5, shortnum);
 }
 
@@ -311,20 +304,17 @@ static inline void draw_full_stbar(player_t* pl)
 
 	// armor
 	if (pl->armorpoints)
-		stbar_draw_number_r(stbar_ar_x, stbar_y, pl->armorpoints, 3,
-		                    numfont);
+		stbar_draw_number_r(stbar_ar_x, stbar_y, pl->armorpoints, 3, numfont);
 
 	// AMMO
 	ty = stbar_y;
 	if (ammo_pri)
 	{
-		stbar_draw_number_r(SCREENWIDTH - 4, ty, *ammo_pri, -4,
-		                    numfont);
+		stbar_draw_number_r(SCREENWIDTH - 4, ty, *ammo_pri, -4, numfont);
 		ty -= numfont[0]->height + 1;
 	}
 	if (ammo_sec && ammo_sec != ammo_pri)
-		stbar_draw_number_r(SCREENWIDTH - 4, ty, *ammo_sec, -4,
-		                    numfont);
+		stbar_draw_number_r(SCREENWIDTH - 4, ty, *ammo_sec, -4, numfont);
 }
 
 //
@@ -342,8 +332,7 @@ static void draw_invbar(player_t* pl)
 		if (screenblocks < 11)
 			invbar_was_on = 1;
 
-		for (uint32_t x = INVBAR_START; x < INVBAR_END;
-		     x += INVBAR_STEP)
+		for (uint32_t x = INVBAR_START; x < INVBAR_END; x += INVBAR_STEP)
 			stbar_draw_center(x, INVBAR_Y, inv_box);
 		stbar_draw_center(INVBAR_CENTER, INVBAR_Y, inv_sel);
 
@@ -354,16 +343,11 @@ static void draw_invbar(player_t* pl)
 			idx = 0;
 			while (item >= 0 && idx < INVBAR_COUNT / 2)
 			{
-				info =
-				    mobjinfo + mo->inventory->slot[item].type;
-				if (info->inventory.icon &&
-				    info->eflags & MFE_INVENTORY_INVBAR)
+				info = mobjinfo + mo->inventory->slot[item].type;
+				if (info->inventory.icon && info->eflags & MFE_INVENTORY_INVBAR)
 				{
-					sbar_draw_invslot(
-					    INVBAR_CENTER - INVBAR_STEP -
-						idx * INVBAR_STEP,
-					    INVBAR_Y, info,
-					    mo->inventory->slot + item);
+					sbar_draw_invslot(INVBAR_CENTER - INVBAR_STEP - idx * INVBAR_STEP, INVBAR_Y,
+					                  info, mo->inventory->slot + item);
 					idx++;
 				}
 				item--;
@@ -372,19 +356,13 @@ static void draw_invbar(player_t* pl)
 			// next items
 			item = pl->inv_sel + 1;
 			idx = 0;
-			while (item < mo->inventory->numslots &&
-			       idx < INVBAR_COUNT / 2)
+			while (item < mo->inventory->numslots && idx < INVBAR_COUNT / 2)
 			{
-				info =
-				    mobjinfo + mo->inventory->slot[item].type;
-				if (info->inventory.icon &&
-				    info->eflags & MFE_INVENTORY_INVBAR)
+				info = mobjinfo + mo->inventory->slot[item].type;
+				if (info->inventory.icon && info->eflags & MFE_INVENTORY_INVBAR)
 				{
-					sbar_draw_invslot(
-					    INVBAR_CENTER + INVBAR_STEP +
-						idx * INVBAR_STEP,
-					    INVBAR_Y, info,
-					    mo->inventory->slot + item);
+					sbar_draw_invslot(INVBAR_CENTER + INVBAR_STEP + idx * INVBAR_STEP, INVBAR_Y,
+					                  info, mo->inventory->slot + item);
 					idx++;
 				}
 				item++;
@@ -392,8 +370,7 @@ static void draw_invbar(player_t* pl)
 
 			// current selection
 			info = mobjinfo + mo->inventory->slot[pl->inv_sel].type;
-			sbar_draw_invslot(INVBAR_CENTER, INVBAR_Y, info,
-			                  mo->inventory->slot + pl->inv_sel);
+			sbar_draw_invslot(INVBAR_CENTER, INVBAR_Y, info, mo->inventory->slot + pl->inv_sel);
 		}
 
 		return;
@@ -432,8 +409,7 @@ static inline void draw_crosshair(player_t* pl)
 	if (extra_config.mouse_look > 1)
 	{
 		int32_t height = viewwindowy + viewheight;
-		y -= finetangent[(pl->mo->pitch + ANG90) >> ANGLETOFINESHIFT] /
-		     410;
+		y -= finetangent[(pl->mo->pitch + ANG90) >> ANGLETOFINESHIFT] / 410;
 		if (y < viewwindowy + xhair->y)
 			y = viewwindowy + xhair->y;
 		else if (y > height - xhair->height + xhair->y)
@@ -446,8 +422,7 @@ static inline void draw_crosshair(player_t* pl)
 //
 // hooks
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-hook_draw_stbar(uint32_t fullscreen, uint32_t refresh)
+static __attribute((regparm(2), no_caller_saved_registers)) void hook_draw_stbar(uint32_t fullscreen, uint32_t refresh)
 {
 	static uint_fast8_t was_in_menu;
 
@@ -462,8 +437,7 @@ hook_draw_stbar(uint32_t fullscreen, uint32_t refresh)
 		else
 			dst = framebuffer;
 
-		memset(dst + SCREENWIDTH * ST_Y, r_color_black,
-		       SCREENWIDTH * ST_H);
+		memset(dst + SCREENWIDTH * ST_Y, r_color_black, SCREENWIDTH * ST_H);
 
 		return;
 	}
@@ -481,8 +455,7 @@ hook_draw_stbar(uint32_t fullscreen, uint32_t refresh)
 	ST_Drawer(fullscreen, refresh);
 
 	if (!fullscreen && wipebuffer != (void*)0x000A0000)
-		dwcopy(framebuffer + SCREENWIDTH * ST_Y,
-		       screen_buffer + SCREENWIDTH * ST_Y,
+		dwcopy(framebuffer + SCREENWIDTH * ST_Y, screen_buffer + SCREENWIDTH * ST_Y,
 		       (SCREENWIDTH * ST_H) / sizeof(uint32_t));
 
 	was_in_menu = menuactive;
@@ -493,9 +466,8 @@ hook_draw_stbar(uint32_t fullscreen, uint32_t refresh)
 
 static void update_ammo(player_t* pl)
 {
-	if (pl->readyweapon &&
-	    ((pl->readyweapon->weapon.ammo_type[0] && !ammo_pri) ||
-	     (pl->readyweapon->weapon.ammo_type[1] && !ammo_sec)))
+	if (pl->readyweapon && ((pl->readyweapon->weapon.ammo_type[0] && !ammo_pri) ||
+	                        (pl->readyweapon->weapon.ammo_type[1] && !ammo_sec)))
 		// update missing ammo pointer
 		pl->stbar_update |= STU_WEAPON_NOW;
 }
@@ -600,8 +572,7 @@ static void update_backpack(player_t* pl)
 		for (uint32_t i = 0; i < 4; i++)
 		{
 			w_maxammo[i].num = ammo_dispmax + i;
-			ammo_dispmax[i] =
-			    mobjinfo[mod_config.ammo_type[i]].ammo.max_count;
+			ammo_dispmax[i] = mobjinfo[mod_config.ammo_type[i]].ammo.max_count;
 		}
 	}
 	else
@@ -609,8 +580,7 @@ static void update_backpack(player_t* pl)
 		for (uint32_t i = 0; i < 4; i++)
 		{
 			w_maxammo[i].num = ammo_dispmax + i;
-			ammo_dispmax[i] = mobjinfo[mod_config.ammo_type[i]]
-			                      .inventory.max_count;
+			ammo_dispmax[i] = mobjinfo[mod_config.ammo_type[i]].inventory.max_count;
 		}
 	}
 }
@@ -867,8 +837,7 @@ void stbar_draw(player_t* pl)
 //
 // hooks
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-st_draw_num(st_number_t* st, uint32_t refresh)
+static __attribute((regparm(2), no_caller_saved_registers)) void st_draw_num(st_number_t* st, uint32_t refresh)
 {
 	uint32_t w, h;
 	int32_t x;
@@ -925,24 +894,23 @@ st_draw_num(st_number_t* st, uint32_t refresh)
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// replace 'STlib_drawNum'
-	{0x0003B020, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)st_draw_num},
-	// replace call to 'ST_Drawer' in 'D_Display'
-	{0x0001D2D5, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)hook_draw_stbar},
-	// remove ammo pointer in normal status bar
-	{0x0003ABE2, CODE_HOOK | HOOK_UINT32, 0x10EBC031},
-	{0x0003ABFB, CODE_HOOK | HOOK_SET_NOPS, 2},
-	{0x0003A282, CODE_HOOK | HOOK_UINT16, 0x3FEB},
-	// disable 'keyboxes' in original status bar
-	{0x0003A2DB, CODE_HOOK | HOOK_UINT16, 0x48EB},
-	// disable 'ST_doPaletteStuff' in 'ST_Drawer'
-	{0x0003A639, CODE_HOOK | HOOK_SET_NOPS, 5},
-	// fix evil grin
-	{0x00039FD4, CODE_HOOK | HOOK_UINT8, 0xB8},
-	{0x00039FD5, CODE_HOOK | HOOK_UINT32, (uint32_t)&do_evil_grin},
-	{0x00039FD9, CODE_HOOK | HOOK_UINT32, 0xDB84188A},
-	{0x00039FDD, CODE_HOOK | HOOK_UINT32, 0x08FE5674},
-	{0x00039FE1, CODE_HOOK | HOOK_UINT16, 0x2FEB},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // replace 'STlib_drawNum'
+    {0x0003B020, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)st_draw_num},
+    // replace call to 'ST_Drawer' in 'D_Display'
+    {0x0001D2D5, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)hook_draw_stbar},
+    // remove ammo pointer in normal status bar
+    {0x0003ABE2, CODE_HOOK | HOOK_UINT32, 0x10EBC031},
+    {0x0003ABFB, CODE_HOOK | HOOK_SET_NOPS, 2},
+    {0x0003A282, CODE_HOOK | HOOK_UINT16, 0x3FEB},
+    // disable 'keyboxes' in original status bar
+    {0x0003A2DB, CODE_HOOK | HOOK_UINT16, 0x48EB},
+    // disable 'ST_doPaletteStuff' in 'ST_Drawer'
+    {0x0003A639, CODE_HOOK | HOOK_SET_NOPS, 5},
+    // fix evil grin
+    {0x00039FD4, CODE_HOOK | HOOK_UINT8, 0xB8},
+    {0x00039FD5, CODE_HOOK | HOOK_UINT32, (uint32_t)&do_evil_grin},
+    {0x00039FD9, CODE_HOOK | HOOK_UINT32, 0xDB84188A},
+    {0x00039FDD, CODE_HOOK | HOOK_UINT32, 0x08FE5674},
+    {0x00039FE1, CODE_HOOK | HOOK_UINT16, 0x2FEB},
 };

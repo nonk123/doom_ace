@@ -60,17 +60,15 @@ uint32_t check_divline_side(fixed_t x, fixed_t y, divline_t* line)
 
 uint32_t check_trace_line(vertex_t* v1, vertex_t* v2)
 {
-	if (trace.dx > FRACUNIT * 16 || trace.dy > FRACUNIT * 16 ||
-	    trace.dx < -FRACUNIT * 16 || trace.dy < -FRACUNIT * 16)
+	if (trace.dx > FRACUNIT * 16 || trace.dy > FRACUNIT * 16 || trace.dx < -FRACUNIT * 16 ||
+	    trace.dy < -FRACUNIT * 16)
 	{
-		if (P_PointOnDivlineSide(v1->x, v1->y, &trace) ==
-		    P_PointOnDivlineSide(v2->x, v2->y, &trace))
+		if (P_PointOnDivlineSide(v1->x, v1->y, &trace) == P_PointOnDivlineSide(v2->x, v2->y, &trace))
 			return 1;
 	}
 	else
 	{
-		if (check_divline_side(v1->x, v1->y, &trace) ==
-		    check_divline_side(v2->x, v2->y, &trace))
+		if (check_divline_side(v1->x, v1->y, &trace) == check_divline_side(v2->x, v2->y, &trace))
 			return 1;
 	}
 
@@ -97,8 +95,7 @@ fixed_t hs_intercept_vector(divline_t* v2, divline_t* v1)
 	fixed_t v2dx = v2->dx >> 8;
 	fixed_t v2dy = v2->dy >> 8;
 
-	den = ((int64_t)v1dy * (int64_t)v2dx - (int64_t)v1dx * (int64_t)v2dy) >>
-	      16;
+	den = ((int64_t)v1dy * (int64_t)v2dx - (int64_t)v1dx * (int64_t)v2dy) >> 16;
 	if (!den)
 		return FRACUNIT;
 
@@ -110,10 +107,7 @@ fixed_t hs_intercept_vector(divline_t* v2, divline_t* v1)
 	//	return num.w / den; // this should work, but GCC wants to use
 	//'__divdi3'
 
-	asm("idiv %%ecx"
-	    : "=a"(frac)
-	    : "a"(num.a), "d"(num.b), "c"(den)
-	    : "cc");
+	asm("idiv %%ecx" : "=a"(frac) : "a"(num.a), "d"(num.b), "c"(den) : "cc");
 
 	return frac;
 }
@@ -121,8 +115,7 @@ fixed_t hs_intercept_vector(divline_t* v2, divline_t* v1)
 //
 // intercepts
 
-__attribute((regparm(2), no_caller_saved_registers)) static uint32_t
-add_line_intercepts(line_t* li)
+__attribute((regparm(2), no_caller_saved_registers)) static uint32_t add_line_intercepts(line_t* li)
 {
 	fixed_t frac;
 	divline_t dl;
@@ -147,8 +140,7 @@ add_line_intercepts(line_t* li)
 		return 1;
 
 	if (!frac &&
-	    P_PointOnLineSide(trace.x, trace.y, li) ==
-	        P_PointOnLineSide(trace.x + trace.dx, trace.y + trace.dy, li))
+	    P_PointOnLineSide(trace.x, trace.y, li) == P_PointOnLineSide(trace.x + trace.dx, trace.y + trace.dy, li))
 		return 1;
 
 	intercept_p->frac = frac;
@@ -159,8 +151,7 @@ add_line_intercepts(line_t* li)
 	return intercept_p < intercepts + MAXINTERCEPTS;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static uint32_t
-add_thing_intercepts(mobj_t* mo)
+__attribute((regparm(2), no_caller_saved_registers)) static uint32_t add_thing_intercepts(mobj_t* mo)
 {
 	vertex_t v1, v2, v3;
 	divline_t dl;
@@ -279,8 +270,7 @@ static void add_intercepts(int32_t x, int32_t y, uint32_t flags)
 //
 // traversers
 
-__attribute((regparm(2), no_caller_saved_registers)) uint32_t
-hs_slide_traverse(intercept_t* in)
+__attribute((regparm(2), no_caller_saved_registers)) uint32_t hs_slide_traverse(intercept_t* in)
 {
 	line_t* li;
 	sector_t* sec;
@@ -299,8 +289,7 @@ hs_slide_traverse(intercept_t* in)
 		if (in->frac < bestslidefrac)
 		{
 			bestslidefrac = in->frac;
-			bestslideline = (void*)&thing_slide_slope -
-			                offsetof(line_t, slopetype);
+			bestslideline = (void*)&thing_slide_slope - offsetof(line_t, slopetype);
 			switch (th->intercept_side)
 			{
 			case INTH_SIDE_LEFT:
@@ -336,8 +325,7 @@ hs_slide_traverse(intercept_t* in)
 	}
 	else
 	{
-		if (li->flags & ML_BLOCKMONSTERS &&
-		    !(slidemo->flags2 & MF2_NOBLOCKMONST))
+		if (li->flags & ML_BLOCKMONSTERS && !(slidemo->flags2 & MF2_NOBLOCKMONST))
 			goto isblocking;
 	}
 
@@ -416,37 +404,24 @@ static fixed_t check_e3d_hit(sector_t* sec, fixed_t frac, fixed_t* zz)
 		{
 			if (hitscanz > *pl->height && z < *pl->height)
 			{
-				if (flatterrain &&
-				    !(mobjinfo[mo_puff_type].flags2 &
-				      MF2_DONTSPLASH) &&
+				if (flatterrain && !(mobjinfo[mo_puff_type].flags2 & MF2_DONTSPLASH) &&
 				    !(pl->flags & E3D_SWAP_PLANES) &&
-				    pl->source->ceilingpic <
-				        numflats + num_texture_flats &&
-				    flatterrain[pl->source->ceilingpic] !=
-				        255 &&
-				    terrain[flatterrain[pl->source->ceilingpic]]
-				            .splash != 255)
+				    pl->source->ceilingpic < numflats + num_texture_flats &&
+				    flatterrain[pl->source->ceilingpic] != 255 &&
+				    terrain[flatterrain[pl->source->ceilingpic]].splash != 255)
 				{
 					fixed_t x, y, ff;
 					int32_t flat = pl->source->ceilingpic;
-					ff = -FixedDiv(
-					    FixedMul(frac,
-					             shootz - *pl->height),
-					    dz);
+					ff = -FixedDiv(FixedMul(frac, shootz - *pl->height), dz);
 					x = trace.x + FixedMul(trace.dx, ff);
 					y = trace.y + FixedMul(trace.dy, ff);
-					if (mobjinfo[mo_puff_type].mass <
-					    TERRAIN_LOW_MASS)
+					if (mobjinfo[mo_puff_type].mass < TERRAIN_LOW_MASS)
 						flat = -flat;
-					terrain_hit_splash(NULL, x, y,
-					                   *pl->height, flat);
+					terrain_hit_splash(NULL, x, y, *pl->height, flat);
 				}
 				if (pl->flags & E3D_BLOCK_HITSCAN)
 				{
-					frac = -FixedDiv(
-					    FixedMul(frac,
-					             shootz - *pl->height),
-					    dz);
+					frac = -FixedDiv(FixedMul(frac, shootz - *pl->height), dz);
 					*zz = *pl->height;
 					return frac;
 				}
@@ -458,34 +433,24 @@ static fixed_t check_e3d_hit(sector_t* sec, fixed_t frac, fixed_t* zz)
 	{
 		extraplane_t* pl;
 
-		if (flatterrain &&
-		    !(mobjinfo[mo_puff_type].flags2 & MF2_DONTSPLASH))
+		if (flatterrain && !(mobjinfo[mo_puff_type].flags2 & MF2_DONTSPLASH))
 		{
 			pl = sec->exfloor;
 			while (pl)
 			{
-				if (!(pl->flags & E3D_SWAP_PLANES) &&
-				    hitscanz < *pl->height && z > *pl->height &&
-				    pl->source->ceilingpic <
-				        numflats + num_texture_flats &&
-				    flatterrain[pl->source->ceilingpic] !=
-				        255 &&
-				    terrain[flatterrain[pl->source->ceilingpic]]
-				            .splash != 255)
+				if (!(pl->flags & E3D_SWAP_PLANES) && hitscanz < *pl->height && z > *pl->height &&
+				    pl->source->ceilingpic < numflats + num_texture_flats &&
+				    flatterrain[pl->source->ceilingpic] != 255 &&
+				    terrain[flatterrain[pl->source->ceilingpic]].splash != 255)
 				{
 					fixed_t x, y, ff;
 					int32_t flat = pl->source->ceilingpic;
-					ff = -FixedDiv(
-					    FixedMul(frac,
-					             shootz - *pl->height),
-					    dz);
+					ff = -FixedDiv(FixedMul(frac, shootz - *pl->height), dz);
 					x = trace.x + FixedMul(trace.dx, ff);
 					y = trace.y + FixedMul(trace.dy, ff);
-					if (mobjinfo[mo_puff_type].mass <
-					    TERRAIN_LOW_MASS)
+					if (mobjinfo[mo_puff_type].mass < TERRAIN_LOW_MASS)
 						flat = -flat;
-					terrain_hit_splash(NULL, x, y,
-					                   *pl->height, flat);
+					terrain_hit_splash(NULL, x, y, *pl->height, flat);
 				}
 				pl = pl->next;
 			}
@@ -494,13 +459,10 @@ static fixed_t check_e3d_hit(sector_t* sec, fixed_t frac, fixed_t* zz)
 		pl = sec->exceiling;
 		while (pl)
 		{
-			if (pl->flags & E3D_BLOCK_HITSCAN &&
-			    hitscanz < *pl->height && z > *pl->height)
+			if (pl->flags & E3D_BLOCK_HITSCAN && hitscanz < *pl->height && z > *pl->height)
 			{
-				frac = -FixedDiv(
-				    FixedMul(frac, shootz - *pl->height), dz);
-				*zz = *pl->height -
-				      1; // make it ever so slightly under
+				frac = -FixedDiv(FixedMul(frac, shootz - *pl->height), dz);
+				*zz = *pl->height - 1; // make it ever so slightly under
 				return frac;
 			}
 			pl = pl->next;
@@ -510,8 +472,7 @@ static fixed_t check_e3d_hit(sector_t* sec, fixed_t frac, fixed_t* zz)
 	return -1;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) uint32_t
-hs_shoot_traverse(intercept_t* in)
+__attribute((regparm(2), no_caller_saved_registers)) uint32_t hs_shoot_traverse(intercept_t* in)
 {
 	fixed_t x;
 	fixed_t y;
@@ -538,27 +499,22 @@ hs_shoot_traverse(intercept_t* in)
 
 		dist = FixedMul(attackrange, in->frac);
 
-		if ((li->frontsector->floorheight !=
-		     li->backsector->floorheight) ||
-		    (flatterrain &&
-		     li->frontsector->floorpic != li->backsector->floorpic &&
+		if ((li->frontsector->floorheight != li->backsector->floorheight) ||
+		    (flatterrain && li->frontsector->floorpic != li->backsector->floorpic &&
 		     !(mobjinfo[mo_puff_type].flags2 & MF2_DONTSPLASH)))
 		{
 			if (FixedDiv(openbottom - shootz, dist) > aimslope)
 				goto hitline;
 		}
 
-		if (li->frontsector->ceilingheight !=
-		    li->backsector->ceilingheight)
+		if (li->frontsector->ceilingheight != li->backsector->ceilingheight)
 		{
 			if (FixedDiv(opentop - shootz, dist) < aimslope)
 				goto hitline;
 		}
 
-		if (activate && li->special &&
-		    (li->flags & ML_ACT_MASK) == MLA_ATK_HIT &&
-		    FixedDiv(opentop - shootz, dist) >= aimslope &&
-		    FixedDiv(openbottom - shootz, dist) <= aimslope)
+		if (activate && li->special && (li->flags & ML_ACT_MASK) == MLA_ATK_HIT &&
+		    FixedDiv(opentop - shootz, dist) >= aimslope && FixedDiv(openbottom - shootz, dist) <= aimslope)
 			spec_activate(li, shootthing, SPEC_ACT_SHOOT);
 
 		if (P_PointOnLineSide(trace.x, trace.y, li))
@@ -633,8 +589,7 @@ hs_shoot_traverse(intercept_t* in)
 			{
 				if (z > frontsector->ceilingheight)
 					in_sky = 1;
-				else if (backsector &&
-				         backsector->ceilingpic == skyflatnum &&
+				else if (backsector && backsector->ceilingpic == skyflatnum &&
 				         backsector->ceilingheight < z)
 					in_sky = 1;
 			}
@@ -644,10 +599,7 @@ hs_shoot_traverse(intercept_t* in)
 		{
 			if (z < frontsector->floorheight)
 			{
-				frac = -FixedDiv(
-				    FixedMul(frac,
-				             shootz - frontsector->floorheight),
-				    dz);
+				frac = -FixedDiv(FixedMul(frac, shootz - frontsector->floorheight), dz);
 				z = frontsector->floorheight;
 				activate = 0;
 				flat_pic = frontsector->floorpic;
@@ -657,10 +609,7 @@ hs_shoot_traverse(intercept_t* in)
 		{
 			if (z > frontsector->ceilingheight)
 			{
-				frac = FixedDiv(
-				    FixedMul(frac, frontsector->ceilingheight -
-				                       shootz),
-				    dz);
+				frac = FixedDiv(FixedMul(frac, frontsector->ceilingheight - shootz), dz);
 				z = frontsector->ceilingheight;
 				activate = 0;
 			}
@@ -686,14 +635,9 @@ hs_shoot_traverse(intercept_t* in)
 		trace.y += FixedMul(trace.dy, frac);
 		trace.dx = z;
 
-		if (flatterrain &&
-		    !(mobjinfo[mo_puff_type].flags2 & MF2_DONTSPLASH) &&
-		    flat_pic >= 0)
+		if (flatterrain && !(mobjinfo[mo_puff_type].flags2 & MF2_DONTSPLASH) && flat_pic >= 0)
 			terrain_hit_splash(NULL, trace.x, trace.y, z,
-			                   mobjinfo[mo_puff_type].mass <
-			                           TERRAIN_LOW_MASS
-			                       ? -flat_pic
-			                       : flat_pic);
+			                   mobjinfo[mo_puff_type].mass < TERRAIN_LOW_MASS ? -flat_pic : flat_pic);
 
 		mobj_spawn_puff(&trace, NULL, mo_puff_type);
 
@@ -714,12 +658,10 @@ hs_shoot_traverse(intercept_t* in)
 		if (!(th->flags & MF_SHOOTABLE))
 			return 1;
 
-		if (th->flags1 & MF1_SPECTRAL &&
-		    !(mobjinfo[mo_puff_type].flags1 & MF1_SPECTRAL))
+		if (th->flags1 & MF1_SPECTRAL && !(mobjinfo[mo_puff_type].flags1 & MF1_SPECTRAL))
 			return 1;
 
-		if (th->flags1 & MF1_GHOST &&
-		    mobjinfo[mo_puff_type].flags1 & MF1_THRUGHOST)
+		if (th->flags1 & MF1_GHOST && mobjinfo[mo_puff_type].flags1 & MF1_THRUGHOST)
 			return 1;
 
 		if (hitscansector)
@@ -749,15 +691,13 @@ hs_shoot_traverse(intercept_t* in)
 
 		trace.x = trace.x + FixedMul(trace.dx, in->frac);
 		trace.y = trace.y + FixedMul(trace.dy, in->frac);
-		trace.dx = shootz +
-		           FixedMul(aimslope, FixedMul(in->frac, attackrange));
+		trace.dx = shootz + FixedMul(aimslope, FixedMul(in->frac, attackrange));
 
 		mobj_spawn_puff(&trace, th, mo_puff_type);
 		mobj_spawn_blood(&trace, th, la_damage, mo_puff_type);
 
 		if (la_damage)
-			mobj_damage(th, shootthing, shootthing, la_damage,
-			            mobjinfo + mo_puff_type);
+			mobj_damage(th, shootthing, shootthing, la_damage, mobjinfo + mo_puff_type);
 
 		linetarget = th;
 
@@ -765,8 +705,7 @@ hs_shoot_traverse(intercept_t* in)
 	}
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-PTR_AimTraverse(intercept_t* in)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t PTR_AimTraverse(intercept_t* in)
 {
 	mobj_t* th;
 	fixed_t slope;
@@ -824,10 +763,8 @@ PTR_AimTraverse(intercept_t* in)
 		pl = back->exfloor;
 		while (pl)
 		{
-			if (pl->flags & E3D_BLOCK_SIGHT &&
-			    pl->source->ceilingheight < shootz &&
-			    pl->source->ceilingheight >= openbottom &&
-			    pl->source->floorheight <= openbottom)
+			if (pl->flags & E3D_BLOCK_SIGHT && pl->source->ceilingheight < shootz &&
+			    pl->source->ceilingheight >= openbottom && pl->source->floorheight <= openbottom)
 			{
 				openbottom = pl->source->ceilingheight;
 				botplane = pl;
@@ -839,10 +776,8 @@ PTR_AimTraverse(intercept_t* in)
 		pl = back->exceiling;
 		while (pl)
 		{
-			if (pl->flags & E3D_BLOCK_SIGHT &&
-			    pl->source->floorheight > shootz &&
-			    pl->source->floorheight <= opentop &&
-			    pl->source->ceilingheight >= opentop)
+			if (pl->flags & E3D_BLOCK_SIGHT && pl->source->floorheight > shootz &&
+			    pl->source->floorheight <= opentop && pl->source->ceilingheight >= opentop)
 			{
 				opentop = pl->source->floorheight;
 				topplane = pl;
@@ -859,16 +794,14 @@ PTR_AimTraverse(intercept_t* in)
 		force = li->frontsector->tag != li->backsector->tag &&
 		        (li->frontsector->exfloor || li->backsector->exfloor);
 
-		if (force ||
-		    li->frontsector->floorheight != li->backsector->floorheight)
+		if (force || li->frontsector->floorheight != li->backsector->floorheight)
 		{
 			slope = FixedDiv(openbottom - shootz, dist);
 			if (slope > botslope)
 				botslope = slope;
 		}
 
-		if (force || li->frontsector->ceilingheight !=
-		                 li->backsector->ceilingheight)
+		if (force || li->frontsector->ceilingheight != li->backsector->ceilingheight)
 		{
 			slope = FixedDiv(opentop - shootz, dist);
 			if (slope < topslope)
@@ -920,8 +853,7 @@ PTR_AimTraverse(intercept_t* in)
 //
 // API
 
-uint32_t path_traverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2,
-                       void* func, uint32_t flags)
+uint32_t path_traverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, void* func, uint32_t flags)
 {
 	int32_t dx, dy;
 	int32_t ia, ib, ic;
@@ -1058,8 +990,7 @@ P_AimLineAttack(mobj_t* t1, angle_t angle, fixed_t distance)
 		pl = pl->next;
 	}
 
-	path_traverse(t1->x, t1->y, x2, y2, PTR_AimTraverse,
-	              PT_ADDLINES | PT_ADDTHINGS);
+	path_traverse(t1->x, t1->y, x2, y2, PTR_AimTraverse, PT_ADDLINES | PT_ADDTHINGS);
 
 	if (topplane)
 	{

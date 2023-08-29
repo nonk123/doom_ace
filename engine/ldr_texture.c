@@ -71,18 +71,14 @@ static uint_fast8_t have_doomtex;
 // internal textures
 
 static uint8_t tex_unknown_data[] = {
-    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-    96, 96, 96, 96, 96, 96, 96, 96, 111, 111, 111, 111, 111, 111, 111, 111,
-    96, 96, 96, 96, 96, 96, 96, 96};
+    96,  96,  96,  96,  96,  96,  96,  96,  111, 111, 111, 111, 111, 111, 111, 111, 96,  96,  96,  96,  96,  96,  96,
+    96,  111, 111, 111, 111, 111, 111, 111, 111, 96,  96,  96,  96,  96,  96,  96,  96,  111, 111, 111, 111, 111, 111,
+    111, 111, 96,  96,  96,  96,  96,  96,  96,  96,  111, 111, 111, 111, 111, 111, 111, 111, 96,  96,  96,  96,  96,
+    96,  96,  96,  111, 111, 111, 111, 111, 111, 111, 111, 96,  96,  96,  96,  96,  96,  96,  96,  111, 111, 111, 111,
+    111, 111, 111, 111, 96,  96,  96,  96,  96,  96,  96,  96,  111, 111, 111, 111, 111, 111, 111, 111, 96,  96,  96,
+    96,  96,  96,  96,  96,  111, 111, 111, 111, 111, 111, 111, 111, 96,  96,  96,  96,  96,  96,  96,  96};
 
-static uint16_t tex_unknown_offs[] = {0, 0, 0, 0, 0, 0, 0, 0,
-                                      8, 8, 8, 8, 8, 8, 8, 8};
+static uint16_t tex_unknown_offs[] = {0, 0, 0, 0, 0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8};
 
 static internal_texture_t internal_texture[EXTRA_TEXTURES] = {{
     // this is 'missing texture' and must be last
@@ -95,8 +91,7 @@ static internal_texture_t internal_texture[EXTRA_TEXTURES] = {{
 //
 // hooks
 
-__attribute((regparm(2), no_caller_saved_registers)) int32_t
-texture_num_get(const uint8_t* name)
+__attribute((regparm(2), no_caller_saved_registers)) int32_t texture_num_get(const uint8_t* name)
 {
 	uint64_t wame;
 	uint32_t idx;
@@ -121,8 +116,7 @@ texture_num_get(const uint8_t* name)
 	return numtextures - 1;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) int32_t
-texture_num_check(const uint8_t* name)
+__attribute((regparm(2), no_caller_saved_registers)) int32_t texture_num_check(const uint8_t* name)
 {
 	// 'texture_num_get' is used more often, but this is sometines required
 	// too
@@ -135,8 +129,7 @@ texture_num_check(const uint8_t* name)
 	return idx;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) uint64_t
-texture_get_name(uint32_t idx)
+__attribute((regparm(2), no_caller_saved_registers)) uint64_t texture_get_name(uint32_t idx)
 {
 	if (!idx)
 		return '-';
@@ -223,12 +216,8 @@ static uint32_t texture_load(uint8_t* name, uint32_t idx)
 				mappatch_t* mp = mt->patch + j;
 				texpatch_t* tp = tex->patch + j;
 
-				if (mp->patch >= tmp_count ||
-				    patch_lump[mp->patch] == 0xFFFF)
-					engine_error(
-					    "TEXTURE",
-					    "Texture %.8s is missing patch!",
-					    mt->name);
+				if (mp->patch >= tmp_count || patch_lump[mp->patch] == 0xFFFF)
+					engine_error("TEXTURE", "Texture %.8s is missing patch!", mt->name);
 
 				tp->originx = mp->originx;
 				tp->originy = mp->originy;
@@ -239,8 +228,7 @@ static uint32_t texture_load(uint8_t* name, uint32_t idx)
 			{
 				uint32_t size;
 
-				size = sizeof(texture_t) +
-				       tex->patchcount * sizeof(texpatch_t);
+				size = sizeof(texture_t) + tex->patchcount * sizeof(texpatch_t);
 				texturecolumnlump[idx] = (void*)tex + size;
 
 				size += tex->width * sizeof(uint16_t);
@@ -373,17 +361,11 @@ uint32_t count_textures()
 		{
 			// DEHACKED must provide alternative names
 			if (!strcmp(dtxt_pnames, "PNAMES"))
-				engine_error("TEXTURE",
-				             "Rename %s using DEHACKED!",
-				             dtxt_pnames);
+				engine_error("TEXTURE", "Rename %s using DEHACKED!", dtxt_pnames);
 			if (!strcmp(dtxt_texture1, "TEXTURE1"))
-				engine_error("TEXTURE",
-				             "Rename %s using DEHACKED!",
-				             dtxt_texture1);
+				engine_error("TEXTURE", "Rename %s using DEHACKED!", dtxt_texture1);
 			if (!strcmp(dtxt_texture2, "TEXTURE2"))
-				engine_error("TEXTURE",
-				             "Rename %s using DEHACKED!",
-				             dtxt_texture2);
+				engine_error("TEXTURE", "Rename %s using DEHACKED!", dtxt_texture2);
 		}
 		else
 		{
@@ -521,8 +503,7 @@ void init_textures(uint32_t count)
 		textureheightpow[tmp_count] = get_height_pow(tex->height);
 		textures[tmp_count] = tex;
 
-		memset((void*)tex->patch, 0xFF,
-		       (uint32_t)tex->width * sizeof(uint16_t));
+		memset((void*)tex->patch, 0xFF, (uint32_t)tex->width * sizeof(uint16_t));
 	}
 
 	//
@@ -568,8 +549,7 @@ uint8_t* texture_get_column(uint32_t tex, uint32_t col)
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// replace 'R_TextureNumForName'
-	{0x00034750, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)texture_num_get},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // replace 'R_TextureNumForName'
+    {0x00034750, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)texture_num_get},
 };

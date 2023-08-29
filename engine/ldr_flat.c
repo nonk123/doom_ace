@@ -50,16 +50,14 @@ static void cb_count(lumpinfo_t* li)
 //
 // hooks
 
-static __attribute((regparm(2), no_caller_saved_registers)) void*
-precache_flat(uint32_t idx)
+static __attribute((regparm(2), no_caller_saved_registers)) void* precache_flat(uint32_t idx)
 {
 	if (idx >= numflats)
 		return NULL; // 'R_PrecacheLevel' does not use this anyway
 	return W_CacheLumpNum(flatlump[idx], PU_CACHE);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) int32_t
-flat_num_get(const uint8_t* name)
+__attribute((regparm(2), no_caller_saved_registers)) int32_t flat_num_get(const uint8_t* name)
 {
 	int32_t ret;
 
@@ -108,8 +106,7 @@ __attribute((regparm(2), no_caller_saved_registers)) void flat_init_data()
 
 			for (uint32_t x = 0; x < patch->width; x++)
 			{
-				column_t* column = (column_t*)((uint8_t*)patch +
-				                               patch->offs[x]);
+				column_t* column = (column_t*)((uint8_t*)patch + patch->offs[x]);
 				while (column->topdelta != 0xFF)
 				{
 					uint32_t count = column->length;
@@ -119,9 +116,7 @@ __attribute((regparm(2), no_caller_saved_registers)) void flat_init_data()
 						colors[*source] = 1;
 						source++;
 					}
-					column =
-					    (column_t*)((uint8_t*)column +
-					                column->length + 4);
+					column = (column_t*)((uint8_t*)column + column->length + 4);
 				}
 			}
 		}
@@ -138,8 +133,7 @@ __attribute((regparm(2), no_caller_saved_registers)) void flat_init_data()
 	}
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) int32_t
-flat_num_check(const uint8_t* name)
+__attribute((regparm(2), no_caller_saved_registers)) int32_t flat_num_check(const uint8_t* name)
 {
 	uint64_t wame;
 	int32_t idx = numflats;
@@ -162,8 +156,7 @@ flat_num_check(const uint8_t* name)
 	return -1;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) uint64_t
-flat_get_name(uint32_t idx)
+__attribute((regparm(2), no_caller_saved_registers)) uint64_t flat_get_name(uint32_t idx)
 {
 	lumpinfo_t* li;
 
@@ -216,12 +209,9 @@ void init_flats()
 	// prepare those textures
 	if (num_texture_flats)
 	{
-		flattexture_data =
-		    ldr_malloc(num_texture_flats * sizeof(uint8_t*));
-		flattexture_idx =
-		    ldr_malloc(num_texture_flats * sizeof(uint16_t));
-		flattexture_mask =
-		    ldr_malloc(num_texture_flats * sizeof(uint8_t));
+		flattexture_data = ldr_malloc(num_texture_flats * sizeof(uint8_t*));
+		flattexture_idx = ldr_malloc(num_texture_flats * sizeof(uint16_t));
+		flattexture_mask = ldr_malloc(num_texture_flats * sizeof(uint8_t));
 
 		num_texture_flats = 0;
 		for (uint32_t i = 0; i < numtextures; i++)
@@ -242,8 +232,7 @@ void init_flats()
 		}
 
 		if (num_texture_flats)
-			doom_printf("[ACE] %u flat textures\n",
-			            num_texture_flats);
+			doom_printf("[ACE] %u flat textures\n", num_texture_flats);
 	}
 }
 
@@ -266,8 +255,7 @@ void* flat_generate_composite(uint32_t idx)
 				continue;
 
 			patch = W_CacheLumpNum(tp->patch, PU_CACHE);
-			draw_patch_to_memory(patch, tp->originx, tp->originy,
-			                     data, 64, 64);
+			draw_patch_to_memory(patch, tp->originx, tp->originy, data, 64, 64);
 		}
 
 		Z_ChangeTag2(data, PU_CACHE);
@@ -279,10 +267,9 @@ void* flat_generate_composite(uint32_t idx)
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// replace 'R_FlatNumForName'
-	{0x00034690, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)flat_num_get},
-	// replace call to 'W_CacheLumpNum' in 'R_PrecacheLevel' (flat caching)
-	{0x0003483C, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)precache_flat},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // replace 'R_FlatNumForName'
+    {0x00034690, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)flat_num_get},
+    // replace call to 'W_CacheLumpNum' in 'R_PrecacheLevel' (flat caching)
+    {0x0003483C, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)precache_flat},
 };

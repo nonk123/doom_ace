@@ -68,14 +68,12 @@ static void bufrd(void* data, uint32_t size)
 	}
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-demo_close_read()
+__attribute((regparm(2), no_caller_saved_registers)) static void demo_close_read()
 {
 	memcpy(player_info, &demobackup, sizeof(player_info_t));
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-demo_read_ticcmd(ticcmd_t* cmd)
+__attribute((regparm(2), no_caller_saved_registers)) static void demo_read_ticcmd(ticcmd_t* cmd)
 {
 	uint32_t pidx, pdst;
 	ticcmd_t tmpcmd;
@@ -84,8 +82,7 @@ demo_read_ticcmd(ticcmd_t* cmd)
 		return;
 
 	pdst = demotic >> 24;
-	if (pdst >= MAXPLAYERS &&
-	    (demotic & 0x00FFFFFF) == (leveltime & 0x00FFFFFF))
+	if (pdst >= MAXPLAYERS && (demotic & 0x00FFFFFF) == (leveltime & 0x00FFFFFF))
 	{
 		G_CheckDemoStatus();
 		usergame = 1;
@@ -207,16 +204,14 @@ static void bufwr(void* data, uint32_t size)
 			uint32_t ret;
 			ret = doom_write(demorecording, buffer, sizeof(buffer));
 			if (ret != sizeof(buffer))
-				engine_error("DEMO",
-				             "Unable to write the data!");
+				engine_error("DEMO", "Unable to write the data!");
 			left = sizeof(buffer);
 			bptr = buffer;
 		}
 	}
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-demo_close_write()
+__attribute((regparm(2), no_caller_saved_registers)) static void demo_close_write()
 {
 	uint32_t pidx = 0xFF000000;
 
@@ -238,8 +233,7 @@ demo_close_write()
 	engine_error("", "Demo was successfully recorded.");
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-demo_write_ticcmd(ticcmd_t* cmd)
+__attribute((regparm(2), no_caller_saved_registers)) static void demo_write_ticcmd(ticcmd_t* cmd)
 {
 	uint32_t pidx;
 
@@ -268,8 +262,7 @@ demo_write_ticcmd(ticcmd_t* cmd)
 	bufwr(cmd, sizeof(ticcmd_t));
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-do_record_start()
+__attribute((regparm(2), no_caller_saved_registers)) static void do_record_start()
 {
 	demo_header_t header;
 
@@ -298,8 +291,7 @@ do_record_start()
 			bufwr(player_info + i, sizeof(player_info_t));
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-do_record_demo(uint8_t* name)
+__attribute((regparm(2), no_caller_saved_registers)) static void do_record_demo(uint8_t* name)
 {
 	doom_sprintf(buffer, "%s.lmp", name);
 	demorecording = doom_open_WR(buffer);
@@ -310,24 +302,23 @@ do_record_demo(uint8_t* name)
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// replace 'G_DoPlayDemo'
-	{0x00021AD0, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)do_play_demo},
-	// replace 'G_RecordDemo'
-	{0x00021970, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)do_record_demo},
-	// replace call to 'G_BeginRecording' in 'D_DoomLoop'
-	{0x0001D520, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)do_record_start},
-	// replace call to 'G_ReadDemoTiccmd' in 'G_Ticker'
-	{0x00020607, CODE_HOOK | HOOK_UINT16, 0xD889},
-	{0x00020609, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)demo_read_ticcmd},
-	{0x0002060E, CODE_HOOK | HOOK_UINT16, 0x43EB},
-	// replace call to 'G_WriteDemoTiccmd' in 'G_Ticker'
-	{0x00020660, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)demo_write_ticcmd},
-	// replace call to 'Z_ChangeTag' in 'G_CheckDemoStatus'
-	{0x00021C8A, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)demo_close_read},
-	{0x00021C8F, CODE_HOOK | HOOK_UINT32, 0x28EBC931},
-	// replace write end in 'G_CheckDemoStatus'
-	{0x00021D16, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)demo_close_write},
-	{0x00021D1B, CODE_HOOK | HOOK_UINT16, 0x44EB},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // replace 'G_DoPlayDemo'
+    {0x00021AD0, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)do_play_demo},
+    // replace 'G_RecordDemo'
+    {0x00021970, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)do_record_demo},
+    // replace call to 'G_BeginRecording' in 'D_DoomLoop'
+    {0x0001D520, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)do_record_start},
+    // replace call to 'G_ReadDemoTiccmd' in 'G_Ticker'
+    {0x00020607, CODE_HOOK | HOOK_UINT16, 0xD889},
+    {0x00020609, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)demo_read_ticcmd},
+    {0x0002060E, CODE_HOOK | HOOK_UINT16, 0x43EB},
+    // replace call to 'G_WriteDemoTiccmd' in 'G_Ticker'
+    {0x00020660, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)demo_write_ticcmd},
+    // replace call to 'Z_ChangeTag' in 'G_CheckDemoStatus'
+    {0x00021C8A, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)demo_close_read},
+    {0x00021C8F, CODE_HOOK | HOOK_UINT32, 0x28EBC931},
+    // replace write end in 'G_CheckDemoStatus'
+    {0x00021D16, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)demo_close_write},
+    {0x00021D1B, CODE_HOOK | HOOK_UINT16, 0x44EB},
 };

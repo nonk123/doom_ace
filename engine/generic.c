@@ -59,8 +59,7 @@ static void light_effect(uint32_t tag, fixed_t frac)
 //
 //
 
-static uint32_t plane_movement(sector_t* sec, fixed_t dist, uint32_t crush,
-                               uint32_t what_plane, uint32_t do_stop)
+static uint32_t plane_movement(sector_t* sec, fixed_t dist, uint32_t crush, uint32_t what_plane, uint32_t do_stop)
 {
 	uint32_t blocked = 0;
 	plane_link_t* plink;
@@ -96,8 +95,7 @@ static uint32_t plane_movement(sector_t* sec, fixed_t dist, uint32_t crush,
 		plink = sec->extra->plink;
 		while (plink->target)
 		{
-			if ((plink->use_ceiling && what_plane & 1) ||
-			    (!plink->use_ceiling && what_plane & 2))
+			if ((plink->use_ceiling && what_plane & 1) || (!plink->use_ceiling && what_plane & 2))
 			{
 				sector_t* ss = plink->target;
 
@@ -109,8 +107,7 @@ static uint32_t plane_movement(sector_t* sec, fixed_t dist, uint32_t crush,
 
 				// this is pretty stupid but it seems that
 				// linked planes always block movement in ZDoom
-				if (mobj_change_sector(ss,
-				                       crush) /*&& do_stop*/)
+				if (mobj_change_sector(ss, crush) /*&& do_stop*/)
 				{
 					fixed_t dd;
 
@@ -144,8 +141,7 @@ static uint32_t plane_movement(sector_t* sec, fixed_t dist, uint32_t crush,
 			plink = sec->extra->plink;
 			while (plink->target)
 			{
-				if ((plink->use_ceiling && what_plane & 1) ||
-				    (!plink->use_ceiling && what_plane & 2))
+				if ((plink->use_ceiling && what_plane & 1) || (!plink->use_ceiling && what_plane & 2))
 				{
 					sector_t* ss = plink->target;
 
@@ -171,8 +167,7 @@ static uint32_t plane_movement(sector_t* sec, fixed_t dist, uint32_t crush,
 			plink = sec->extra->plink;
 			while (plink->target)
 			{
-				if ((plink->use_ceiling && what_plane & 1) ||
-				    (!plink->use_ceiling && what_plane & 2))
+				if ((plink->use_ceiling && what_plane & 1) || (!plink->use_ceiling && what_plane & 2))
 				{
 					sector_t* ss = plink->target;
 					uint32_t planes = 0;
@@ -199,8 +194,7 @@ static uint32_t plane_movement(sector_t* sec, fixed_t dist, uint32_t crush,
 //
 // thinkers
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-think_ceiling(generic_mover_t* gm)
+__attribute((regparm(2), no_caller_saved_registers)) void think_ceiling(generic_mover_t* gm)
 {
 	sector_t* sec;
 
@@ -219,9 +213,7 @@ think_ceiling(generic_mover_t* gm)
 			if (seq)
 			{
 				if (seq->start)
-					S_StartSound(
-					    (mobj_t*)&gm->sector->soundorg,
-					    seq->start);
+					S_StartSound((mobj_t*)&gm->sector->soundorg, seq->start);
 				gm->sndwait = seq->delay;
 			}
 		}
@@ -242,13 +234,11 @@ think_ceiling(generic_mover_t* gm)
 
 		if (!gm->sndwait && gm->up_seq && gm->up_seq->move)
 		{
-			S_StartSound((mobj_t*)&gm->sector->soundorg,
-			             gm->up_seq->move);
+			S_StartSound((mobj_t*)&gm->sector->soundorg, gm->up_seq->move);
 			gm->sndwait = gm->up_seq->repeat & SSQ_REP_MASK;
 		}
 
-		if (plane_movement(sec, dist, gm->crush, 1,
-		                   gm->flags & MVF_BLOCK_STAY))
+		if (plane_movement(sec, dist, gm->crush, 1, gm->flags & MVF_BLOCK_STAY))
 		{
 			if (gm->flags & MVF_BLOCK_GO_DN)
 			{
@@ -258,10 +248,7 @@ think_ceiling(generic_mover_t* gm)
 				if (gm->dn_seq)
 				{
 					if (gm->dn_seq->start)
-						S_StartSound(
-						    (mobj_t*)&gm->sector
-							->soundorg,
-						    gm->dn_seq->start);
+						S_StartSound((mobj_t*)&gm->sector->soundorg, gm->dn_seq->start);
 					gm->sndwait = gm->dn_seq->delay;
 				}
 			}
@@ -280,14 +267,11 @@ think_ceiling(generic_mover_t* gm)
 			if (!gm->up_seq || !gm->up_seq->stop)
 			{
 				gm->sndwait = 0;
-				if (gm->up_seq &&
-				    !(gm->up_seq->repeat & SSQ_NO_STOP))
-					S_StopSound(
-					    (mobj_t*)&gm->sector->soundorg);
+				if (gm->up_seq && !(gm->up_seq->repeat & SSQ_NO_STOP))
+					S_StopSound((mobj_t*)&gm->sector->soundorg);
 			}
 			else
-				S_StartSound((mobj_t*)&gm->sector->soundorg,
-				             gm->up_seq->stop);
+				S_StartSound((mobj_t*)&gm->sector->soundorg, gm->up_seq->stop);
 
 			if (gm->speed_dn)
 			{
@@ -310,14 +294,11 @@ think_ceiling(generic_mover_t* gm)
 
 		if (!gm->sndwait && gm->dn_seq && gm->dn_seq->move)
 		{
-			S_StartSound((mobj_t*)&gm->sector->soundorg,
-			             gm->dn_seq->move);
+			S_StartSound((mobj_t*)&gm->sector->soundorg, gm->dn_seq->move);
 			gm->sndwait = gm->dn_seq->repeat & SSQ_REP_MASK;
 		}
 
-		if (plane_movement(sec, dist, gm->crush, 1,
-		                   gm->flags &
-		                       (MVF_BLOCK_STAY | MVF_BLOCK_GO_UP)))
+		if (plane_movement(sec, dist, gm->crush, 1, gm->flags & (MVF_BLOCK_STAY | MVF_BLOCK_GO_UP)))
 		{
 			if (gm->flags & MVF_BLOCK_GO_UP)
 			{
@@ -327,10 +308,7 @@ think_ceiling(generic_mover_t* gm)
 				if (gm->up_seq)
 				{
 					if (gm->up_seq->start)
-						S_StartSound(
-						    (mobj_t*)&gm->sector
-							->soundorg,
-						    gm->up_seq->start);
+						S_StartSound((mobj_t*)&gm->sector->soundorg, gm->up_seq->start);
 					gm->sndwait = gm->up_seq->delay;
 				}
 			}
@@ -350,14 +328,11 @@ think_ceiling(generic_mover_t* gm)
 			if (!gm->dn_seq || !gm->dn_seq->stop)
 			{
 				gm->sndwait = 0;
-				if (gm->dn_seq &&
-				    !(gm->dn_seq->repeat & SSQ_NO_STOP))
-					S_StopSound(
-					    (mobj_t*)&gm->sector->soundorg);
+				if (gm->dn_seq && !(gm->dn_seq->repeat & SSQ_NO_STOP))
+					S_StopSound((mobj_t*)&gm->sector->soundorg);
 			}
 			else
-				S_StartSound((mobj_t*)&gm->sector->soundorg,
-				             gm->dn_seq->stop);
+				S_StartSound((mobj_t*)&gm->sector->soundorg, gm->dn_seq->stop);
 
 			if (gm->speed_up)
 			{
@@ -373,8 +348,7 @@ think_ceiling(generic_mover_t* gm)
 	if (gm->lighttag)
 	{
 		fixed_t frac;
-		frac = FixedDiv(sec->ceilingheight - gm->bot_height,
-		                gm->top_height - gm->bot_height);
+		frac = FixedDiv(sec->ceilingheight - gm->bot_height, gm->top_height - gm->bot_height);
 		light_effect(gm->lighttag, frac);
 	}
 
@@ -390,8 +364,7 @@ finish_move:
 	sec->specialactive &= ~ACT_CEILING;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-think_floor(generic_mover_t* gm)
+__attribute((regparm(2), no_caller_saved_registers)) void think_floor(generic_mover_t* gm)
 {
 	sector_t* sec;
 	fixed_t original;
@@ -411,9 +384,7 @@ think_floor(generic_mover_t* gm)
 			if (seq)
 			{
 				if (seq->start)
-					S_StartSound(
-					    (mobj_t*)&gm->sector->soundorg,
-					    seq->start);
+					S_StartSound((mobj_t*)&gm->sector->soundorg, seq->start);
 				gm->sndwait = seq->delay;
 			}
 		}
@@ -435,14 +406,11 @@ think_floor(generic_mover_t* gm)
 
 		if (!gm->sndwait && gm->up_seq && gm->up_seq->move)
 		{
-			S_StartSound((mobj_t*)&gm->sector->soundorg,
-			             gm->up_seq->move);
+			S_StartSound((mobj_t*)&gm->sector->soundorg, gm->up_seq->move);
 			gm->sndwait = gm->up_seq->repeat & SSQ_REP_MASK;
 		}
 
-		if (plane_movement(sec, dist, gm->crush, 2,
-		                   gm->flags &
-		                       (MVF_BLOCK_STAY | MVF_BLOCK_GO_DN)))
+		if (plane_movement(sec, dist, gm->crush, 2, gm->flags & (MVF_BLOCK_STAY | MVF_BLOCK_GO_DN)))
 		{
 			if (gm->flags & MVF_BLOCK_GO_DN)
 			{
@@ -452,10 +420,7 @@ think_floor(generic_mover_t* gm)
 				if (gm->dn_seq)
 				{
 					if (gm->dn_seq->start)
-						S_StartSound(
-						    (mobj_t*)&gm->sector
-							->soundorg,
-						    gm->dn_seq->start);
+						S_StartSound((mobj_t*)&gm->sector->soundorg, gm->dn_seq->start);
 					gm->sndwait = gm->dn_seq->delay;
 				}
 			}
@@ -472,14 +437,11 @@ think_floor(generic_mover_t* gm)
 			if (!gm->up_seq || !gm->up_seq->stop)
 			{
 				gm->sndwait = 0;
-				if (gm->up_seq &&
-				    !(gm->up_seq->repeat & SSQ_NO_STOP))
-					S_StopSound(
-					    (mobj_t*)&gm->sector->soundorg);
+				if (gm->up_seq && !(gm->up_seq->repeat & SSQ_NO_STOP))
+					S_StopSound((mobj_t*)&gm->sector->soundorg);
 			}
 			else
-				S_StartSound((mobj_t*)&gm->sector->soundorg,
-				             gm->up_seq->stop);
+				S_StartSound((mobj_t*)&gm->sector->soundorg, gm->up_seq->stop);
 
 			if (gm->speed_dn)
 			{
@@ -502,13 +464,11 @@ think_floor(generic_mover_t* gm)
 
 		if (!gm->sndwait && gm->dn_seq && gm->dn_seq->move)
 		{
-			S_StartSound((mobj_t*)&gm->sector->soundorg,
-			             gm->dn_seq->move);
+			S_StartSound((mobj_t*)&gm->sector->soundorg, gm->dn_seq->move);
 			gm->sndwait = gm->dn_seq->repeat & SSQ_REP_MASK;
 		}
 
-		if (plane_movement(sec, dist, gm->crush, 2,
-		                   gm->flags & MVF_BLOCK_STAY))
+		if (plane_movement(sec, dist, gm->crush, 2, gm->flags & MVF_BLOCK_STAY))
 		{
 			if (gm->flags & MVF_BLOCK_GO_UP)
 			{
@@ -518,10 +478,7 @@ think_floor(generic_mover_t* gm)
 				if (gm->up_seq)
 				{
 					if (gm->up_seq->start)
-						S_StartSound(
-						    (mobj_t*)&gm->sector
-							->soundorg,
-						    gm->up_seq->start);
+						S_StartSound((mobj_t*)&gm->sector->soundorg, gm->up_seq->start);
 					gm->sndwait = gm->up_seq->delay;
 				}
 			}
@@ -537,14 +494,11 @@ think_floor(generic_mover_t* gm)
 			if (!gm->dn_seq || !gm->dn_seq->stop)
 			{
 				gm->sndwait = 0;
-				if (gm->dn_seq &&
-				    !(gm->dn_seq->repeat & SSQ_NO_STOP))
-					S_StopSound(
-					    (mobj_t*)&gm->sector->soundorg);
+				if (gm->dn_seq && !(gm->dn_seq->repeat & SSQ_NO_STOP))
+					S_StopSound((mobj_t*)&gm->sector->soundorg);
 			}
 			else
-				S_StartSound((mobj_t*)&gm->sector->soundorg,
-				             gm->dn_seq->stop);
+				S_StartSound((mobj_t*)&gm->sector->soundorg, gm->dn_seq->stop);
 
 			if (gm->speed_up)
 			{
@@ -569,8 +523,7 @@ finish_move:
 	sec->specialactive &= ~ACT_FLOOR;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-think_light(generic_light_t* gl)
+__attribute((regparm(2), no_caller_saved_registers)) void think_light(generic_light_t* gl)
 {
 	sector_t* sec;
 	fixed_t level;
@@ -630,8 +583,7 @@ think_light(generic_light_t* gl)
 //
 // API - ceiling
 
-generic_mover_t* generic_ceiling(sector_t* sec, uint32_t dir, uint32_t def_seq,
-                                 uint32_t is_fast)
+generic_mover_t* generic_ceiling(sector_t* sec, uint32_t dir, uint32_t def_seq, uint32_t is_fast)
 {
 	generic_mover_t* gm;
 	sound_seq_t* seq;
@@ -665,8 +617,7 @@ generic_mover_t* generic_ceiling(sector_t* sec, uint32_t dir, uint32_t def_seq,
 		}
 		snd = dir == DIR_UP ? gm->up_seq : gm->dn_seq;
 		if (snd->start && !map_skip_stuff)
-			S_StartSound((mobj_t*)&gm->sector->soundorg,
-			             snd->start);
+			S_StartSound((mobj_t*)&gm->sector->soundorg, snd->start);
 		gm->sndwait = snd->delay;
 	}
 
@@ -693,8 +644,7 @@ generic_mover_t* generic_ceiling_by_sector(sector_t* sec)
 //
 // API - floor
 
-generic_mover_t* generic_floor(sector_t* sec, uint32_t dir, uint32_t def_seq,
-                               uint32_t is_fast)
+generic_mover_t* generic_floor(sector_t* sec, uint32_t dir, uint32_t def_seq, uint32_t is_fast)
 {
 	generic_mover_t* gm;
 	sound_seq_t* seq;
@@ -728,8 +678,7 @@ generic_mover_t* generic_floor(sector_t* sec, uint32_t dir, uint32_t def_seq,
 		}
 		snd = dir == DIR_UP ? gm->up_seq : gm->dn_seq;
 		if (snd->start && !map_skip_stuff)
-			S_StartSound((mobj_t*)&gm->sector->soundorg,
-			             snd->start);
+			S_StartSound((mobj_t*)&gm->sector->soundorg, snd->start);
 		gm->sndwait = snd->delay;
 	}
 

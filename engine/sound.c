@@ -139,8 +139,7 @@ static const sound_seq_t def_sndseq[NUMSNDSEQ] = {
 //
 // hooks
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-sound_start_check(void** mo, uint32_t idx)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t sound_start_check(void** mo, uint32_t idx)
 {
 	sfxinfo_t* sfx;
 	uint32_t count = 0;
@@ -197,8 +196,7 @@ sound_start_check(void** mo, uint32_t idx)
 	return idx;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-start_weapon_sound(mobj_t* mo, uint32_t idx)
+static __attribute((regparm(2), no_caller_saved_registers)) void start_weapon_sound(mobj_t* mo, uint32_t idx)
 {
 	S_StartSound(SOUND_CHAN_WEAPON(mo), idx);
 }
@@ -285,10 +283,8 @@ static void sfx_by_lump(uint8_t* name, int32_t lump)
 
 	// sanity check
 	if (sfx < sfxinfo + NUMSFX && sfx->lumpnum != lump)
-		engine_error(
-		    "SNDINFO",
-		    "Illegal replacement of '%.8s' by '%.8s' in '%s' detected!",
-		    lumpinfo[sfx->lumpnum].name, lumpinfo[lump].name, name);
+		engine_error("SNDINFO", "Illegal replacement of '%.8s' by '%.8s' in '%s' detected!",
+		             lumpinfo[sfx->lumpnum].name, lumpinfo[lump].name, name);
 
 	// fill info
 	sfx->lumpnum = lump;
@@ -332,10 +328,7 @@ static void cb_sndinfo(lumpinfo_t* li)
 				if (!kw)
 					goto error_end;
 				if (kw[0] != '{')
-					engine_error(
-					    "SNDINFO",
-					    "Expected '%c' found '%s'!", '{',
-					    kw);
+					engine_error("SNDINFO", "Expected '%c' found '%s'!", '{', kw);
 
 				// get random sounds
 				while (1)
@@ -351,9 +344,7 @@ static void cb_sndinfo(lumpinfo_t* li)
 					}
 
 					if (count >= 5)
-						engine_error(
-						    "SNDINFO",
-						    "Too many random sounds!");
+						engine_error("SNDINFO", "Too many random sounds!");
 
 					sfx = sfx_get(kw);
 					id[count] = sfx - sfxinfo;
@@ -365,11 +356,10 @@ static void cb_sndinfo(lumpinfo_t* li)
 
 				// sanity check
 				if (sfx < sfxinfo + NUMSFX)
-					engine_error(
-					    "SNDINFO",
-					    "Illegal replacement of '%.8s' by "
-					    "random in '%s' detected!",
-					    lumpinfo[sfx->lumpnum].name, name);
+					engine_error("SNDINFO",
+					             "Illegal replacement of '%.8s' by "
+					             "random in '%s' detected!",
+					             lumpinfo[sfx->lumpnum].name, name);
 
 				// modify
 				sfx->lumpnum = -1;
@@ -392,35 +382,28 @@ static void cb_sndinfo(lumpinfo_t* li)
 			else if (!strcmp(kw + 1, "playersound"))
 			{
 				uint8_t *pcl, *slt;
-				uint8_t text[PLAYER_SOUND_CLASS_LEN +
-				             PLAYER_SOUND_SLOT_LEN];
+				uint8_t text[PLAYER_SOUND_CLASS_LEN + PLAYER_SOUND_SLOT_LEN];
 
 				// sound class
 				pcl = tp_get_keyword_lc();
 				if (!pcl)
 					goto error_end;
 				if (strlen(pcl) >= PLAYER_SOUND_CLASS_LEN)
-					engine_error("SNDINFO",
-					             "Too long string '%s'!",
-					             pcl);
+					engine_error("SNDINFO", "Too long string '%s'!", pcl);
 
 				// gender
 				kw = tp_get_keyword_lc();
 				if (!kw)
 					goto error_end;
 				if (strcmp(kw, "other"))
-					engine_error("SNDINFO",
-					             "Unsupported gender '%s'!",
-					             kw);
+					engine_error("SNDINFO", "Unsupported gender '%s'!", kw);
 
 				// sound slot
 				slt = tp_get_keyword_lc();
 				if (!slt)
 					goto error_end;
 				if (strlen(slt) >= PLAYER_SOUND_SLOT_LEN)
-					engine_error("SNDINFO",
-					             "Too long string '%s'!",
-					             slt);
+					engine_error("SNDINFO", "Too long string '%s'!", slt);
 
 				// sound lump
 				kw = tp_get_keyword();
@@ -439,8 +422,7 @@ static void cb_sndinfo(lumpinfo_t* li)
 				continue;
 			}
 			else
-				engine_error("SNDINFO",
-				             "Unsupported directive '%s'!", kw);
+				engine_error("SNDINFO", "Unsupported directive '%s'!", kw);
 		}
 
 		name = kw;
@@ -520,8 +502,7 @@ static void cb_sndseq(lumpinfo_t* li)
 				goto error_end;
 
 			numsndseq++;
-			sndseq = ldr_realloc(sndseq,
-			                     numsndseq * sizeof(sound_seq_t));
+			sndseq = ldr_realloc(sndseq, numsndseq * sizeof(sound_seq_t));
 			seq = sndseq + numsndseq - 1;
 			memset(seq, 0, sizeof(sound_seq_t));
 			seq->alias = tp_hash64(name);
@@ -542,17 +523,13 @@ static void cb_sndseq(lumpinfo_t* li)
 
 				if (!strcmp(wk, "door"))
 				{
-					if (doom_sscanf(kw, "%u", &value) !=
-					        1 ||
-					    value >= 255)
+					if (doom_sscanf(kw, "%u", &value) != 1 || value >= 255)
 						goto error_value;
 					seq->number = value | SEQ_IS_DOOR;
 				}
 				else if (!strcmp(wk, "platform"))
 				{
-					if (doom_sscanf(kw, "%u", &value) !=
-					        1 ||
-					    value >= 255)
+					if (doom_sscanf(kw, "%u", &value) != 1 || value >= 255)
 						goto error_value;
 					seq->number = value;
 				}
@@ -561,9 +538,7 @@ static void cb_sndseq(lumpinfo_t* li)
 					sound_seq_t* sss;
 					seq_sounds_t* dst;
 
-					if (doom_sscanf(wk, "%u", &value) !=
-					        1 ||
-					    value > 3)
+					if (doom_sscanf(wk, "%u", &value) != 1 || value > 3)
 					{
 						kw = wk;
 						goto error_value;
@@ -631,60 +606,49 @@ static void cb_sndseq(lumpinfo_t* li)
 
 			if (!strcmp(wk, "door"))
 			{
-				if (doom_sscanf(kw, "%u", &value) != 1 ||
-				    value >= 255)
+				if (doom_sscanf(kw, "%u", &value) != 1 || value >= 255)
 					goto error_value;
 				seq->number = value | SEQ_IS_DOOR;
 			}
 			else if (!strcmp(wk, "platform"))
 			{
-				if (doom_sscanf(kw, "%u", &value) != 1 ||
-				    value >= 255)
+				if (doom_sscanf(kw, "%u", &value) != 1 || value >= 255)
 					goto error_value;
 				seq->number = value;
 			}
 			else if (!strcmp(wk, "playuntildone"))
 			{
-				seq->norm_open.start =
-				    sfx_by_alias(tp_hash64(kw));
-				seq->norm_open.delay =
-				    get_sfx_length(seq->norm_open.start);
+				seq->norm_open.start = sfx_by_alias(tp_hash64(kw));
+				seq->norm_open.delay = get_sfx_length(seq->norm_open.start);
 			}
 			else if (!strcmp(wk, "playtime"))
 			{
-				seq->norm_open.start =
-				    sfx_by_alias(tp_hash64(kw));
+				seq->norm_open.start = sfx_by_alias(tp_hash64(kw));
 				kw = tp_get_keyword();
 				if (!kw)
 					goto error_end;
-				if (doom_sscanf(kw, "%u", &value) != 1 ||
-				    !value || value > 0xFFFF)
+				if (doom_sscanf(kw, "%u", &value) != 1 || !value || value > 0xFFFF)
 					goto error_value;
 				seq->norm_open.delay = value;
 			}
 			else if (!strcmp(wk, "playloop"))
 			{
-				seq->norm_open.move =
-				    sfx_by_alias(tp_hash64(kw));
+				seq->norm_open.move = sfx_by_alias(tp_hash64(kw));
 				kw = tp_get_keyword();
 				if (!kw)
 					goto error_end;
-				if (doom_sscanf(kw, "%u", &value) != 1 ||
-				    !value || value > 0x0FFF)
+				if (doom_sscanf(kw, "%u", &value) != 1 || !value || value > 0x0FFF)
 					goto error_value;
 				seq->norm_open.repeat = value;
 			}
 			else if (!strcmp(wk, "playrepeat"))
 			{
-				seq->norm_open.move =
-				    sfx_by_alias(tp_hash64(kw));
-				seq->norm_open.repeat =
-				    get_sfx_length(seq->norm_open.move);
+				seq->norm_open.move = sfx_by_alias(tp_hash64(kw));
+				seq->norm_open.repeat = get_sfx_length(seq->norm_open.move);
 			}
 			else if (!strcmp(wk, "stopsound"))
 			{
-				seq->norm_open.stop =
-				    sfx_by_alias(tp_hash64(kw));
+				seq->norm_open.stop = sfx_by_alias(tp_hash64(kw));
 			}
 			else if (!strcmp(wk, "nostopcutoff"))
 			{
@@ -692,9 +656,7 @@ static void cb_sndseq(lumpinfo_t* li)
 				tp_push_keyword(kw);
 			}
 			else
-				engine_error("SNDSEQ",
-				             "Unknown keyword '%s' in '%s'!",
-				             wk, name);
+				engine_error("SNDSEQ", "Unknown keyword '%s' in '%s'!", wk, name);
 		}
 	}
 
@@ -912,15 +874,13 @@ void init_sound()
 		sfx_hooks[i].value += (uint32_t)sfxinfo;
 	utils_install_hooks(sfx_hooks, NUM_SFX_HOOKS);
 
-	*((uint32_t*)((void*)0x0003F433 + doom_code_segment)) =
-	    numsfx * sizeof(sfxinfo_t);
+	*((uint32_t*)((void*)0x0003F433 + doom_code_segment)) = numsfx * sizeof(sfxinfo_t);
 }
 
 //
 // sound update
 
-uint32_t sound_adjust(mobj_t* listener, mobj_t* source, int32_t* vol,
-                      int32_t* sep)
+uint32_t sound_adjust(mobj_t* listener, mobj_t* source, int32_t* vol, int32_t* sep)
 {
 	fixed_t approx_dist;
 	fixed_t adx;
@@ -931,14 +891,12 @@ uint32_t sound_adjust(mobj_t* listener, mobj_t* source, int32_t* vol,
 		goto full_volume;
 
 	// check for full volume sound
-	if ((void*)source >= (void*)sfxinfo &&
-	    (void*)source < (void*)(sfxinfo + numsfx))
+	if ((void*)source >= (void*)sfxinfo && (void*)source < (void*)(sfxinfo + numsfx))
 		goto full_volume;
 
 	// check for sector sound
 	// place sector sounds closest to the camera
-	if ((void*)source >= (void*)sectors &&
-	    (void*)source < (void*)(sectors + numsectors))
+	if ((void*)source >= (void*)sectors && (void*)source < (void*)(sectors + numsectors))
 	{
 		sector_t* sec;
 		fixed_t tmp;
@@ -986,9 +944,7 @@ uint32_t sound_adjust(mobj_t* listener, mobj_t* source, int32_t* vol,
 	if (approx_dist < S_CLOSE_DIST)
 		*vol = volume_val;
 	else
-		*vol = (volume_val *
-		        ((S_CLIPPING_DIST - approx_dist) >> FRACBITS)) /
-		       S_ATTENUATOR;
+		*vol = (volume_val * ((S_CLIPPING_DIST - approx_dist) >> FRACBITS)) / S_ATTENUATOR;
 
 	return (*vol > 0);
 
@@ -1003,45 +959,40 @@ full_volume:
 
 static hook_t sfx_hooks[NUM_SFX_HOOKS] = {
     // patch access to 'S_sfx'
-    {0x0003F160, CODE_HOOK | HOOK_UINT32, 0},
-    {0x0003F3C2, CODE_HOOK | HOOK_UINT32, 28},
-    {0x0003F3D4, CODE_HOOK | HOOK_UINT32, 28},
-    {0x0003F3DE, CODE_HOOK | HOOK_UINT32, 24},
-    {0x0003F401, CODE_HOOK | HOOK_UINT32, 24},
-    {0x0003F40C, CODE_HOOK | HOOK_UINT32, 32},
-    {0x0003F41D, CODE_HOOK | HOOK_UINT32, 24},
-    {0x0003F42A, CODE_HOOK | HOOK_UINT32, 24},
+    {0x0003F160, CODE_HOOK | HOOK_UINT32, 0},  {0x0003F3C2, CODE_HOOK | HOOK_UINT32, 28},
+    {0x0003F3D4, CODE_HOOK | HOOK_UINT32, 28}, {0x0003F3DE, CODE_HOOK | HOOK_UINT32, 24},
+    {0x0003F401, CODE_HOOK | HOOK_UINT32, 24}, {0x0003F40C, CODE_HOOK | HOOK_UINT32, 32},
+    {0x0003F41D, CODE_HOOK | HOOK_UINT32, 24}, {0x0003F42A, CODE_HOOK | HOOK_UINT32, 24},
 };
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// disable hardcoded sound randomization
-	{0x00027716, CODE_HOOK | HOOK_UINT16, 0x41EB}, // A_Look
-	{0x0002882B, CODE_HOOK | HOOK_UINT16, 0x47EB}, // A_Scream
-	// replace calls to 'S_AdjustSoundParams'
-	{0x0003F1F8, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)hook_sound_adjust},
-	{0x0003F4D9, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)hook_sound_adjust},
-	// sound listener is player->camera
-	{0x0001D5FA, CODE_HOOK | HOOK_UINT32, (uint32_t)&players->camera},
-	{0x0003F1F2, CODE_HOOK | HOOK_UINT32, (uint32_t)&players->camera},
-	// custom sound ID check and translation
-	// invalid sounds are skipped instead of causing error
-	{0x0003F13C, CODE_HOOK | HOOK_UINT32, 0xE08950},
-	{0x0003F13F, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)sound_start_check},
-	{0x0003F144, CODE_HOOK | HOOK_UINT32, 0xC0855D},
-	{0x0003F148, CODE_HOOK | HOOK_JMP_DOOM, 0x0003F365},
-	{0x0003F147, CODE_HOOK | HOOK_UINT16, 0x840F},
-	{0x0003F14D, CODE_HOOK | HOOK_UINT32, 0x00EBC789},
-	{0x0003F151, CODE_HOOK | HOOK_SET_NOPS, 5},
-	{0x0003F205, CODE_HOOK | HOOK_UINT16, 0x2FEB},
-	// disable sfx->link
-	{0x0003F171, CODE_HOOK | HOOK_UINT8, 0xEB},
-	{0x0003F493, CODE_HOOK | HOOK_UINT8, 0xEB},
-	// disable some M_Random calls
-	{0x0003F248, CODE_HOOK | HOOK_UINT16, 0x78EB},
-	// A_Saw, CHAN_WEAPON
-	{0x0002D666, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)start_weapon_sound},
-	{0x0002D677, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)start_weapon_sound},
-	// A_Punch, CHAN_WEAPON
-	{0x0002D5C9, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)start_weapon_sound},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // disable hardcoded sound randomization
+    {0x00027716, CODE_HOOK | HOOK_UINT16, 0x41EB}, // A_Look
+    {0x0002882B, CODE_HOOK | HOOK_UINT16, 0x47EB}, // A_Scream
+    // replace calls to 'S_AdjustSoundParams'
+    {0x0003F1F8, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)hook_sound_adjust},
+    {0x0003F4D9, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)hook_sound_adjust},
+    // sound listener is player->camera
+    {0x0001D5FA, CODE_HOOK | HOOK_UINT32, (uint32_t)&players->camera},
+    {0x0003F1F2, CODE_HOOK | HOOK_UINT32, (uint32_t)&players->camera},
+    // custom sound ID check and translation
+    // invalid sounds are skipped instead of causing error
+    {0x0003F13C, CODE_HOOK | HOOK_UINT32, 0xE08950},
+    {0x0003F13F, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)sound_start_check},
+    {0x0003F144, CODE_HOOK | HOOK_UINT32, 0xC0855D},
+    {0x0003F148, CODE_HOOK | HOOK_JMP_DOOM, 0x0003F365},
+    {0x0003F147, CODE_HOOK | HOOK_UINT16, 0x840F},
+    {0x0003F14D, CODE_HOOK | HOOK_UINT32, 0x00EBC789},
+    {0x0003F151, CODE_HOOK | HOOK_SET_NOPS, 5},
+    {0x0003F205, CODE_HOOK | HOOK_UINT16, 0x2FEB},
+    // disable sfx->link
+    {0x0003F171, CODE_HOOK | HOOK_UINT8, 0xEB},
+    {0x0003F493, CODE_HOOK | HOOK_UINT8, 0xEB},
+    // disable some M_Random calls
+    {0x0003F248, CODE_HOOK | HOOK_UINT16, 0x78EB},
+    // A_Saw, CHAN_WEAPON
+    {0x0002D666, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)start_weapon_sound},
+    {0x0002D677, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)start_weapon_sound},
+    // A_Punch, CHAN_WEAPON
+    {0x0002D5C9, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)start_weapon_sound},
 };

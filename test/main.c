@@ -59,8 +59,7 @@ void ace_main()
 	// Call offsets are relative to EIP so offset to 'hook_I_FinishUpdate'
 	// has to be calculated.
 	*((uint32_t*)(doom_code_segment + 0x0001D4A7)) =
-	    (uint32_t)hook_I_FinishUpdate -
-	    (uint32_t)(doom_code_segment + 0x0001D4AB);
+	    (uint32_t)hook_I_FinishUpdate - (uint32_t)(doom_code_segment + 0x0001D4AB);
 
 	// continue loading Doom
 }

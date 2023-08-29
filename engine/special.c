@@ -69,12 +69,10 @@ void find_nearest_floor(sector_t* sec)
 		if (!bs)
 			continue;
 
-		if (bs->floorheight < sec->floorheight &&
-		    bs->floorheight > find_dn)
+		if (bs->floorheight < sec->floorheight && bs->floorheight > find_dn)
 			find_dn = bs->floorheight;
 
-		if (bs->floorheight > sec->floorheight &&
-		    bs->floorheight < find_up)
+		if (bs->floorheight > sec->floorheight && bs->floorheight < find_up)
 			find_up = bs->floorheight;
 	}
 
@@ -101,12 +99,10 @@ void find_nearest_ceiling(sector_t* sec)
 		if (!bs)
 			continue;
 
-		if (bs->ceilingheight < sec->ceilingheight &&
-		    bs->ceilingheight > find_dn)
+		if (bs->ceilingheight < sec->ceilingheight && bs->ceilingheight > find_dn)
 			find_dn = bs->ceilingheight;
 
-		if (bs->ceilingheight > sec->ceilingheight &&
-		    bs->ceilingheight < find_up)
+		if (bs->ceilingheight > sec->ceilingheight && bs->ceilingheight < find_up)
 			find_up = bs->ceilingheight;
 	}
 
@@ -208,9 +204,7 @@ static uint32_t act_Door_Raise(sector_t* sec, line_t* ln)
 			if (gm->up_seq)
 			{
 				if (gm->up_seq->start)
-					S_StartSound(
-					    (mobj_t*)&gm->sector->soundorg,
-					    gm->up_seq->start);
+					S_StartSound((mobj_t*)&gm->sector->soundorg, gm->up_seq->start);
 				gm->sndwait = gm->up_seq->delay;
 			}
 		}
@@ -219,9 +213,7 @@ static uint32_t act_Door_Raise(sector_t* sec, line_t* ln)
 			if (gm->dn_seq)
 			{
 				if (gm->dn_seq->start)
-					S_StartSound(
-					    (mobj_t*)&gm->sector->soundorg,
-					    gm->dn_seq->start);
+					S_StartSound((mobj_t*)&gm->sector->soundorg, gm->dn_seq->start);
 				gm->sndwait = gm->dn_seq->delay;
 			}
 		}
@@ -295,8 +287,7 @@ static uint32_t act_Floor_ByValue(sector_t* sec, line_t* ln)
 	if (dest == sec->floorheight)
 		return 1;
 
-	gm = generic_floor(sec, value_mult < 0 ? DIR_DOWN : DIR_UP,
-	                   SNDSEQ_FLOOR, 0);
+	gm = generic_floor(sec, value_mult < 0 ? DIR_DOWN : DIR_UP, SNDSEQ_FLOOR, 0);
 	gm->top_height = dest;
 	gm->bot_height = dest;
 	gm->speed_now = spec_arg[1] * (FRACUNIT / 8);
@@ -416,8 +407,7 @@ static uint32_t act_Generic_Floor(sector_t* sec, line_t* ln)
 		return 1;
 	}
 
-	gm = generic_floor(sec, spec_arg[4] & 8 ? DIR_UP : DIR_DOWN,
-	                   SNDSEQ_FLOOR, 0);
+	gm = generic_floor(sec, spec_arg[4] & 8 ? DIR_UP : DIR_DOWN, SNDSEQ_FLOOR, 0);
 	gm->top_height = dest;
 	gm->bot_height = dest;
 	gm->speed_now = spec_arg[1] * (FRACUNIT / 8);
@@ -430,8 +420,7 @@ static uint32_t act_Generic_Floor(sector_t* sec, line_t* ln)
 	if (spec_arg[4] & 8)
 	{
 		// UP
-		if (dest <= sec->floorheight ||
-		    sec->floorheight + gm->speed_now >= dest)
+		if (dest <= sec->floorheight || sec->floorheight + gm->speed_now >= dest)
 		{
 			gm->sndwait = 2;
 			think_floor(gm);
@@ -440,8 +429,7 @@ static uint32_t act_Generic_Floor(sector_t* sec, line_t* ln)
 	else
 	{
 		// DOWN
-		if (dest >= sec->floorheight ||
-		    sec->floorheight - gm->speed_now <= dest)
+		if (dest >= sec->floorheight || sec->floorheight - gm->speed_now <= dest)
 		{
 			gm->sndwait = 2;
 			think_floor(gm);
@@ -514,8 +502,7 @@ static uint32_t act_Ceiling_ByValue(sector_t* sec, line_t* ln)
 	if (dest == sec->ceilingheight)
 		return 1;
 
-	gm = generic_ceiling(sec, value_mult < 0 ? DIR_DOWN : DIR_UP,
-	                     SNDSEQ_CEILING, 0);
+	gm = generic_ceiling(sec, value_mult < 0 ? DIR_DOWN : DIR_UP, SNDSEQ_CEILING, 0);
 	gm->top_height = dest;
 	gm->bot_height = dest;
 	gm->speed_now = spec_arg[1] * (FRACUNIT / 8);
@@ -627,8 +614,7 @@ static uint32_t act_Generic_Ceiling(sector_t* sec, line_t* ln)
 		return 1;
 	}
 
-	gm = generic_ceiling(sec, spec_arg[4] & 8 ? DIR_UP : DIR_DOWN,
-	                     SNDSEQ_CEILING, 0);
+	gm = generic_ceiling(sec, spec_arg[4] & 8 ? DIR_UP : DIR_DOWN, SNDSEQ_CEILING, 0);
 	gm->top_height = dest;
 	gm->bot_height = dest;
 	gm->speed_now = spec_arg[1] * (FRACUNIT / 8);
@@ -642,8 +628,7 @@ static uint32_t act_Generic_Ceiling(sector_t* sec, line_t* ln)
 	if (spec_arg[4] & 8)
 	{
 		// UP
-		if (dest <= sec->ceilingheight ||
-		    sec->ceilingheight + gm->speed_now >= dest)
+		if (dest <= sec->ceilingheight || sec->ceilingheight + gm->speed_now >= dest)
 		{
 			gm->sndwait = 2;
 			think_ceiling(gm);
@@ -652,8 +637,7 @@ static uint32_t act_Generic_Ceiling(sector_t* sec, line_t* ln)
 	else
 	{
 		// DOWN
-		if (dest >= sec->ceilingheight ||
-		    sec->ceilingheight - gm->speed_now <= dest)
+		if (dest >= sec->ceilingheight || sec->ceilingheight - gm->speed_now <= dest)
 		{
 			gm->sndwait = 2;
 			think_ceiling(gm);
@@ -775,8 +759,7 @@ static uint32_t act_Plat_Bidir(sector_t* sec, line_t* ln)
 	if (sec->specialactive & ACT_FLOOR)
 		return 0;
 
-	gm = generic_floor(sec, value_mult < 0 ? DIR_DOWN : DIR_UP, SNDSEQ_PLAT,
-	                   0);
+	gm = generic_floor(sec, value_mult < 0 ? DIR_DOWN : DIR_UP, SNDSEQ_PLAT, 0);
 	gm->speed_now = spec_arg[1] * (FRACUNIT / 8);
 	gm->delay = spec_arg[2];
 	gm->flags = MVF_BLOCK_GO_DN | MVF_BLOCK_GO_UP;
@@ -825,8 +808,7 @@ static uint32_t act_Stairs_Build(sector_t* sec, line_t* ln)
 		if (sec->specialactive & ACT_FLOOR)
 			break;
 
-		gm = generic_floor(sec, value_mult < 0 ? DIR_DOWN : DIR_UP,
-		                   SNDSEQ_FLOOR, 0);
+		gm = generic_floor(sec, value_mult < 0 ? DIR_DOWN : DIR_UP, SNDSEQ_FLOOR, 0);
 		gm->flags = MVF_BLOCK_STAY;
 		gm->speed_now = speed;
 
@@ -882,16 +864,14 @@ static uint32_t act_Stairs_Build(sector_t* sec, line_t* ln)
 
 static uint32_t act_SetColor(sector_t* sec, line_t* ln)
 {
-	sec->extra->color = (spec_arg[1] >> 4) | (spec_arg[2] & 0xF0) |
-	                    ((uint16_t)(spec_arg[3] & 0xF0) << 4) |
+	sec->extra->color = (spec_arg[1] >> 4) | (spec_arg[2] & 0xF0) | ((uint16_t)(spec_arg[3] & 0xF0) << 4) |
 	                    ((uint16_t)(spec_arg[4] & 0xF0) << 8);
 
 	for (uint32_t i = 0; i < sector_light_count; i++)
 	{
 		sector_light_t* cl = sector_light + i;
 
-		if (cl->color == sec->extra->color &&
-		    cl->fade == sec->extra->fade)
+		if (cl->color == sec->extra->color && cl->fade == sec->extra->fade)
 		{
 			sec->lightlevel = (sec->lightlevel & 0x1FF) | (i << 9);
 			break;
@@ -901,15 +881,13 @@ static uint32_t act_SetColor(sector_t* sec, line_t* ln)
 
 static uint32_t act_SetFade(sector_t* sec, line_t* ln)
 {
-	sec->extra->fade = (spec_arg[1] >> 4) | (spec_arg[2] & 0xF0) |
-	                   ((uint16_t)(spec_arg[3] & 0xF0) << 4);
+	sec->extra->fade = (spec_arg[1] >> 4) | (spec_arg[2] & 0xF0) | ((uint16_t)(spec_arg[3] & 0xF0) << 4);
 
 	for (uint32_t i = 0; i < sector_light_count; i++)
 	{
 		sector_light_t* cl = sector_light + i;
 
-		if (cl->color == sec->extra->color &&
-		    cl->fade == sec->extra->fade)
+		if (cl->color == sec->extra->color && cl->fade == sec->extra->fade)
 		{
 			sec->lightlevel = (sec->lightlevel & 0x1FF) | (i << 9);
 			break;
@@ -1299,8 +1277,7 @@ static uint32_t do_Teleport()
 	if (value_mult < 0)
 		flags |= TELEF_FOG;
 
-	return mobj_teleport(spec_activator, mo->x, mo->y, mo->z, mo->angle,
-	                     flags);
+	return mobj_teleport(spec_activator, mo->x, mo->y, mo->z, mo->angle, flags);
 }
 
 static uint32_t do_TeleportOther()
@@ -1322,12 +1299,10 @@ static uint32_t do_TeleportOther()
 	else
 		flags |= TELEF_NOSTOP;
 
-	return mobj_teleport(mo, target->x, target->y, target->z, target->angle,
-	                     flags);
+	return mobj_teleport(mo, target->x, target->y, target->z, target->angle, flags);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) uint32_t
-PIT_TeleportInSector(mobj_t* mo)
+__attribute((regparm(2), no_caller_saved_registers)) uint32_t PIT_TeleportInSector(mobj_t* mo)
 {
 	fixed_t r;
 
@@ -1400,12 +1375,9 @@ static uint32_t do_TeleportInSector()
 		for (mobj_t* mo = sec->thinglist; mo; mo = mo->snext)
 			PIT_TeleportInSector(mo);
 
-		for (int32_t x = sec->blockbox[BOXLEFT];
-		     x <= sec->blockbox[BOXRIGHT]; x++)
-			for (int32_t y = sec->blockbox[BOXBOTTOM];
-			     y <= sec->blockbox[BOXTOP]; y++)
-				P_BlockThingsIterator(x, y,
-				                      PIT_TeleportInSector);
+		for (int32_t x = sec->blockbox[BOXLEFT]; x <= sec->blockbox[BOXRIGHT]; x++)
+			for (int32_t y = sec->blockbox[BOXBOTTOM]; y <= sec->blockbox[BOXTOP]; y++)
+				P_BlockThingsIterator(x, y, PIT_TeleportInSector);
 	}
 
 	for (thinker_t* th = thinkercap.next; th != &thinkercap; th = th->next)
@@ -1696,8 +1668,7 @@ static uint32_t do_SetBlocking(line_t* li, line_t* ln)
 //
 // tag handler
 
-static uint32_t handle_tag(line_t* ln, uint32_t tag,
-                           uint32_t (*cb)(sector_t*, line_t*))
+static uint32_t handle_tag(line_t* ln, uint32_t tag, uint32_t (*cb)(sector_t*, line_t*))
 {
 	uint32_t success = 0;
 
@@ -1752,8 +1723,7 @@ static void handle_tid(line_t* ln, int32_t tid, void (*cb)(mobj_t*))
 //
 // lid handler
 
-static uint32_t handle_lid(line_t* ln, uint32_t lid,
-                           uint32_t (*cb)(line_t*, line_t*))
+static uint32_t handle_lid(line_t* ln, uint32_t lid, uint32_t (*cb)(line_t*, line_t*))
 {
 	uint32_t success = 0;
 
@@ -1793,18 +1763,15 @@ void spec_activate(line_t* ln, mobj_t* mo, uint32_t type)
 				return;
 			if (mo->player)
 				break;
-			if (mo->flags & MF_MISSILE &&
-			    (ln->special == 70 || // Teleport
-			     ln->special == 71    // Teleport_NoFog
-			     ))
+			if (mo->flags & MF_MISSILE && (ln->special == 70 || // Teleport
+			                               ln->special == 71    // Teleport_NoFog
+			                               ))
 				break;
-			if (!(ln->flags & ML_MONSTER_ACT) &&
-			    (map_level_info->flags &
-			         MAP_FLAG_NO_MONSTER_ACTIVATION ||
-			     (ln->special != 206 && // Plat_DownWaitUpStayLip
-			      ln->special != 70 &&  // Teleport
-			      ln->special != 71     // Teleport_NoFog
-			      )))
+			if (!(ln->flags & ML_MONSTER_ACT) && (map_level_info->flags & MAP_FLAG_NO_MONSTER_ACTIVATION ||
+			                                      (ln->special != 206 && // Plat_DownWaitUpStayLip
+			                                       ln->special != 70 &&  // Teleport
+			                                       ln->special != 71     // Teleport_NoFog
+			                                       )))
 				return;
 			if (mo->flags1 & MF1_ISMONSTER)
 				break;
@@ -1818,13 +1785,11 @@ void spec_activate(line_t* ln, mobj_t* mo, uint32_t type)
 				return;
 			if (mo->player)
 				break;
-			if (!(ln->flags & ML_MONSTER_ACT) &&
-			    (map_level_info->flags &
-			         MAP_FLAG_NO_MONSTER_ACTIVATION ||
-			     (ln->special != 12 && // Door_Raise
-			      ln->special != 70 && // Teleport
-			      ln->special != 71    // Teleport_NoFog
-			      )))
+			if (!(ln->flags & ML_MONSTER_ACT) && (map_level_info->flags & MAP_FLAG_NO_MONSTER_ACTIVATION ||
+			                                      (ln->special != 12 && // Door_Raise
+			                                       ln->special != 70 && // Teleport
+			                                       ln->special != 71    // Teleport_NoFog
+			                                       )))
 				return;
 			break;
 		case MLA_MON_CROSS:
@@ -1842,8 +1807,7 @@ void spec_activate(line_t* ln, mobj_t* mo, uint32_t type)
 					mo = mo->target;
 				if (!mo)
 					return;
-				if (!mo->player &&
-				    !(ln->flags & ML_MONSTER_ACT))
+				if (!mo->player && !(ln->flags & ML_MONSTER_ACT))
 					return;
 				break;
 			}
@@ -1910,29 +1874,23 @@ void spec_activate(line_t* ln, mobj_t* mo, uint32_t type)
 		if (spec_arg[3])
 		{
 			uint8_t* message;
-			message = mobj_check_keylock(spec_activator,
-			                             spec_arg[3], spec_arg[0]);
+			message = mobj_check_keylock(spec_activator, spec_arg[3], spec_arg[0]);
 			if (message)
 			{
 				if (spec_activator->player)
 				{
 					if (message[0])
-						spec_activator->player
-						    ->message = message;
+						spec_activator->player->message = message;
 					if (!mobj_lock_sound)
-						mobj_lock_sound =
-						    mo->info->player.sound
-							.usefail;
+						mobj_lock_sound = mo->info->player.sound.usefail;
 				}
 				if (mobj_lock_sound)
-					S_StartSound(spec_activator,
-					             mobj_lock_sound);
+					S_StartSound(spec_activator, mobj_lock_sound);
 				value_mult = 0;
 			}
 		}
 		if (value_mult)
-			spec_success =
-			    handle_tag(ln, spec_arg[0], act_Door_Raise);
+			spec_success = handle_tag(ln, spec_arg[0], act_Door_Raise);
 		break;
 	case 15: // Autosave
 		if (!netgame)
@@ -1995,8 +1953,7 @@ void spec_activate(line_t* ln, mobj_t* mo, uint32_t type)
 		spec_success = handle_tag(ln, spec_arg[0], act_Ceiling_ByValue);
 		break;
 	case 44: // Ceiling_CrushStop
-		spec_success =
-		    handle_tag(ln, spec_arg[0], act_Ceiling_CrushStop);
+		spec_success = handle_tag(ln, spec_arg[0], act_Ceiling_CrushStop);
 		break;
 	case 47: // Ceiling_MoveToValue
 		value_mult = 0;
@@ -2044,12 +2001,10 @@ void spec_activate(line_t* ln, mobj_t* mo, uint32_t type)
 				int32_t damage = spec_arg[0];
 				if (!damage)
 					damage = 1000000;
-				mobj_damage(spec_activator, NULL, NULL, damage,
-				            NULL);
+				mobj_damage(spec_activator, NULL, NULL, damage, NULL);
 			}
 			else
-				mobj_give_health(spec_activator, -spec_arg[0],
-				                 0);
+				mobj_give_health(spec_activator, -spec_arg[0], 0);
 			spec_success = 1;
 		}
 		break;
@@ -2068,8 +2023,7 @@ void spec_activate(line_t* ln, mobj_t* mo, uint32_t type)
 		spec_success = do_TeleportInSector();
 		break;
 	case 97: // Ceiling_LowerAndCrushDist
-		spec_success =
-		    handle_tag(ln, spec_arg[0], act_Ceiling_LowerAndCrushDist);
+		spec_success = handle_tag(ln, spec_arg[0], act_Ceiling_LowerAndCrushDist);
 		break;
 	case 99: // Floor_RaiseAndCrushDoom
 		value_mult = 1;
@@ -2084,8 +2038,7 @@ void spec_activate(line_t* ln, mobj_t* mo, uint32_t type)
 		spec_success = handle_tag(ln, spec_arg[0], act_Light_ByValue);
 		break;
 	case 112: // Light_ChangeToValue
-		spec_success =
-		    handle_tag(ln, spec_arg[0], arg_Light_ChangeToValue);
+		spec_success = handle_tag(ln, spec_arg[0], arg_Light_ChangeToValue);
 		break;
 	case 113: // Light_Fade
 		spec_success = handle_tag(ln, spec_arg[0], arg_Light_Fade);
@@ -2118,8 +2071,7 @@ void spec_activate(line_t* ln, mobj_t* mo, uint32_t type)
 		handle_tid(ln, spec_arg[0], act_Thing_Remove);
 		break;
 	case 133: // Thing_Destroy
-		handle_tid(ln, spec_arg[0] > 0 ? spec_arg[0] : -1,
-		           act_Thing_Destroy);
+		handle_tid(ln, spec_arg[0] > 0 ? spec_arg[0] : -1, act_Thing_Destroy);
 		break;
 	case 134: // Thing_Projectile
 		value_mult = 2;
@@ -2251,16 +2203,13 @@ void spec_activate(line_t* ln, mobj_t* mo, uint32_t type)
 //
 // hooks
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-spec_line_cross(uint32_t lidx, uint32_t side)
+__attribute((regparm(2), no_caller_saved_registers)) void spec_line_cross(uint32_t lidx, uint32_t side)
 {
 	register mobj_t* mo asm("ebx"); // hack to extract 3rd argument
-	spec_activate(lines + lidx, mo,
-	              (side ? SPEC_ACT_BACK_SIDE : 0) | SPEC_ACT_CROSS);
+	spec_activate(lines + lidx, mo, (side ? SPEC_ACT_BACK_SIDE : 0) | SPEC_ACT_CROSS);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) uint32_t
-spec_line_use(mobj_t* mo, line_t* ln)
+__attribute((regparm(2), no_caller_saved_registers)) uint32_t spec_line_use(mobj_t* mo, line_t* ln)
 {
 	register uint32_t side asm("ebx"); // hack to extract 3rd argument
 
@@ -2272,8 +2221,7 @@ spec_line_use(mobj_t* mo, line_t* ln)
 	return spec_success;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) uint32_t
-EV_Teleport(line_t* ln, uint32_t side)
+__attribute((regparm(2), no_caller_saved_registers)) uint32_t EV_Teleport(line_t* ln, uint32_t side)
 {
 	register mobj_t* mo asm("ebx"); // hack to extract 3rd argument
 
@@ -2296,8 +2244,7 @@ EV_Teleport(line_t* ln, uint32_t side)
 			continue;
 
 		if (target->subsector->sector->tag == ln->tag)
-			return mobj_teleport(mo, target->x, target->y,
-			                     target->z, target->angle,
+			return mobj_teleport(mo, target->x, target->y, target->z, target->angle,
 			                     TELEF_USE_ANGLE | TELEF_FOG);
 	}
 
@@ -2307,11 +2254,10 @@ EV_Teleport(line_t* ln, uint32_t side)
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// 'PTR_UseTraverse' checks for ln->special (8bit)
-	{0x0002BCA9, CODE_HOOK | HOOK_UINT32, 0x00127B80},
-	{0x0002BCAD, CODE_HOOK | HOOK_UINT8, 0x90},
-	// replace 'EV_Teleport'
-	{0x00031E40, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)EV_Teleport},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // 'PTR_UseTraverse' checks for ln->special (8bit)
+    {0x0002BCA9, CODE_HOOK | HOOK_UINT32, 0x00127B80},
+    {0x0002BCAD, CODE_HOOK | HOOK_UINT8, 0x90},
+    // replace 'EV_Teleport'
+    {0x00031E40, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)EV_Teleport},
 };

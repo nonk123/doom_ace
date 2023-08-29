@@ -175,20 +175,13 @@ static config_entry_t config_mod[] = {
     {"stbar.ammo[2].type", &mod_config.ammo_rocket, TYPE_ALIAS},
     {"stbar.ammo[3].type", &mod_config.ammo_cell, TYPE_ALIAS},
     // custom damage types
-    {"damage[0].name", &damage_type_config[DAMAGE_CUSTOM_0].name,
-     TYPE_STRING_LC_ALLOC},
-    {"damage[1].name", &damage_type_config[DAMAGE_CUSTOM_1].name,
-     TYPE_STRING_LC_ALLOC},
-    {"damage[2].name", &damage_type_config[DAMAGE_CUSTOM_2].name,
-     TYPE_STRING_LC_ALLOC},
-    {"damage[3].name", &damage_type_config[DAMAGE_CUSTOM_3].name,
-     TYPE_STRING_LC_ALLOC},
-    {"damage[4].name", &damage_type_config[DAMAGE_CUSTOM_4].name,
-     TYPE_STRING_LC_ALLOC},
-    {"damage[5].name", &damage_type_config[DAMAGE_CUSTOM_5].name,
-     TYPE_STRING_LC_ALLOC},
-    {"damage[6].name", &damage_type_config[DAMAGE_CUSTOM_6].name,
-     TYPE_STRING_LC_ALLOC},
+    {"damage[0].name", &damage_type_config[DAMAGE_CUSTOM_0].name, TYPE_STRING_LC_ALLOC},
+    {"damage[1].name", &damage_type_config[DAMAGE_CUSTOM_1].name, TYPE_STRING_LC_ALLOC},
+    {"damage[2].name", &damage_type_config[DAMAGE_CUSTOM_2].name, TYPE_STRING_LC_ALLOC},
+    {"damage[3].name", &damage_type_config[DAMAGE_CUSTOM_3].name, TYPE_STRING_LC_ALLOC},
+    {"damage[4].name", &damage_type_config[DAMAGE_CUSTOM_4].name, TYPE_STRING_LC_ALLOC},
+    {"damage[5].name", &damage_type_config[DAMAGE_CUSTOM_5].name, TYPE_STRING_LC_ALLOC},
+    {"damage[6].name", &damage_type_config[DAMAGE_CUSTOM_6].name, TYPE_STRING_LC_ALLOC},
     // custom automap colors
     {"automap.lockdefs", &mod_config.automap_lockdefs, TYPE_U8},
     {"automap.color[0]", (void*)0x00026325, TYPE_COLOR, 1}, // background
@@ -196,10 +189,8 @@ static config_entry_t config_mod[] = {
     {"automap.color[2]", (void*)0x00025E4B, TYPE_COLOR, 1}, // one-sided line
     {"automap.color[3]", (void*)0x00025EA3, TYPE_COLOR, 1}, // floor change
     {"automap.color[4]", (void*)0x00025EBF, TYPE_COLOR, 1}, // ceiling change
-    {"automap.color[5]", (void*)0x00025F05, TYPE_COLOR,
-     1}, // gray lines (allmap)
-    {"automap.color[6]", (void*)0x00025EDA, TYPE_COLOR,
-     1}, // gray lines (cheating)
+    {"automap.color[5]", (void*)0x00025F05, TYPE_COLOR, 1}, // gray lines (allmap)
+    {"automap.color[6]", (void*)0x00025EDA, TYPE_COLOR, 1}, // gray lines (cheating)
     {"automap.color[7]", (void*)0x00026147, TYPE_COLOR, 1}, // players
     {"automap.color[8]", (void*)0x00026352, TYPE_COLOR, 1}, // things
     // terminator
@@ -243,29 +234,20 @@ static uint32_t parse_value(config_entry_t* conf_def)
 					switch (conf->type)
 					{
 					case TYPE_U8:
-						if (doom_sscanf(kv, "%d",
-						                &value) == 1 &&
-						    value >= 0 && value < 256)
+						if (doom_sscanf(kv, "%d", &value) == 1 && value >= 0 && value < 256)
 							*conf->u8 = value;
 						break;
 					case TYPE_U16:
-						if (doom_sscanf(kv, "%d",
-						                &value) == 1 &&
-						    value >= 0 && value < 65535)
+						if (doom_sscanf(kv, "%d", &value) == 1 && value >= 0 && value < 65535)
 							*conf->u16 = value;
 						break;
 					case TYPE_S32:
-						if (doom_sscanf(kv, "%d",
-						                &value) == 1)
+						if (doom_sscanf(kv, "%d", &value) == 1)
 							*conf->s32 = value;
 						break;
 					case TYPE_COLOR:
-						if (doom_sscanf(kv, "%d",
-						                &value) == 1 &&
-						    value >= 0 && value < 65535)
-							*conf->u8 =
-							    r_find_color_4(
-								value);
+						if (doom_sscanf(kv, "%d", &value) == 1 && value >= 0 && value < 65535)
+							*conf->u8 = r_find_color_4(value);
 						break;
 					case TYPE_ALIAS:
 						*conf->u64 = tp_hash64(kv);
@@ -283,15 +265,11 @@ static uint32_t parse_value(config_entry_t* conf_def)
 						if (strlen(kv) != 16)
 							break;
 
-						if (doom_sscanf(kv + 8, "%X",
-						                tmp.aw + 0) !=
-						    1)
+						if (doom_sscanf(kv + 8, "%X", tmp.aw + 0) != 1)
 							break;
 
 						kv[8] = 0;
-						if (doom_sscanf(kv, "%X",
-						                tmp.aw + 1) !=
-						    1)
+						if (doom_sscanf(kv, "%X", tmp.aw + 1) != 1)
 							break;
 
 						*conf->u64 = tmp.alias;
@@ -305,12 +283,9 @@ static uint32_t parse_value(config_entry_t* conf_def)
 							*conf->ptrp = kw;
 							while (1)
 							{
-								uint8_t in =
-								    *kv++;
-								if (in >= 'A' &&
-								    in <= 'Z')
-									in |=
-									    0x20;
+								uint8_t in = *kv++;
+								if (in >= 'A' && in <= 'Z')
+									in |= 0x20;
 								*kw++ = in;
 								if (!in)
 									break;
@@ -505,8 +480,7 @@ static __attribute((regparm(2), no_caller_saved_registers)) void config_save()
 		{
 			// workaround for missing '%lX' support
 			uint64_t alias = *conf->u64;
-			doom_fprintf(f, "%08X%08X\n", (uint32_t)(alias >> 32),
-			             (uint32_t)alias);
+			doom_fprintf(f, "%08X%08X\n", (uint32_t)(alias >> 32), (uint32_t)alias);
 		}
 		break;
 		}
@@ -519,12 +493,11 @@ static __attribute((regparm(2), no_caller_saved_registers)) void config_save()
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// repace 'M_SaveDefaults'
-	{0x00024300, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)config_save},
-	// invert 'run key' logic (auto run)
-	{0x0001FBC5, CODE_HOOK | HOOK_UINT8, 0x01},
-	// new defaults
-	{0x0002B698, DATA_HOOK | HOOK_UINT32, 11}, // screenblocks
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // repace 'M_SaveDefaults'
+    {0x00024300, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)config_save},
+    // invert 'run key' logic (auto run)
+    {0x0001FBC5, CODE_HOOK | HOOK_UINT8, 0x01},
+    // new defaults
+    {0x0002B698, DATA_HOOK | HOOK_UINT32, 11}, // screenblocks
 };

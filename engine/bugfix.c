@@ -9,8 +9,7 @@
 
 //
 // hooks
-static const hook_t hooks[] __attribute__((used, section(".hooks"),
-                                           aligned(4))) = {
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
     // disable 'store demo' feature
     {0x0001D113, CODE_HOOK | HOOK_UINT16, 0x4CEB},
     // fix blaze door double closing sound

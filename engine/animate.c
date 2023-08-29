@@ -212,8 +212,7 @@ static switch_t* get_free_switch(uint16_t* dest, fixed_t x, fixed_t y)
 	return slot;
 }
 
-static uint32_t switch_line_texture(aswitch_t* swtch, uint16_t* dest,
-                                    uint32_t diff, int32_t state, line_t* line)
+static uint32_t switch_line_texture(aswitch_t* swtch, uint16_t* dest, uint32_t diff, int32_t state, line_t* line)
 {
 	animframe_t* frame;
 
@@ -243,10 +242,8 @@ static uint32_t switch_line_texture(aswitch_t* swtch, uint16_t* dest,
 		fixed_t x, y;
 
 		// get sound origin
-		x = line->bbox[BOXLEFT] +
-		    (line->bbox[BOXRIGHT] - line->bbox[BOXLEFT]) / 2;
-		y = line->bbox[BOXBOTTOM] +
-		    (line->bbox[BOXTOP] - line->bbox[BOXBOTTOM]) / 2;
+		x = line->bbox[BOXLEFT] + (line->bbox[BOXRIGHT] - line->bbox[BOXLEFT]) / 2;
+		y = line->bbox[BOXBOTTOM] + (line->bbox[BOXTOP] - line->bbox[BOXBOTTOM]) / 2;
 
 		// find switch slot
 		slot = get_free_switch(dest, x, y);
@@ -268,8 +265,7 @@ static uint32_t switch_line_texture(aswitch_t* swtch, uint16_t* dest,
 				slot->dest = dest;
 				slot->swtch = swtch;
 				slot->base = leveltime;
-				slot->delay =
-				    state ? BUTTON_TIME + swtch->tick_total : 0;
+				slot->delay = state ? BUTTON_TIME + swtch->tick_total : 0;
 				slot->animate = animate;
 			}
 
@@ -281,8 +277,7 @@ static uint32_t switch_line_texture(aswitch_t* swtch, uint16_t* dest,
 			if (!(state & 2))
 			{
 				slot->soundtick = BUTTON_SNDTICK;
-				S_StartSound((mobj_t*)&slot->soundorg,
-				             swtch->sound);
+				S_StartSound((mobj_t*)&slot->soundorg, swtch->sound);
 			}
 		}
 
@@ -312,8 +307,7 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 	uint8_t *kw, *name;
 	int32_t target;
 	uint32_t skip = 0;
-	int32_t (*get_pic)(const uint8_t*)
-	    __attribute((regparm(2), no_caller_saved_registers));
+	int32_t (*get_pic)(const uint8_t*) __attribute((regparm(2), no_caller_saved_registers));
 
 	while (1)
 	{
@@ -356,10 +350,7 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 			if (!kw)
 				goto error_end;
 			if (*((uint16_t*)kw) != 0x6E6F)
-				engine_error(
-				    "ANIMDEFS",
-				    "Expected keyword '%s' found '%s' in '%s'!",
-				    "on", kw, name);
+				engine_error("ANIMDEFS", "Expected keyword '%s' found '%s' in '%s'!", "on", kw, name);
 
 			// expecting 'pic' or 'sound'
 			kw = tp_get_keyword_lc();
@@ -382,10 +373,7 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 			}
 
 			if (strcmp(kw, kwl->pic))
-				engine_error(
-				    "ANIMDEFS",
-				    "Expected keyword '%s' found '%s' in '%s'!",
-				    "pic", kw, name);
+				engine_error("ANIMDEFS", "Expected keyword '%s' found '%s' in '%s'!", "pic", kw, name);
 
 			// switch
 			dest.swtch = switch_ptr;
@@ -411,10 +399,7 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 					goto error_end;
 				num = texture_num_check(kw);
 				if (num < 0)
-					engine_error(
-					    "ANIMDEFS",
-					    "Frame '%s' not found for '%s'\n",
-					    kw, name);
+					engine_error("ANIMDEFS", "Frame '%s' not found for '%s'\n", kw, name);
 
 				if (animations)
 				{
@@ -433,8 +418,7 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 				kw = tp_get_keyword();
 				if (!kw)
 					goto error_end;
-				if (doom_sscanf(kw, "%u", &num) != 1 ||
-				    num < 0) // zero can be used on last frame
+				if (doom_sscanf(kw, "%u", &num) != 1 || num < 0) // zero can be used on last frame
 					goto error_numeric;
 
 				// add this info
@@ -545,9 +529,8 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 					kw = tp_get_keyword();
 					if (!kw)
 						goto error_end;
-					if (doom_sscanf(kw, "%u", &num) != 1 ||
-					    num < 0) // zero can be used on last
-					             // frame
+					if (doom_sscanf(kw, "%u", &num) != 1 || num < 0) // zero can be used on last
+					                                                 // frame
 						goto error_numeric;
 
 					// add this info
@@ -573,12 +556,10 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 				{
 					dest.swtch->terminator = 0;
 					dest.swtch->count = count;
-					dest.swtch->target =
-					    skip; // this was stored above
+					dest.swtch->target = skip; // this was stored above
 					dest.swtch->tick_total = tick_total;
 					dest.swtch->sound = sound;
-					dest.swtch->reverse =
-					    reverse; // this was stored above
+					dest.swtch->reverse = reverse; // this was stored above
 				}
 			}
 			else
@@ -589,19 +570,16 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 				dest.swtch = switch_ptr;
 
 				// offset: header + frame
-				switch_ptr +=
-				    sizeof(aswitch_t) + sizeof(animframe_t);
+				switch_ptr += sizeof(aswitch_t) + sizeof(animframe_t);
 
 				if (animations)
 				{
 					dest.swtch->terminator = 0;
 					dest.swtch->count = 1;
-					dest.swtch->target =
-					    skip; // this was stored above
+					dest.swtch->target = skip; // this was stored above
 					dest.swtch->tick_total = 1;
 					dest.swtch->sound = sound;
-					dest.swtch->reverse =
-					    reverse; // this was stored above
+					dest.swtch->reverse = reverse; // this was stored above
 					dest.swtch->frame[0].tick = 0;
 					dest.swtch->frame[0].pic = target;
 				}
@@ -613,8 +591,7 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 		else
 		{
 			if (!skip && kw[0] && strcmp(kw, "allowdecals"))
-				engine_error("ANIMDEFS",
-				             "Invalid keyword '%s'!", kw);
+				engine_error("ANIMDEFS", "Invalid keyword '%s'!", kw);
 			continue;
 		}
 
@@ -654,8 +631,7 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 
 			num = get_pic(kw);
 			if (num <= target || num - target > 255)
-				engine_error("ANIMDEFS",
-				             "Invalid range in '%s'", name);
+				engine_error("ANIMDEFS", "Invalid range in '%s'", name);
 
 			num -= target;
 			num++;
@@ -674,8 +650,7 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 				goto error_numeric;
 
 			// offset: header
-			anim_ptr +=
-			    sizeof(anim_header_t) + sizeof(animt_range_t);
+			anim_ptr += sizeof(anim_header_t) + sizeof(animt_range_t);
 
 			// generate frames
 			if (animations)
@@ -691,11 +666,9 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 
 				// store animation info
 				if (get_pic == flat_num_check)
-					dest.anim->head.type =
-					    ANIM_TYPE_FLAT_RANGE;
+					dest.anim->head.type = ANIM_TYPE_FLAT_RANGE;
 				else
-					dest.anim->head.type =
-					    ANIM_TYPE_TEXTURE_RANGE;
+					dest.anim->head.type = ANIM_TYPE_TEXTURE_RANGE;
 				dest.anim->head.target = target;
 				dest.anim->head.count = num;
 				dest.anim->range.tics = tics;
@@ -716,8 +689,7 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 			count = 0;
 
 			// offset: header
-			anim_ptr +=
-			    sizeof(anim_header_t) + sizeof(animt_single_t);
+			anim_ptr += sizeof(anim_header_t) + sizeof(animt_single_t);
 
 			// parse all frames
 			while (1)
@@ -734,10 +706,7 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 					goto error_end;
 				num = get_pic(kw);
 				if (num < 0)
-					engine_error(
-					    "ANIMDEFS",
-					    "Frame '%s' not found for '%s'\n",
-					    kw, name);
+					engine_error("ANIMDEFS", "Frame '%s' not found for '%s'\n", kw, name);
 
 				if (animations)
 				{
@@ -756,8 +725,7 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 				kw = tp_get_keyword();
 				if (!kw)
 					goto error_end;
-				if (doom_sscanf(kw, "%u", &num) != 1 ||
-				    num <= 0)
+				if (doom_sscanf(kw, "%u", &num) != 1 || num <= 0)
 					goto error_numeric;
 
 				// add this info
@@ -788,11 +756,9 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 			if (animations)
 			{
 				if (get_pic == flat_num_check)
-					dest.anim->head.type =
-					    ANIM_TYPE_FLAT_SINGLE;
+					dest.anim->head.type = ANIM_TYPE_FLAT_SINGLE;
 				else
-					dest.anim->head.type =
-					    ANIM_TYPE_TEXTURE_SINGLE;
+					dest.anim->head.type = ANIM_TYPE_TEXTURE_SINGLE;
 				dest.anim->head.target = target;
 				dest.anim->head.count = count;
 				dest.anim->single.tick_total = tick_total;
@@ -801,20 +767,15 @@ static void parse_animdefs(const anim_kw_list_t* kwl)
 			goto continue_keyword;
 		}
 
-		engine_error(
-		    "ANIMDEFS",
-		    "Expected keyword 'pic' or 'range' found '%s' in '%s'!", kw,
-		    name);
+		engine_error("ANIMDEFS", "Expected keyword 'pic' or 'range' found '%s' in '%s'!", kw, name);
 	}
 
 error_end:
 	engine_error("ANIMDEFS", "Incomplete definition!");
 error_tics:
-	engine_error("ANIMDEFS", "Expected keyword '%s' found '%s' in '%s'!",
-	             "tics", kw, name);
+	engine_error("ANIMDEFS", "Expected keyword '%s' found '%s' in '%s'!", "tics", kw, name);
 error_numeric:
-	engine_error("ANIMDEFS", "Unable to parse number '%s' in '%s'!", kw,
-	             name);
+	engine_error("ANIMDEFS", "Unable to parse number '%s' in '%s'!", kw, name);
 error_tic_count:
 	engine_error("ANIMDEFS", "Bad tick count for '%s'!", name);
 error_anim_count:
@@ -824,8 +785,7 @@ error_anim_count:
 //
 // hooks
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-do_line_switch(line_t* ln, uint32_t repeat)
+__attribute((regparm(2), no_caller_saved_registers)) void do_line_switch(line_t* ln, uint32_t repeat)
 {
 	void* ptr = switch_ptr;
 	side_t* side = sides + ln->sidenum[(repeat >> 1) & 1];
@@ -846,20 +806,17 @@ do_line_switch(line_t* ln, uint32_t repeat)
 		// check all textures
 		if (swtch->target == side->toptexture)
 		{
-			switch_line_texture(swtch, &side->toptexture, 0, repeat,
-			                    ln);
+			switch_line_texture(swtch, &side->toptexture, 0, repeat, ln);
 			break;
 		}
 		else if (swtch->target == side->midtexture)
 		{
-			switch_line_texture(swtch, &side->midtexture, 0, repeat,
-			                    ln);
+			switch_line_texture(swtch, &side->midtexture, 0, repeat, ln);
 			break;
 		}
 		else if (swtch->target == side->bottomtexture)
 		{
-			switch_line_texture(swtch, &side->bottomtexture, 0,
-			                    repeat, ln);
+			switch_line_texture(swtch, &side->bottomtexture, 0, repeat, ln);
 			break;
 		}
 	}
@@ -951,8 +908,7 @@ void animate_step()
 			animframe_t* frame;
 
 			// pointer offset
-			ptr += sizeof(anim_header_t) + sizeof(animt_single_t) +
-			       anim->head.count * sizeof(animframe_t);
+			ptr += sizeof(anim_header_t) + sizeof(animt_single_t) + anim->head.count * sizeof(animframe_t);
 
 			// tick offset
 			tick_offs = leveltime % anim->single.tick_total;
@@ -969,8 +925,7 @@ void animate_step()
 			if (anim->head.type == ANIM_TYPE_FLAT_SINGLE)
 				flattranslation[anim->head.target] = frame->pic;
 			else
-				texturetranslation[anim->head.target] =
-				    frame->pic;
+				texturetranslation[anim->head.target] = frame->pic;
 		}
 		break;
 		case ANIM_TYPE_FLAT_RANGE:
@@ -980,20 +935,16 @@ void animate_step()
 			uint32_t offset = leveltime / anim->range.tics;
 
 			// pointer offset
-			ptr += sizeof(anim_header_t) + sizeof(animt_range_t) +
-			       (count * 2 - 1) * sizeof(uint16_t);
+			ptr += sizeof(anim_header_t) + sizeof(animt_range_t) + (count * 2 - 1) * sizeof(uint16_t);
 
-			for (uint32_t i = anim->head.target;
-			     i < anim->head.target + anim->head.count; i++)
+			for (uint32_t i = anim->head.target; i < anim->head.target + anim->head.count; i++)
 			{
 				uint32_t idx = (offset + i) % anim->head.count;
 
 				if (anim->head.type == ANIM_TYPE_FLAT_RANGE)
-					flattranslation[i] =
-					    anim->range.pic[idx];
+					flattranslation[i] = anim->range.pic[idx];
 				else
-					texturetranslation[i] =
-					    anim->range.pic[idx];
+					texturetranslation[i] = anim->range.pic[idx];
 			}
 		}
 		break;
@@ -1027,17 +978,15 @@ void animate_step()
 			active->dest = NULL;
 
 			// use reverse animation
-			switch_line_texture(active->swtch->reverse, dest, 0, 0,
-			                    active->line);
+			switch_line_texture(active->swtch->reverse, dest, 0, 0, active->line);
 
 			return;
 		}
 
 		if (active->animate)
 		{
-			active->animate = switch_line_texture(
-			    active->swtch, active->dest,
-			    leveltime - active->base, -1, NULL);
+			active->animate =
+			    switch_line_texture(active->swtch, active->dest, leveltime - active->base, -1, NULL);
 			if (!active->animate && !active->delay)
 				active->dest = NULL;
 		}
@@ -1092,10 +1041,7 @@ uint16_t anim_switch_type(switch_t* slot)
 	return 0;
 }
 
-uint64_t anim_switch_texture(switch_t* slot)
-{
-	return texture_get_name(slot->swtch->target);
-}
+uint64_t anim_switch_texture(switch_t* slot) { return texture_get_name(slot->swtch->target); }
 
 switch_t* anim_switch_make(uint16_t type, line_t* line, uint64_t wame)
 {
@@ -1185,12 +1131,11 @@ switch_t* anim_switch_make(uint16_t type, line_t* line, uint64_t wame)
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// disable call to 'P_InitSwitchList' in 'P_Init'
-	{0x0002E9A0, CODE_HOOK | HOOK_SET_NOPS, 5},
-	// disable call to 'P_InitPicAnims' in 'P_Init'
-	{0x0002E9A5, CODE_HOOK | HOOK_SET_NOPS, 5},
-	// replace 'P_ChangeSwitchTexture'
-	{0x00030310, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)do_line_switch},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // disable call to 'P_InitSwitchList' in 'P_Init'
+    {0x0002E9A0, CODE_HOOK | HOOK_SET_NOPS, 5},
+    // disable call to 'P_InitPicAnims' in 'P_Init'
+    {0x0002E9A5, CODE_HOOK | HOOK_SET_NOPS, 5},
+    // replace 'P_ChangeSwitchTexture'
+    {0x00030310, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)do_line_switch},
 };

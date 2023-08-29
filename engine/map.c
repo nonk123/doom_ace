@@ -153,43 +153,22 @@ static map_level_t map_info_default;
 
 // map attributes
 static const map_attr_t map_attr[] = {
-    {.name = "levelnum",
-     .type = IT_U8,
-     .offset = offsetof(map_level_t, levelnum)},
-    {.name = "cluster",
-     .type = IT_U8,
-     .offset = offsetof(map_level_t, cluster)},
+    {.name = "levelnum", .type = IT_U8, .offset = offsetof(map_level_t, levelnum)},
+    {.name = "cluster", .type = IT_U8, .offset = offsetof(map_level_t, cluster)},
     {.name = "par", .type = IT_U16, .offset = offsetof(map_level_t, par_time)},
-    {.name = "titlepatch",
-     .type = IT_PATCH,
-     .offset = offsetof(map_level_t, title_lump)},
-    {.name = "music",
-     .type = IT_MUSIC,
-     .offset = offsetof(map_level_t, music_level)},
-    {.name = "intermusic",
-     .type = IT_MUSIC,
-     .offset = offsetof(map_level_t, music_inter)},
-    {.name = "sky1",
-     .type = IT_TEXTURE,
-     .offset = offsetof(map_level_t, texture_sky[0])},
-    {.name = "sky2",
-     .type = IT_TEXTURE,
-     .offset = offsetof(map_level_t, texture_sky[1])},
-    {.name = "next",
-     .type = IT_MAP,
-     .offset = offsetof(map_level_t, next_normal)},
-    {.name = "secretnext",
-     .type = IT_MAP,
-     .offset = offsetof(map_level_t, next_secret)},
+    {.name = "titlepatch", .type = IT_PATCH, .offset = offsetof(map_level_t, title_lump)},
+    {.name = "music", .type = IT_MUSIC, .offset = offsetof(map_level_t, music_level)},
+    {.name = "intermusic", .type = IT_MUSIC, .offset = offsetof(map_level_t, music_inter)},
+    {.name = "sky1", .type = IT_TEXTURE, .offset = offsetof(map_level_t, texture_sky[0])},
+    {.name = "sky2", .type = IT_TEXTURE, .offset = offsetof(map_level_t, texture_sky[1])},
+    {.name = "next", .type = IT_MAP, .offset = offsetof(map_level_t, next_normal)},
+    {.name = "secretnext", .type = IT_MAP, .offset = offsetof(map_level_t, next_secret)},
     // flags
     {.name = "nointermission",
      .type = IT_FLAG,
      .offset = offsetof(map_level_t, flags),
      .flag = MAP_FLAG_NO_INTERMISSION},
-    {.name = "fallingdamage",
-     .type = IT_FLAG,
-     .offset = offsetof(map_level_t, flags),
-     .flag = MAP_FLAG_FALLING_DAMAGE},
+    {.name = "fallingdamage", .type = IT_FLAG, .offset = offsetof(map_level_t, flags), .flag = MAP_FLAG_FALLING_DAMAGE},
     {.name = "monsterfallingdamage",
      .type = IT_FLAG,
      .offset = offsetof(map_level_t, flags),
@@ -198,22 +177,13 @@ static const map_attr_t map_attr[] = {
      .type = IT_FLAG,
      .offset = offsetof(map_level_t, flags),
      .flag = MAP_FLAG_MONSTER_FALL_DMG},
-    {.name = "nofreelook",
-     .type = IT_FLAG,
-     .offset = offsetof(map_level_t, flags),
-     .flag = MAP_FLAG_NO_FREELOOK},
+    {.name = "nofreelook", .type = IT_FLAG, .offset = offsetof(map_level_t, flags), .flag = MAP_FLAG_NO_FREELOOK},
     //	{.name = "filterstarts", .type = IT_FLAG, .offset =
     // offsetof(map_level_t, flags), .flag = MAP_FLAG_FILTER_STARTS},
     //	{.name = "useplayerstartz", .type = IT_FLAG, .offset =
     // offsetof(map_level_t, flags), .flag = MAP_FLAG_USE_PLAYER_START_Z},
-    {.name = "allowrespawn",
-     .type = IT_FLAG,
-     .offset = offsetof(map_level_t, flags),
-     .flag = MAP_FLAG_ALLOW_RESPAWN},
-    {.name = "noinfighting",
-     .type = IT_FLAG,
-     .offset = offsetof(map_level_t, flags),
-     .flag = MAP_FLAG_NO_INFIGHTING},
+    {.name = "allowrespawn", .type = IT_FLAG, .offset = offsetof(map_level_t, flags), .flag = MAP_FLAG_ALLOW_RESPAWN},
+    {.name = "noinfighting", .type = IT_FLAG, .offset = offsetof(map_level_t, flags), .flag = MAP_FLAG_NO_INFIGHTING},
     {.name = "totalinfighting",
      .type = IT_FLAG,
      .offset = offsetof(map_level_t, flags),
@@ -238,55 +208,38 @@ static const map_attr_t map_attr[] = {
     {.name = NULL}};
 // cluster attributes
 static const map_attr_t clst_attr[] = {
-    {.name = "music",
-     .type = IT_MUSIC,
-     .offset = offsetof(map_cluster_t, lump_music)},
-    {.name = "flat",
-     .type = IT_FLAT_LUMP,
-     .offset = offsetof(map_cluster_t, lump_flat)},
-    {.name = "entertext",
-     .type = IT_TEXT_CHAIN,
-     .offset = offsetof(map_cluster_t, text_enter)},
-    {.name = "exittext",
-     .type = IT_TEXT_CHAIN,
-     .offset = offsetof(map_cluster_t, text_leave)},
-    {.name = "hub",
-     .type = IT_FLAG,
-     .offset = offsetof(map_cluster_t, flags),
-     .flag = CLST_FLAG_HUB},
+    {.name = "music", .type = IT_MUSIC, .offset = offsetof(map_cluster_t, lump_music)},
+    {.name = "flat", .type = IT_FLAT_LUMP, .offset = offsetof(map_cluster_t, lump_flat)},
+    {.name = "entertext", .type = IT_TEXT_CHAIN, .offset = offsetof(map_cluster_t, text_enter)},
+    {.name = "exittext", .type = IT_TEXT_CHAIN, .offset = offsetof(map_cluster_t, text_leave)},
+    {.name = "hub", .type = IT_FLAG, .offset = offsetof(map_cluster_t, flags), .flag = CLST_FLAG_HUB},
     // terminator
     {.name = NULL}};
 // episode attributes
 static const map_attr_t epi_attr[] = {
-    {.name = "picname",
-     .type = IT_PATCH,
-     .offset = offsetof(map_episode_t, title_lump)},
-    {.name = "noskillmenu",
-     .type = IT_FLAG,
-     .offset = offsetof(map_episode_t, flags),
-     .flag = EPI_FLAG_NO_SKILL_MENU},
+    {.name = "picname", .type = IT_PATCH, .offset = offsetof(map_episode_t, title_lump)},
+    {.name = "noskillmenu", .type = IT_FLAG, .offset = offsetof(map_episode_t, flags), .flag = EPI_FLAG_NO_SKILL_MENU},
     // terminator
     {.name = NULL}};
 
 // LOCKDEFS parser
-static const lockdefs_kw_list_t lockdefs_kw_list[] = {
-    {
-	.lock = "l",
-	.any = "a",
-	.message = "m",
-	.msg_data = "g",
-	.remote = "r",
-	.rmt_data = "h",
-	.mapcolor = "c",
-    },
-    {
-	.lock = "lock",
-	.any = "any",
-	.message = "message",
-	.remote = "remotemessage",
-	.mapcolor = "mapcolor",
-	.sound = "lockedsound",
-    }};
+static const lockdefs_kw_list_t lockdefs_kw_list[] = {{
+							  .lock = "l",
+							  .any = "a",
+							  .message = "m",
+							  .msg_data = "g",
+							  .remote = "r",
+							  .rmt_data = "h",
+							  .mapcolor = "c",
+						      },
+                                                      {
+							  .lock = "lock",
+							  .any = "any",
+							  .message = "message",
+							  .remote = "remotemessage",
+							  .mapcolor = "mapcolor",
+							  .sound = "lockedsound",
+						      }};
 
 //
 
@@ -299,8 +252,7 @@ static const hook_t patch_hexen[];
 //
 // line scroller
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-think_line_scroll(line_scroll_t* ls)
+__attribute((regparm(2), no_caller_saved_registers)) void think_line_scroll(line_scroll_t* ls)
 {
 	side_t* side = sides + ls->line->sidenum[0];
 	side->textureoffset += (fixed_t)ls->x * (FRACUNIT / 64);
@@ -451,8 +403,7 @@ static void spawn_map_thing(map_thinghex_t* mt, mapthing_t* ot)
 		playerstarts[idx].type = mt->type;
 		playerstarts[idx].options = mt->arg[0];
 		if (!deathmatch && map_skip_stuff != 1)
-			mobj_spawn_player(idx, mt->x * FRACUNIT,
-			                  mt->y * FRACUNIT, angle);
+			mobj_spawn_player(idx, mt->x * FRACUNIT, mt->y * FRACUNIT, angle);
 
 		return;
 	}
@@ -507,23 +458,20 @@ static void spawn_map_thing(map_thinghex_t* mt, mapthing_t* ot)
 	           ))
 	{
 		subsector_t* ss;
-		ss = R_PointInSubsector((fixed_t)mt->x << FRACBITS,
-		                        (fixed_t)mt->y << FRACBITS);
+		ss = R_PointInSubsector((fixed_t)mt->x << FRACBITS, (fixed_t)mt->y << FRACBITS);
 		switch (mt->type)
 		{
 		case 1411:
 			ss->sector->sndseq = mt->arg[0];
 			break;
 		case 9038:
-			ss->sector->extra->color =
-			    (mt->arg[0] >> 4) | (mt->arg[1] & 0xF0) |
-			    ((uint16_t)(mt->arg[2] & 0xF0) << 4) |
-			    ((uint16_t)(mt->arg[3] & 0xF0) << 8);
+			ss->sector->extra->color = (mt->arg[0] >> 4) | (mt->arg[1] & 0xF0) |
+			                           ((uint16_t)(mt->arg[2] & 0xF0) << 4) |
+			                           ((uint16_t)(mt->arg[3] & 0xF0) << 8);
 			break;
 		case 9039:
 			ss->sector->extra->fade =
-			    (mt->arg[0] >> 4) | (mt->arg[1] & 0xF0) |
-			    ((uint16_t)(mt->arg[2] & 0xF0) << 4);
+			    (mt->arg[0] >> 4) | (mt->arg[1] & 0xF0) | ((uint16_t)(mt->arg[2] & 0xF0) << 4);
 			break;
 		}
 		return;
@@ -561,8 +509,8 @@ static void spawn_map_thing(map_thinghex_t* mt, mapthing_t* ot)
 		info = mobjinfo + info->replacement;
 
 	// doom map format, coop, only monsters (and keys, lol)
-	if (ot && netgame && !deathmatch && ot->options & 16 &&
-	    !(info->flags1 & MF1_ISMONSTER) && info->extra_type != ETYPE_KEY)
+	if (ot && netgame && !deathmatch && ot->options & 16 && !(info->flags1 & MF1_ISMONSTER) &&
+	    info->extra_type != ETYPE_KEY)
 		return;
 
 	// 'not in deathmatch'
@@ -613,8 +561,7 @@ static void spawn_map_thing(map_thinghex_t* mt, mapthing_t* ot)
 		{
 			if (mo->info->st_switchable.inactive)
 			{
-				state_t* st =
-				    states + mo->info->st_switchable.inactive;
+				state_t* st = states + mo->info->st_switchable.inactive;
 				mo->state = st;
 				mo->sprite = st->sprite;
 				mo->frame = st->frame;
@@ -644,8 +591,8 @@ static void spawn_map_thing(map_thinghex_t* mt, mapthing_t* ot)
 	}
 	mo->special.tid = mt->tid;
 
-	if (hack == 9044 || hack == 9001 || hack == 9025 || hack == 9070 ||
-	    hack == 9071 || hack == 9072 || hack == 9074)
+	if (hack == 9044 || hack == 9001 || hack == 9025 || hack == 9070 || hack == 9071 || hack == 9072 ||
+	    hack == 9074)
 		mo->flags |= MF_NOGRAVITY;
 
 	if (hack == 9997)
@@ -760,8 +707,7 @@ static inline void load_nodes(int32_t map_lump)
 	// ssectors
 	numsubsectors = *((uint32_t*)xnod_ptr);
 	xnod_ptr += sizeof(uint32_t);
-	subsectors =
-	    Z_Malloc(numsubsectors * sizeof(subsector_t), PU_LEVEL, NULL);
+	subsectors = Z_Malloc(numsubsectors * sizeof(subsector_t), PU_LEVEL, NULL);
 	count = 0;
 	for (uint32_t i = 0; i < numsubsectors; i++)
 	{
@@ -793,8 +739,7 @@ static inline void load_nodes(int32_t map_lump)
 		side = *((uint8_t*)xnod_ptr);
 		xnod_ptr += sizeof(uint8_t);
 
-		seg->angle = R_PointToAngle2(seg->v1->x, seg->v1->y, seg->v2->x,
-		                             seg->v2->y);
+		seg->angle = R_PointToAngle2(seg->v1->x, seg->v1->y, seg->v2->x, seg->v2->y);
 		seg->offset = seg_offset(seg->v1, (side ? line->v2 : line->v1));
 
 		seg->linedef = line;
@@ -838,8 +783,7 @@ extra_ssec:
 	// allocate extra subsector info
 	// NOTE: this should be part of 'subsector_t' but extending struct size
 	// in EXE hack is ... tedious
-	e_subsectors =
-	    Z_Malloc(numsubsectors * sizeof(subsector_extra_t), PU_LEVEL, NULL);
+	e_subsectors = Z_Malloc(numsubsectors * sizeof(subsector_extra_t), PU_LEVEL, NULL);
 	memset(e_subsectors, 0, numsubsectors * sizeof(subsector_extra_t));
 }
 
@@ -862,8 +806,7 @@ uint32_t map_check_lump(int32_t lump)
 
 	lump++;
 
-	if (lump < numlumps &&
-	    lumpinfo[lump].wame == map_wame_check[ML_BEHAVIOR - 1])
+	if (lump < numlumps && lumpinfo[lump].wame == map_wame_check[ML_BEHAVIOR - 1])
 		return MAP_FORMAT_HEXEN;
 
 	return MAP_FORMAT_DOOM;
@@ -955,19 +898,15 @@ static inline void parse_sectors()
 			if (map_format != MAP_FORMAT_DOOM)
 			{
 				// check for plane links
-				if (li->frontsector == sec &&
-				    li->special == 51 // Sector_SetLink
+				if (li->frontsector == sec && li->special == 51 // Sector_SetLink
 				)
 				{
-					if (li->arg0 || !li->arg1 ||
-					    li->arg1 == li->frontsector->tag ||
-					    !li->arg3 || li->arg3 & 0xFC)
-						engine_error(
-						    "MAP", "Invalid use of "
-							   "'Sector_SetLink'!");
+					if (li->arg0 || !li->arg1 || li->arg1 == li->frontsector->tag || !li->arg3 ||
+					    li->arg3 & 0xFC)
+						engine_error("MAP", "Invalid use of "
+						                    "'Sector_SetLink'!");
 
-					for (uint32_t k = 0; k < numsectors;
-					     k++)
+					for (uint32_t k = 0; k < numsectors; k++)
 					{
 						if (sectors[k].tag == li->arg1)
 							plink_count++;
@@ -981,31 +920,24 @@ static inline void parse_sectors()
 			plane_link_t* plink;
 
 			plink_count++;
-			plink = Z_Malloc(plink_count * sizeof(plane_link_t),
-			                 PU_LEVEL, NULL);
+			plink = Z_Malloc(plink_count * sizeof(plane_link_t), PU_LEVEL, NULL);
 			se->plink = plink;
 
 			for (uint32_t j = 0; j < sec->linecount; j++)
 			{
 				line_t* li = sec->lines[j];
 
-				if (li->frontsector == sec &&
-				    li->special == 51 // Sector_SetLink
+				if (li->frontsector == sec && li->special == 51 // Sector_SetLink
 				)
 				{
-					for (uint32_t k = 0; k < numsectors;
-					     k++)
+					for (uint32_t k = 0; k < numsectors; k++)
 					{
 						if (sectors[k].tag == li->arg1)
 						{
-							plink->target =
-							    sectors + k;
-							plink->use_ceiling =
-							    li->arg2 > 0;
-							plink->link_floor =
-							    li->arg3 & 1;
-							plink->link_ceiling =
-							    li->arg3 & 2;
+							plink->target = sectors + k;
+							plink->use_ceiling = li->arg2 > 0;
+							plink->link_floor = li->arg3 & 1;
+							plink->link_ceiling = li->arg3 & 2;
 							plink++;
 						}
 					}
@@ -1285,8 +1217,7 @@ uint32_t map_load_setup(uint32_t new_game)
 	map_format = map_check_lump(map_lump_idx);
 	if (!map_format)
 		goto map_load_error;
-	doom_printf("[MAP] %s map format\n",
-	            map_format == MAP_FORMAT_DOOM ? "Doom" : "Hexen");
+	doom_printf("[MAP] %s map format\n", map_format == MAP_FORMAT_DOOM ? "Doom" : "Hexen");
 
 	// setup level info
 	map_level_info = map_get_info(map_lump_idx);
@@ -1363,8 +1294,7 @@ uint32_t map_load_setup(uint32_t new_game)
 
 	// reject
 	if (W_LumpLength(map_lump_idx + ML_REJECT))
-		rejectmatrix =
-		    W_CacheLumpNum(map_lump_idx + ML_REJECT, PU_LEVEL);
+		rejectmatrix = W_CacheLumpNum(map_lump_idx + ML_REJECT, PU_LEVEL);
 	else
 		rejectmatrix = NULL;
 
@@ -1457,8 +1387,7 @@ map_load_error:
 //
 // hooks
 
-__attribute((regparm(2), no_caller_saved_registers)) static uint32_t
-check_door_key(line_t* line, mobj_t* mo)
+__attribute((regparm(2), no_caller_saved_registers)) static uint32_t check_door_key(line_t* line, mobj_t* mo)
 {
 	player_t* pl = mo->player;
 	uint16_t k0, k1;
@@ -1506,8 +1435,7 @@ check_door_key(line_t* line, mobj_t* mo)
 	return 0;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) uint32_t
-check_obj_key(line_t* line, mobj_t* mo)
+__attribute((regparm(2), no_caller_saved_registers)) uint32_t check_obj_key(line_t* line, mobj_t* mo)
 {
 	player_t* pl = mo->player;
 	uint16_t k0, k1;
@@ -1608,8 +1536,7 @@ void map_start_title()
 //
 // default map setup
 
-static void setup_episode(uint32_t start, uint32_t episode, uint32_t secret,
-                          uint8_t** names)
+static void setup_episode(uint32_t start, uint32_t episode, uint32_t secret, uint8_t** names)
 {
 	uint8_t text[12];
 
@@ -1632,8 +1559,7 @@ static void setup_episode(uint32_t start, uint32_t episode, uint32_t secret,
 		info->texture_sky[0] = texture_num_get(text);
 		info->texture_sky[1] = info->texture_sky[0];
 
-		doom_sprintf(text, dtxt_mus_pfx,
-		             S_music[(episode - 1) * 9 + i + 1].name);
+		doom_sprintf(text, dtxt_mus_pfx, S_music[(episode - 1) * 9 + i + 1].name);
 		info->music_level = wad_check_lump(text);
 		info->music_inter = map_info_unnamed.music_inter;
 		info->par_time = pars[info->levelnum + 10];
@@ -1650,15 +1576,12 @@ static void setup_episode(uint32_t start, uint32_t episode, uint32_t secret,
 			switch (episode)
 			{
 			case 1:
-				info->win_lump[0] =
-				    W_CheckNumForName(dtxt_help2);
+				info->win_lump[0] = W_CheckNumForName(dtxt_help2);
 				if (info->win_lump[0] < 0)
-					info->win_lump[0] = W_CheckNumForName(
-					    "CREDIT"); // retail
+					info->win_lump[0] = W_CheckNumForName("CREDIT"); // retail
 				break;
 			case 2:
-				info->win_lump[0] =
-				    W_CheckNumForName(dtxt_victory2);
+				info->win_lump[0] = W_CheckNumForName(dtxt_victory2);
 				break;
 			case 3:
 				victory = MAP_END_BUNNY_SCROLL;
@@ -1680,8 +1603,7 @@ static void setup_episode(uint32_t start, uint32_t episode, uint32_t secret,
 	}
 }
 
-static void setup_cluster(uint32_t start, uint32_t count, uint32_t cluster,
-                          uint32_t sky)
+static void setup_cluster(uint32_t start, uint32_t count, uint32_t cluster, uint32_t sky)
 {
 	uint8_t text[12];
 
@@ -1783,9 +1705,7 @@ static uint32_t parse_attributes(const map_attr_t* attr_def, void* dest)
 			if (!kw)
 				return 1;
 			if (kw[0] != '=')
-				engine_error("ZMAPINFO",
-				             "Expected '%c' found '%s'!", '=',
-				             kw);
+				engine_error("ZMAPINFO", "Expected '%c' found '%s'!", '=', kw);
 		}
 
 		switch (attr->type)
@@ -1795,9 +1715,7 @@ static uint32_t parse_attributes(const map_attr_t* attr_def, void* dest)
 			if (!kw)
 				return 1;
 			if (doom_sscanf(kw, "%u", &value) != 1 || value > 255)
-				engine_error("ZMAPINFO",
-				             "Unable to parse number '%s'!",
-				             kw);
+				engine_error("ZMAPINFO", "Unable to parse number '%s'!", kw);
 			*((uint8_t*)(dest + attr->offset)) = value;
 			break;
 		case IT_U16:
@@ -1805,9 +1723,7 @@ static uint32_t parse_attributes(const map_attr_t* attr_def, void* dest)
 			if (!kw)
 				return 1;
 			if (doom_sscanf(kw, "%u", &value) != 1 || value > 65535)
-				engine_error("ZMAPINFO",
-				             "Unable to parse number '%s'!",
-				             kw);
+				engine_error("ZMAPINFO", "Unable to parse number '%s'!", kw);
 			*((uint16_t*)(dest + attr->offset)) = value;
 			break;
 		case IT_MUSIC:
@@ -1822,15 +1738,13 @@ static uint32_t parse_attributes(const map_attr_t* attr_def, void* dest)
 			kw = tp_get_keyword();
 			if (!kw)
 				return 1;
-			*((int32_t*)(dest + attr->offset)) =
-			    flatlump[flat_num_get(kw)];
+			*((int32_t*)(dest + attr->offset)) = flatlump[flat_num_get(kw)];
 			break;
 		case IT_TEXTURE:
 			kw = tp_get_keyword();
 			if (!kw)
 				return 1;
-			*((uint16_t*)(dest + attr->offset)) =
-			    texture_num_get(kw);
+			*((uint16_t*)(dest + attr->offset)) = texture_num_get(kw);
 			break;
 		case IT_MAP:
 		{
@@ -1843,25 +1757,19 @@ static uint32_t parse_attributes(const map_attr_t* attr_def, void* dest)
 			if (!strcmp("endpic", kw))
 			{
 				map_level_t* info = dest;
-				uint32_t is_secret =
-				    attr->offset ==
-				    offsetof(map_level_t, next_secret);
+				uint32_t is_secret = attr->offset == offsetof(map_level_t, next_secret);
 
 				kw = tp_get_keyword_lc();
 				if (!kw)
 					return 1;
 				if (kw[0] != ',')
-					engine_error(
-					    "ZMAPINFO",
-					    "Expected '%c' found '%s'!", ',',
-					    kw);
+					engine_error("ZMAPINFO", "Expected '%c' found '%s'!", ',', kw);
 
 				kw = tp_get_keyword_lc();
 				if (!kw)
 					return 1;
 
-				next = is_secret ? MAP_END_CUSTOM_PIC_S
-				                 : MAP_END_CUSTOM_PIC_N;
+				next = is_secret ? MAP_END_CUSTOM_PIC_S : MAP_END_CUSTOM_PIC_N;
 				info->win_lump[is_secret] = wad_check_lump(kw);
 			}
 			else if (!strcmp("endgamec", kw))
@@ -1941,8 +1849,7 @@ static uint32_t parse_attributes(const map_attr_t* attr_def, void* dest)
 //
 // LOCKDEFS
 
-static uint16_t* lockdefs_add_text(uint16_t* bptr, uint16_t* end, uint8_t* text,
-                                   uint16_t code)
+static uint16_t* lockdefs_add_text(uint16_t* bptr, uint16_t* end, uint8_t* text, uint16_t code)
 {
 	uint32_t len;
 
@@ -1986,17 +1893,14 @@ static void parse_lockdefs(const lockdefs_kw_list_t* kwl)
 				goto error_end;
 
 			if (doom_sscanf(kw, "%u", &id) != 1 || !id || id > 255)
-				engine_error("LOCKDEFS",
-				             "Invalid lock ID '%s'!", kw);
+				engine_error("LOCKDEFS", "Invalid lock ID '%s'!", kw);
 
 			kw = tp_get_keyword();
 			if (!kw)
 				goto error_end;
 
 			if (kw[0] != '{')
-				engine_error("LOCKDEFS",
-				             "Expected '%c' found '%s'!", '{',
-				             kw);
+				engine_error("LOCKDEFS", "Expected '%c' found '%s'!", '{', kw);
 
 			bptr = buffer;
 			ld.id = id;
@@ -2012,35 +1916,27 @@ static void parse_lockdefs(const lockdefs_kw_list_t* kwl)
 				if (kw[0] == '}')
 					break;
 
-				if (!strcasecmp(kw, kwl->message) ||
-				    !strcasecmp(kw, kwl->remote))
+				if (!strcasecmp(kw, kwl->message) || !strcasecmp(kw, kwl->remote))
 				{
 					uint16_t* ret;
-					uint16_t code = kw[0] == kwl->message[0]
-					                    ? KEYLOCK_MESSAGE
-					                    : KEYLOCK_REMTMSG;
+					uint16_t code = kw[0] == kwl->message[0] ? KEYLOCK_MESSAGE : KEYLOCK_REMTMSG;
 
 					kw = tp_get_keyword();
 					if (!kw)
 						goto error_end;
 
-					ret = lockdefs_add_text(
-					    bptr, buffer + 256, kw, code);
+					ret = lockdefs_add_text(bptr, buffer + 256, kw, code);
 					if (!ret)
 						goto error_overflow;
 
 					bptr = ret;
 				}
 				else if (kwl->msg_data &&
-				         (!strcasecmp(kw, kwl->msg_data) ||
-				          !strcasecmp(kw, kwl->rmt_data)))
+				         (!strcasecmp(kw, kwl->msg_data) || !strcasecmp(kw, kwl->rmt_data)))
 				{
 					uint16_t* ret;
 					uint32_t addr;
-					uint16_t code =
-					    kw[0] == kwl->msg_data[0]
-						? KEYLOCK_MESSAGE
-						: KEYLOCK_REMTMSG;
+					uint16_t code = kw[0] == kwl->msg_data[0] ? KEYLOCK_MESSAGE : KEYLOCK_REMTMSG;
 
 					kw = tp_get_keyword();
 					if (!kw)
@@ -2048,10 +1944,8 @@ static void parse_lockdefs(const lockdefs_kw_list_t* kwl)
 
 					doom_sscanf(kw, "%X", &addr);
 
-					ret = lockdefs_add_text(
-					    bptr, buffer + 256,
-					    (uint8_t*)addr + doom_data_segment,
-					    code);
+					ret = lockdefs_add_text(bptr, buffer + 256, (uint8_t*)addr + doom_data_segment,
+					                        code);
 					if (!ret)
 						goto error_overflow;
 
@@ -2065,30 +1959,26 @@ static void parse_lockdefs(const lockdefs_kw_list_t* kwl)
 					if (!kw)
 						goto error_end;
 
-					if (doom_sscanf(kw, "%u", &r) != 1 ||
-					    r > 255)
+					if (doom_sscanf(kw, "%u", &r) != 1 || r > 255)
 						goto error_value;
 
 					kw = tp_get_keyword();
 					if (!kw)
 						goto error_end;
 
-					if (doom_sscanf(kw, "%u", &g) != 1 ||
-					    g > 255)
+					if (doom_sscanf(kw, "%u", &g) != 1 || g > 255)
 						goto error_value;
 
 					kw = tp_get_keyword();
 					if (!kw)
 						goto error_end;
 
-					if (doom_sscanf(kw, "%u", &b) != 1 ||
-					    b > 255)
+					if (doom_sscanf(kw, "%u", &b) != 1 || b > 255)
 						goto error_value;
 
 					ld.color = r_find_color(r, g, b);
 				}
-				else if (kwl->sound &&
-				         !strcasecmp(kw, kwl->sound))
+				else if (kwl->sound && !strcasecmp(kw, kwl->sound))
 				{
 					kw = tp_get_keyword();
 					if (!kw)
@@ -2108,10 +1998,7 @@ static void parse_lockdefs(const lockdefs_kw_list_t* kwl)
 						goto error_end;
 
 					if (kw[0] != '{')
-						engine_error(
-						    "LOCKDEFS",
-						    "Expected '%c' found '%s'!",
-						    '{', kw);
+						engine_error("LOCKDEFS", "Expected '%c' found '%s'!", '{', kw);
 
 					*value = KEYLOCK_KEYLIST;
 					while (1)
@@ -2124,21 +2011,15 @@ static void parse_lockdefs(const lockdefs_kw_list_t* kwl)
 
 						if (kw[0] == '}')
 						{
-							*value =
-							    KEYLOCK_KEYLIST |
-							    ((bptr - value) -
-							     1);
+							*value = KEYLOCK_KEYLIST | ((bptr - value) - 1);
 							break;
 						}
 
 						if (bptr >= buffer + 256)
 							goto error_overflow;
 
-						type = mobj_check_type(
-						    tp_hash64(kw));
-						if (type < 0 ||
-						    mobjinfo[type].extra_type !=
-						        ETYPE_KEY)
+						type = mobj_check_type(tp_hash64(kw));
+						if (type < 0 || mobjinfo[type].extra_type != ETYPE_KEY)
 							goto error_type;
 
 						*bptr++ = type;
@@ -2152,9 +2033,7 @@ static void parse_lockdefs(const lockdefs_kw_list_t* kwl)
 						goto error_overflow;
 
 					type = mobj_check_type(tp_hash64(kw));
-					if (type < 0 ||
-					    mobjinfo[type].extra_type !=
-					        ETYPE_KEY)
+					if (type < 0 || mobjinfo[type].extra_type != ETYPE_KEY)
 						goto error_type;
 
 					*bptr++ = KEYLOCK_KEYLIST | 1;
@@ -2233,9 +2112,7 @@ static void cb_count_stuff(lumpinfo_t* li)
 				{
 					// add new entry
 					uint32_t idx = num_maps++;
-					map_info = ldr_realloc(
-					    map_info,
-					    num_maps * sizeof(map_level_t));
+					map_info = ldr_realloc(map_info, num_maps * sizeof(map_level_t));
 					info = map_info + idx;
 				}
 
@@ -2334,12 +2211,10 @@ static void cb_mapinfo(lumpinfo_t* li)
 			lump = wad_check_lump(kw);
 
 			// parse level number
-			if (kw[0] == 'e' && kw[1] >= '1' && kw[1] <= '9' &&
-			    kw[2] == 'm' && kw[3] >= '0' && kw[3] <= '9' &&
-			    kw[4] == 0)
+			if (kw[0] == 'e' && kw[1] >= '1' && kw[1] <= '9' && kw[2] == 'm' && kw[3] >= '0' &&
+			    kw[3] <= '9' && kw[4] == 0)
 				levelnum = (kw[1] - '1') * 10 + (kw[3] - '0');
-			else if (kw[0] == 'm' && kw[1] == 'a' && kw[2] == 'p' &&
-			         kw[3] >= '0' && kw[3] <= '9')
+			else if (kw[0] == 'm' && kw[1] == 'a' && kw[2] == 'p' && kw[3] >= '0' && kw[3] <= '9')
 				doom_sscanf(kw + 3, "%u\n", &levelnum);
 
 			// map title
@@ -2355,10 +2230,7 @@ static void cb_mapinfo(lumpinfo_t* li)
 					return;
 
 				if (kw[0] != '{')
-					engine_error(
-					    "ZMAPINFO",
-					    "Expected '%c' found '%s'!", '{',
-					    kw);
+					engine_error("ZMAPINFO", "Expected '%c' found '%s'!", '{', kw);
 
 				if (tp_skip_code_block(1))
 					break;
@@ -2400,9 +2272,7 @@ static void cb_mapinfo(lumpinfo_t* li)
 				break;
 
 			if (doom_sscanf(kw, "%u", &tmp) != 1 || tmp > 255)
-				engine_error("ZMAPINFO",
-				             "Unable to parse number '%s'!",
-				             kw);
+				engine_error("ZMAPINFO", "Unable to parse number '%s'!", kw);
 
 			// check
 			if (num_clusters >= max_cluster)
@@ -2413,8 +2283,7 @@ static void cb_mapinfo(lumpinfo_t* li)
 			memset(clst, 0, sizeof(map_cluster_t));
 			clst->idx = tmp;
 			clst->lump_music = cluster_music;
-			clst->lump_flat =
-			    flatlump[0]; // this is different than ZDoom
+			clst->lump_flat = flatlump[0]; // this is different than ZDoom
 
 			// get properties
 			if (parse_attributes(clst_attr, clst))
@@ -2446,8 +2315,7 @@ static void cb_mapinfo(lumpinfo_t* li)
 			map_episode_t* epi;
 
 			if (map_episode_count >= MAX_EPISODES)
-				engine_error("ZMAPINFO",
-				             "Too many episodes defined!");
+				engine_error("ZMAPINFO", "Too many episodes defined!");
 
 			epi = map_episode_def + map_episode_count;
 
@@ -2638,10 +2506,8 @@ void init_map()
 		for (uint32_t i = 0; i < num_clusters; i++)
 		{
 			map_cluster_t* clst = map_cluster + i;
-			clst->text_leave =
-			    dec_reloc_es(target, clst->text_leave);
-			clst->text_enter =
-			    dec_reloc_es(target, clst->text_enter);
+			clst->text_leave = dec_reloc_es(target, clst->text_leave);
+			clst->text_enter = dec_reloc_es(target, clst->text_enter);
 		}
 
 		// relocate maps
@@ -2706,8 +2572,7 @@ __attribute((regparm(2), no_caller_saved_registers)) static void do_new_game()
 	map_load_setup(1);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-do_autostart_game()
+__attribute((regparm(2), no_caller_saved_registers)) static void do_autostart_game()
 {
 	for (uint32_t i = 0; i < MAXPLAYERS; i++)
 		players[i].state = PST_REBORN;
@@ -2718,8 +2583,7 @@ do_autostart_game()
 		{
 			if (startmap > 9)
 				startmap = 1;
-			doom_sprintf(map_lump.name, "E%uM%u", startepisode,
-			             startmap);
+			doom_sprintf(map_lump.name, "E%uM%u", startepisode, startmap);
 		}
 		else
 		{
@@ -2740,8 +2604,7 @@ do_autostart_game()
 	map_load_setup(1);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-set_world_done()
+__attribute((regparm(2), no_caller_saved_registers)) static void set_world_done()
 {
 	int32_t music_lump = -1;
 
@@ -2817,8 +2680,7 @@ set_world_done()
 			int32_t lump;
 			fake_game_mode = 0;
 			gameepisode = 1;
-			lump = map_level_info->win_lump[map_next_num ==
-			                                MAP_END_CUSTOM_PIC_S];
+			lump = map_level_info->win_lump[map_next_num == MAP_END_CUSTOM_PIC_S];
 			if (lump < 0)
 				lump = W_GetNumForName(dtxt_interpic);
 			victory_patch = W_CacheLumpNum(lump, PU_CACHE);
@@ -2830,9 +2692,8 @@ set_world_done()
 			break;
 		}
 		if (music_lump >= -1) // -1 means STOP
-			start_music(
-			    music_lump,
-			    1); // technically, 'mus_bunny' should not loop ...
+			start_music(music_lump,
+			            1); // technically, 'mus_bunny' should not loop ...
 	}
 }
 
@@ -2882,9 +2743,7 @@ __attribute((regparm(2), no_caller_saved_registers)) static void do_completed()
 
 	// clean-up players
 	for (uint32_t i = 0; i < MAXPLAYERS; i++)
-		player_finish(players + i,
-		              !old_cl || old_cl != new_cl ||
-		                  !(old_cl->flags & CLST_FLAG_HUB));
+		player_finish(players + i, !old_cl || old_cl != new_cl || !(old_cl->flags & CLST_FLAG_HUB));
 
 	// intermission
 	gamestate = GS_INTERMISSION;
@@ -2911,8 +2770,7 @@ __attribute((regparm(2), no_caller_saved_registers)) static void do_completed()
 	wminfo.partime = map_level_info->par_time * 35;
 	wminfo.pnum = consoleplayer;
 
-	if (map_next_info && map_next_info->levelhack &&
-	    map_next_info->levelhack < 0x80)
+	if (map_next_info && map_next_info->levelhack && map_next_info->levelhack < 0x80)
 	{
 		fake_game_mode = 0;
 		wminfo.next = (map_next_info->levelhack & 15) - 1;
@@ -2957,8 +2815,7 @@ __attribute((regparm(2), no_caller_saved_registers)) static void do_world_done()
 		map_load_setup(0);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-music_intermission()
+__attribute((regparm(2), no_caller_saved_registers)) static void music_intermission()
 {
 	start_music(map_level_info->music_inter, 1);
 }
@@ -3052,8 +2909,7 @@ P_BlockLinesIterator(int32_t x, int32_t y, line_func_t func)
 //
 // hooks
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-hit_slide_line(line_t* ln)
+__attribute((regparm(2), no_caller_saved_registers)) static void hit_slide_line(line_t* ln)
 {
 	if (ln->slopetype == ST_HORIZONTAL)
 	{
@@ -3084,15 +2940,12 @@ static const hook_t patch_doom[] = {
 static const hook_t patch_hexen[] = {
     // replace line special handlers
     {0x0002B340, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)spec_line_cross},
-    {0x00027286, CODE_HOOK | HOOK_CALL_ACE,
-     (uint32_t)spec_line_use}, // by monster
-    {0x0002BCFE, CODE_HOOK | HOOK_CALL_ACE,
-     (uint32_t)spec_line_use}, // by player
-			       // terminator
+    {0x00027286, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)spec_line_use}, // by monster
+    {0x0002BCFE, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)spec_line_use}, // by player
+								      // terminator
     {0}};
 
-static const hook_t hooks[] __attribute__((used, section(".hooks"),
-                                           aligned(4))) = {
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
     // replace 'D_StartTitle'
     {0x00022A4E, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)map_start_title},
     {0x0001EB1F, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)map_start_title},
@@ -3152,8 +3005,7 @@ static const hook_t hooks[] __attribute__((used, section(".hooks"),
     // use 'map_level_info->name' in 'HU_Start'
     {0x0003B5D2, CODE_HOOK | HOOK_UINT8, 0xA1},
     {0x0003B5D3, CODE_HOOK | HOOK_UINT32, (uint32_t)&map_level_info},
-    {0x0003B5D7, CODE_HOOK | HOOK_UINT32,
-     0x708B | (offsetof(map_level_t, name) << 16)},
+    {0x0003B5D7, CODE_HOOK | HOOK_UINT32, 0x708B | (offsetof(map_level_t, name) << 16)},
     {0x0003B5DA, CODE_HOOK | HOOK_UINT16, 0x2DEB},
     // replace call to 'W_CacheLumpName' in 'F_TextWrite' with 'W_CacheLumpNum'
     {0x0001C5A3, CODE_HOOK | HOOK_CALL_DOOM, 0x00038D00},
@@ -3215,16 +3067,11 @@ static const hook_t hooks[] __attribute__((used, section(".hooks"),
     {0x0002838C, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)P_CheckSight},
     {0x0002BDC6, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)P_CheckSight},
     // replace 'P_PathTraverse' on multiple places
-    {0x0002B5F6, CODE_HOOK | HOOK_CALL_ACE,
-     (uint32_t)hook_path_traverse}, // P_SlideMove
-    {0x0002B616, CODE_HOOK | HOOK_CALL_ACE,
-     (uint32_t)hook_path_traverse}, // P_SlideMove
-    {0x0002B636, CODE_HOOK | HOOK_CALL_ACE,
-     (uint32_t)hook_path_traverse}, // P_SlideMove
-    {0x0002BC89, CODE_HOOK | HOOK_CALL_ACE,
-     (uint32_t)hook_path_traverse}, // P_LineAttack
-    {0x0002BD55, CODE_HOOK | HOOK_CALL_ACE,
-     (uint32_t)hook_path_traverse}, // P_UseLines
+    {0x0002B5F6, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)hook_path_traverse}, // P_SlideMove
+    {0x0002B616, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)hook_path_traverse}, // P_SlideMove
+    {0x0002B636, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)hook_path_traverse}, // P_SlideMove
+    {0x0002BC89, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)hook_path_traverse}, // P_LineAttack
+    {0x0002BD55, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)hook_path_traverse}, // P_UseLines
     // replace pointers to 'PTR_SlideTraverse' in 'P_SlideMove'
     {0x0002B5DD, CODE_HOOK | HOOK_UINT32, (uint32_t)hs_slide_traverse},
     {0x0002B5FC, CODE_HOOK | HOOK_UINT32, (uint32_t)hs_slide_traverse},

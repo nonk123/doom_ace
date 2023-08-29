@@ -161,11 +161,9 @@ static void cf_idfa(player_t* pl, uint8_t* arg)
 			inventory_give(mo, type, 1);
 
 			if (info->weapon.ammo_type[0])
-				inventory_give(mo, info->weapon.ammo_type[0],
-				               INV_MAX_COUNT);
+				inventory_give(mo, info->weapon.ammo_type[0], INV_MAX_COUNT);
 			if (info->weapon.ammo_type[1])
-				inventory_give(mo, info->weapon.ammo_type[1],
-				               INV_MAX_COUNT);
+				inventory_give(mo, info->weapon.ammo_type[1], INV_MAX_COUNT);
 		}
 	}
 
@@ -282,15 +280,13 @@ static void cf_mdk(player_t* pl, uint8_t* arg)
 {
 	fixed_t slope;
 
-	if (player_info[pl - players].flags & PLF_AUTO_AIM ||
-	    map_level_info->flags & MAP_FLAG_NO_FREELOOK)
+	if (player_info[pl - players].flags & PLF_AUTO_AIM || map_level_info->flags & MAP_FLAG_NO_FREELOOK)
 		slope = P_AimLineAttack(pl->mo, pl->mo->angle, 1024 * FRACUNIT);
 	else
 		linetarget = NULL;
 
 	if (!linetarget)
-		slope =
-		    finetangent[(pl->mo->pitch + ANG90) >> ANGLETOFINESHIFT];
+		slope = finetangent[(pl->mo->pitch + ANG90) >> ANGLETOFINESHIFT];
 
 	P_LineAttack(pl->mo, pl->mo->angle, MISSILERANGE, slope, 1000000);
 }
@@ -361,8 +357,7 @@ static void cf_summon(player_t* pl, uint8_t* arg)
 		y = mo->y;
 		z = mo->z;
 		if (mobjinfo[type].flags & MF_MISSILE)
-			z += (pl->mo->height / 2) +
-			     pl->mo->info->player.attack_offs;
+			z += (pl->mo->height / 2) + pl->mo->info->player.attack_offs;
 	}
 	else
 	{
@@ -376,8 +371,7 @@ static void cf_summon(player_t* pl, uint8_t* arg)
 	mo = P_SpawnMobj(x, y, z, type);
 	mo->angle = pl->mo->angle;
 	if (mo->flags & MF_MISSILE)
-		missile_stuff(mo, pl->mo, NULL, projectile_speed(mo->info),
-		              pl->mo->angle, pl->mo->pitch, 0);
+		missile_stuff(mo, pl->mo, NULL, projectile_speed(mo->info), pl->mo->angle, pl->mo->pitch, 0);
 }
 
 static void cf_freeze(player_t* pl, uint8_t* arg)
@@ -392,10 +386,7 @@ static void cf_freeze(player_t* pl, uint8_t* arg)
 		pl->message = "Freeze mode OFF";
 }
 
-static void cf_thaw(player_t* pl, uint8_t* arg)
-{
-	pl->prop &= ~((1 << PROP_FROZEN) | (1 << PROP_TOTALLYFROZEN));
-}
+static void cf_thaw(player_t* pl, uint8_t* arg) { pl->prop &= ~((1 << PROP_FROZEN) | (1 << PROP_TOTALLYFROZEN)); }
 
 static void cf_class(player_t* pl, uint8_t* arg)
 {
@@ -456,8 +447,7 @@ static void cf_save_light(player_t* pl, uint8_t* arg)
 
 		if (cl->color != 0x0FFF)
 		{
-			doom_sprintf(text, "+%03X%04X.lmp", cl->fade,
-			             cl->color);
+			doom_sprintf(text, "+%03X%04X.lmp", cl->fade, cl->color);
 			fd = doom_open_WR(text);
 			if (fd >= 0)
 			{
@@ -519,9 +509,8 @@ void cheat_check(uint32_t pidx)
 	{
 		if (!strcmp(cf->name, cb->text))
 		{
-			if (cheat_disable &&
-			    cf->func != cf_map) // allow map changes (and
-			                        // synchronization)
+			if (cheat_disable && cf->func != cf_map) // allow map changes (and
+			                                         // synchronization)
 				return;
 			pl->cheats |= CF_IS_CHEATER; // mark cheaters forever
 			cf->func(pl, arg);
@@ -540,8 +529,7 @@ void cheat_check(uint32_t pidx)
 		return;
 	}
 
-	if (pidx != consoleplayer ||
-	    (!pl->message && (netgame || demoplayback)))
+	if (pidx != consoleplayer || (!pl->message && (netgame || demoplayback)))
 	{
 		message_is_important = 1;
 		players[consoleplayer].message = "Cheat activated!";
@@ -578,27 +566,26 @@ void cheat_reset()
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// disable original cheats
-	{0x00039B08, CODE_HOOK | HOOK_UINT16, 0xE990},
-	{0x00025403, CODE_HOOK | HOOK_UINT16, 0xE990},
-	// enable chat in singleplayer, disable 'enter' to repeat last message
-	{0x0003B9EE, CODE_HOOK | HOOK_UINT16, 0x29EB},
-	// change chat key
-	{0x0003BA1B, CODE_HOOK | HOOK_UINT8, '`'},
-	// enable lowercase
-	{0x0003BC1F, CODE_HOOK | HOOK_UINT16, 0x15EB},
-	{0x0003C26B, CODE_HOOK | HOOK_UINT8, 0x7E},
-	// cheat marker (first byte)
-	{0x0003BA34, CODE_HOOK | HOOK_UINT8, TIC_CMD_CHEAT},
-	// do not display sent message
-	{0x0003BC6D, CODE_HOOK | HOOK_UINT8, 0xEB},
-	// disable chat macros
-	{0x0003BB53, CODE_HOOK | HOOK_UINT16, 0xE990},
-	// disable direct chat
-	{0x0003BA44, CODE_HOOK | HOOK_JMP_DOOM, 0x0003BCB1},
-	// disable chat processing
-	{0x0003B78E, CODE_HOOK | HOOK_JMP_DOOM, 0x0003B8C7},
-	{0x0003B64F, CODE_HOOK | HOOK_UINT16, 0x1AEB},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // disable original cheats
+    {0x00039B08, CODE_HOOK | HOOK_UINT16, 0xE990},
+    {0x00025403, CODE_HOOK | HOOK_UINT16, 0xE990},
+    // enable chat in singleplayer, disable 'enter' to repeat last message
+    {0x0003B9EE, CODE_HOOK | HOOK_UINT16, 0x29EB},
+    // change chat key
+    {0x0003BA1B, CODE_HOOK | HOOK_UINT8, '`'},
+    // enable lowercase
+    {0x0003BC1F, CODE_HOOK | HOOK_UINT16, 0x15EB},
+    {0x0003C26B, CODE_HOOK | HOOK_UINT8, 0x7E},
+    // cheat marker (first byte)
+    {0x0003BA34, CODE_HOOK | HOOK_UINT8, TIC_CMD_CHEAT},
+    // do not display sent message
+    {0x0003BC6D, CODE_HOOK | HOOK_UINT8, 0xEB},
+    // disable chat macros
+    {0x0003BB53, CODE_HOOK | HOOK_UINT16, 0xE990},
+    // disable direct chat
+    {0x0003BA44, CODE_HOOK | HOOK_JMP_DOOM, 0x0003BCB1},
+    // disable chat processing
+    {0x0003B78E, CODE_HOOK | HOOK_JMP_DOOM, 0x0003B8C7},
+    {0x0003B64F, CODE_HOOK | HOOK_UINT16, 0x1AEB},
 };

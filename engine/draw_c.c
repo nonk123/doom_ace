@@ -34,23 +34,19 @@ static fixed_t mhax_y, mhax_h;
 
 static const uint8_t unknown_flat[4] = {96, 111, 111, 96};
 
-static const uint8_t doom_lock_id[] = {26, 130, 27, 131, 28, 129, 32, 130, 33,
-                                       129, 34, 131, 99, 130, 133, 130, 134,
+static const uint8_t doom_lock_id[] = {26, 130, 27, 131, 28, 129, 32, 130, 33, 129, 34, 131, 99, 130, 133, 130, 134,
                                        129, 135, 129, 136, 131, 137, 131,
                                        // terminator
                                        0};
 
 static int16_t fuzzoffset[FUZZTABLE] = {
-    SCREENWIDTH,  -SCREENWIDTH, SCREENWIDTH,  -SCREENWIDTH, SCREENWIDTH,
-    SCREENWIDTH,  -SCREENWIDTH, SCREENWIDTH,  SCREENWIDTH,  -SCREENWIDTH,
-    SCREENWIDTH,  SCREENWIDTH,  SCREENWIDTH,  -SCREENWIDTH, SCREENWIDTH,
-    SCREENWIDTH,  SCREENWIDTH,  -SCREENWIDTH, -SCREENWIDTH, -SCREENWIDTH,
-    -SCREENWIDTH, SCREENWIDTH,  -SCREENWIDTH, -SCREENWIDTH, SCREENWIDTH,
-    SCREENWIDTH,  SCREENWIDTH,  SCREENWIDTH,  -SCREENWIDTH, SCREENWIDTH,
-    -SCREENWIDTH, SCREENWIDTH,  SCREENWIDTH,  -SCREENWIDTH, -SCREENWIDTH,
-    SCREENWIDTH,  SCREENWIDTH,  -SCREENWIDTH, -SCREENWIDTH, -SCREENWIDTH,
-    -SCREENWIDTH, SCREENWIDTH,  SCREENWIDTH,  SCREENWIDTH,  SCREENWIDTH,
-    -SCREENWIDTH, SCREENWIDTH,  SCREENWIDTH,  -SCREENWIDTH, SCREENWIDTH};
+    SCREENWIDTH,  -SCREENWIDTH, SCREENWIDTH,  -SCREENWIDTH, SCREENWIDTH,  SCREENWIDTH,  -SCREENWIDTH, SCREENWIDTH,
+    SCREENWIDTH,  -SCREENWIDTH, SCREENWIDTH,  SCREENWIDTH,  SCREENWIDTH,  -SCREENWIDTH, SCREENWIDTH,  SCREENWIDTH,
+    SCREENWIDTH,  -SCREENWIDTH, -SCREENWIDTH, -SCREENWIDTH, -SCREENWIDTH, SCREENWIDTH,  -SCREENWIDTH, -SCREENWIDTH,
+    SCREENWIDTH,  SCREENWIDTH,  SCREENWIDTH,  SCREENWIDTH,  -SCREENWIDTH, SCREENWIDTH,  -SCREENWIDTH, SCREENWIDTH,
+    SCREENWIDTH,  -SCREENWIDTH, -SCREENWIDTH, SCREENWIDTH,  SCREENWIDTH,  -SCREENWIDTH, -SCREENWIDTH, -SCREENWIDTH,
+    -SCREENWIDTH, SCREENWIDTH,  SCREENWIDTH,  SCREENWIDTH,  SCREENWIDTH,  -SCREENWIDTH, SCREENWIDTH,  SCREENWIDTH,
+    -SCREENWIDTH, SCREENWIDTH};
 
 //
 // column drawers
@@ -155,8 +151,7 @@ __attribute((regparm(2), no_caller_saved_registers)) void R_DrawFuzzColumn()
 	} while (count--);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-R_DrawTranslatedColumn()
+__attribute((regparm(2), no_caller_saved_registers)) void R_DrawTranslatedColumn()
 {
 	int32_t count;
 	uint8_t* dest;
@@ -175,15 +170,13 @@ R_DrawTranslatedColumn()
 
 	do
 	{
-		*dest = dc_colormap
-		    [dc_translation[dc_source[frac >> r_dc_mask.u8[2]]]];
+		*dest = dc_colormap[dc_translation[dc_source[frac >> r_dc_mask.u8[2]]]];
 		dest += SCREENWIDTH;
 		frac += step;
 	} while (count--);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-R_DrawTranslatedColumnTint0()
+__attribute((regparm(2), no_caller_saved_registers)) void R_DrawTranslatedColumnTint0()
 {
 	int32_t count;
 	uint8_t* dest;
@@ -202,16 +195,14 @@ R_DrawTranslatedColumnTint0()
 
 	do
 	{
-		uint8_t color = dc_colormap
-		    [dc_translation[dc_source[frac >> r_dc_mask.u8[2]]]];
+		uint8_t color = dc_colormap[dc_translation[dc_source[frac >> r_dc_mask.u8[2]]]];
 		*dest = dr_tinttab[*dest + color * 256];
 		dest += SCREENWIDTH;
 		frac += step;
 	} while (count--);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-R_DrawTranslatedColumnTint1()
+__attribute((regparm(2), no_caller_saved_registers)) void R_DrawTranslatedColumnTint1()
 {
 	int32_t count;
 	uint8_t* dest;
@@ -230,8 +221,7 @@ R_DrawTranslatedColumnTint1()
 
 	do
 	{
-		uint8_t color = dc_colormap
-		    [dc_translation[dc_source[frac >> r_dc_mask.u8[2]]]];
+		uint8_t color = dc_colormap[dc_translation[dc_source[frac >> r_dc_mask.u8[2]]]];
 		*dest = dr_tinttab[*dest * 256 + color];
 		dest += SCREENWIDTH;
 		frac += step;
@@ -344,8 +334,7 @@ __attribute((regparm(2), no_caller_saved_registers)) void R_DrawMaskedSpan()
 	} while (count--);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-R_DrawMaskedSpanTint0()
+__attribute((regparm(2), no_caller_saved_registers)) void R_DrawMaskedSpanTint0()
 {
 	uint8_t* dest;
 	uint32_t count;
@@ -375,8 +364,7 @@ R_DrawMaskedSpanTint0()
 	} while (count--);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-R_DrawMaskedSpanTint1()
+__attribute((regparm(2), no_caller_saved_registers)) void R_DrawMaskedSpanTint1()
 {
 	uint8_t* dest;
 	uint32_t count;
@@ -413,8 +401,7 @@ __attribute((regparm(3), no_caller_saved_registers)) // three!
 void
 V_DrawPatchDirect(int32_t x, int32_t y, patch_t* patch)
 {
-	draw_patch_to_memory(patch, x - patch->x, y - patch->y, framebuffer,
-	                     SCREENWIDTH, SCREENHEIGHT);
+	draw_patch_to_memory(patch, x - patch->x, y - patch->y, framebuffer, SCREENWIDTH, SCREENHEIGHT);
 }
 
 __attribute((regparm(3), no_caller_saved_registers)) // three!
@@ -465,8 +452,7 @@ V_DrawPatchTranslated(int32_t x, int32_t y, patch_t* patch)
 			yy = y + column->topdelta;
 			ystop = yy + column->length;
 
-			column =
-			    (column_t*)((uint8_t*)column + column->length + 4);
+			column = (column_t*)((uint8_t*)column + column->length + 4);
 
 			if (yy < 0)
 			{
@@ -536,8 +522,7 @@ V_DrawPatchTint0(int32_t x, int32_t y, patch_t* patch)
 			yy = y + column->topdelta;
 			ystop = yy + column->length;
 
-			column =
-			    (column_t*)((uint8_t*)column + column->length + 4);
+			column = (column_t*)((uint8_t*)column + column->length + 4);
 
 			if (yy < 0)
 			{
@@ -607,8 +592,7 @@ V_DrawPatchTint1(int32_t x, int32_t y, patch_t* patch)
 			yy = y + column->topdelta;
 			ystop = yy + column->length;
 
-			column =
-			    (column_t*)((uint8_t*)column + column->length + 4);
+			column = (column_t*)((uint8_t*)column + column->length + 4);
 
 			if (yy < 0)
 			{
@@ -633,8 +617,7 @@ V_DrawPatchTint1(int32_t x, int32_t y, patch_t* patch)
 //
 // draw in cache
 
-void draw_patch_to_memory(patch_t* patch, int32_t x, int32_t y, void* dst,
-                          uint32_t width, uint32_t height)
+void draw_patch_to_memory(patch_t* patch, int32_t x, int32_t y, void* dst, uint32_t width, uint32_t height)
 {
 	int32_t xstop;
 	column_t* column;
@@ -677,8 +660,7 @@ void draw_patch_to_memory(patch_t* patch, int32_t x, int32_t y, void* dst,
 			yy = y + column->topdelta;
 			ystop = yy + column->length;
 
-			column =
-			    (column_t*)((uint8_t*)column + column->length + 4);
+			column = (column_t*)((uint8_t*)column + column->length + 4);
 
 			if (yy < 0)
 			{
@@ -721,8 +703,7 @@ void init_draw()
 		int32_t idx = SCREENHEIGHT - i - 1;
 
 		memcpy(ptr, loop_dc_start, sizeof(loop_dc_start));
-		*((int32_t*)(ptr + sizeof(loop_dc_start) - sizeof(uint32_t))) =
-		    idx * -320;
+		*((int32_t*)(ptr + sizeof(loop_dc_start) - sizeof(uint32_t))) = idx * -320;
 
 		r_dc_jump[idx] = ptr;
 
@@ -737,8 +718,7 @@ void init_draw()
 		int32_t idx = SCREENWIDTH - i - 1;
 
 		memcpy(ptr, loop_ds_start, sizeof(loop_ds_start));
-		*((int32_t*)(ptr + sizeof(loop_ds_start) - sizeof(uint32_t))) =
-		    -idx;
+		*((int32_t*)(ptr + sizeof(loop_ds_start) - sizeof(uint32_t))) = -idx;
 
 		r_ds_jump[idx] = ptr;
 
@@ -766,8 +746,7 @@ static
 	V_DrawPatchDirect(x, y, patch);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-check_map_line(line_t* li)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t check_map_line(line_t* li)
 {
 	const uint8_t* ptr;
 	const lockdef_t* ld;
@@ -818,8 +797,7 @@ check_map_line(line_t* li)
 	return 1;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-draw_map_line(map_line_t* ml, uint32_t color)
+static __attribute((regparm(2), no_caller_saved_registers)) void draw_map_line(map_line_t* ml, uint32_t color)
 {
 	map_line_t fl;
 	map_line_t lm;
@@ -839,8 +817,7 @@ draw_map_line(map_line_t* ml, uint32_t color)
 		AM_drawFline(&fl, color);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-draw_map_grid(uint32_t color)
+static __attribute((regparm(2), no_caller_saved_registers)) void draw_map_grid(uint32_t color)
 {
 	fixed_t tmp;
 
@@ -855,8 +832,7 @@ draw_map_grid(uint32_t color)
 	AM_drawGrid(color);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-do_follow_player()
+static __attribute((regparm(2), no_caller_saved_registers)) void do_follow_player()
 {
 	fixed_t yy = am_plr->mo->y;
 	am_plr->mo->y = FixedMul(am_plr->mo->y, AMAP_Y_SCALE);
@@ -866,8 +842,7 @@ do_follow_player()
 
 //
 // hooks
-static const hook_t hooks[] __attribute__((used, section(".hooks"),
-                                           aligned(4))) = {
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
     // disable unchained mode
     {0x0001A06C, CODE_HOOK | HOOK_JMP_DOOM, 0x0001A0EB},
     // disable 'I_UpdateNoBlit'

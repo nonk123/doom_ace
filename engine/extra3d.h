@@ -68,8 +68,7 @@ void e3d_update_planes(sector_t* src, uint32_t planes);
 
 //
 
-visplane_t* e3d_find_plane(fixed_t height, uint32_t picnum, uint16_t light,
-                           uint16_t alpha);
+visplane_t* e3d_find_plane(fixed_t height, uint32_t picnum, uint16_t light, uint16_t alpha);
 visplane_t* e3d_check_plane(visplane_t* pl, int32_t start, int32_t stop);
 
 //

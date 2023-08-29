@@ -592,8 +592,7 @@ static inline void generate_preview_line(int fd, uint32_t y, save_name_t* slot)
 	uint8_t* src;
 
 	dst = screen_buffer;
-	dst += 320 * 200 * 2 + sizeof(patch_t) + 160 * sizeof(uint32_t) + 3 +
-	       (99 - y);
+	dst += 320 * 200 * 2 + sizeof(patch_t) + 160 * sizeof(uint32_t) + 3 + (99 - y);
 
 	src = screen_buffer;
 	src += 320 * 200 * 3;
@@ -679,15 +678,13 @@ static void draw_check_preview()
 //
 // drawers
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-draw_load_menu()
+static __attribute((regparm(2), no_caller_saved_registers)) void draw_load_menu()
 {
 	V_DrawPatchDirect(97, 17, W_CacheLumpName(dtxt_m_loadg, PU_CACHE));
 	draw_check_preview();
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-draw_save_menu()
+static __attribute((regparm(2), no_caller_saved_registers)) void draw_save_menu()
 {
 	V_DrawPatchDirect(97, 17, W_CacheLumpName(dtxt_m_saveg, PU_CACHE));
 	draw_check_preview();
@@ -704,8 +701,7 @@ void saveload_clear_cluster(uint32_t idx)
 	{
 		if (map_info[i].cluster == idx && map_info[i].lump >= 0)
 		{
-			doom_sprintf(name, SAVE_DIR "\\%.8s.asv",
-			             lumpinfo[map_info[i].lump].name);
+			doom_sprintf(name, SAVE_DIR "\\%.8s.asv", lumpinfo[map_info[i].lump].name);
 			doom_unlink(name);
 		}
 	}
@@ -721,8 +717,7 @@ static void save_put_generic(generic_mover_t* gm, uint32_t magic)
 	writer_add_u16(magic);
 
 	sav.sector = gm->sector - sectors;
-	sav.texture =
-	    gm->flags & MVF_SET_TEXTURE ? flat_get_name(gm->texture) : 0;
+	sav.texture = gm->flags & MVF_SET_TEXTURE ? flat_get_name(gm->texture) : 0;
 	sav.sndseq = gm->seq_save;
 	sav.type = gm->type;
 	sav.direction = gm->direction;
@@ -758,17 +753,14 @@ static inline void sv_put_sectors(int32_t lump)
 		fixed_t height;
 		int16_t lightlevel;
 
-		flags |= (sec->floorpic != flat_num_get(ms[i].floorpic))
-		         << SF_SEC_TEXTURE_FLOOR;
-		flags |= (sec->ceilingpic != flat_num_get(ms[i].ceilingpic))
-		         << SF_SEC_TEXTURE_CEILING;
+		flags |= (sec->floorpic != flat_num_get(ms[i].floorpic)) << SF_SEC_TEXTURE_FLOOR;
+		flags |= (sec->ceilingpic != flat_num_get(ms[i].ceilingpic)) << SF_SEC_TEXTURE_CEILING;
 
 		height = (fixed_t)ms[i].floorheight * FRACUNIT;
 		flags |= (sec->floorheight != height) << SF_SEC_HEIGHT_FLOOR;
 
 		height = (fixed_t)ms[i].ceilingheight * FRACUNIT;
-		flags |= (sec->ceilingheight != height)
-		         << SF_SEC_HEIGHT_CEILING;
+		flags |= (sec->ceilingheight != height) << SF_SEC_HEIGHT_CEILING;
 
 		lightlevel = ms[i].lightlevel;
 		if (lightlevel < 0)
@@ -843,13 +835,9 @@ static inline void sv_put_sidedefs(int32_t lump)
 		offs = (fixed_t)ms[i].rowoffset * FRACUNIT;
 		flags |= (side->rowoffset != offs) << SF_SIDE_OFFSY;
 
-		flags |= (side->toptexture != texture_num_get(ms[i].toptexture))
-		         << SF_SIDE_TEXTURE_TOP;
-		flags |= (side->bottomtexture !=
-		          texture_num_get(ms[i].bottomtexture))
-		         << SF_SIDE_TEXTURE_BOT;
-		flags |= (side->midtexture != texture_num_get(ms[i].midtexture))
-		         << SF_SIDE_TEXTURE_MID;
+		flags |= (side->toptexture != texture_num_get(ms[i].toptexture)) << SF_SIDE_TEXTURE_TOP;
+		flags |= (side->bottomtexture != texture_num_get(ms[i].bottomtexture)) << SF_SIDE_TEXTURE_BOT;
+		flags |= (side->midtexture != texture_num_get(ms[i].midtexture)) << SF_SIDE_TEXTURE_MID;
 
 		if (flags)
 		{
@@ -895,9 +883,7 @@ static inline void sv_put_linedefs_doom(int32_t lump)
 		line_t* line = lines + i;
 		uint32_t flags = 0;
 
-		flags |=
-		    ((line->flags & ~ML_MAPPED) != (ml[i].flags & ~ML_MAPPED))
-		    << SF_LINE_FLAGS;
+		flags |= ((line->flags & ~ML_MAPPED) != (ml[i].flags & ~ML_MAPPED)) << SF_LINE_FLAGS;
 		flags |= (line->special != ml[i].special) << SF_LINE_SPECIAL;
 		flags |= (line->tag != ml[i].tag) << SF_LINE_TAG;
 
@@ -932,9 +918,7 @@ static inline void sv_put_linedefs_hexen(int32_t lump)
 		line_t* line = lines + i;
 		uint32_t flags = 0;
 
-		flags |=
-		    ((line->flags & ~ML_MAPPED) != (ml[i].flags & ~ML_MAPPED))
-		    << SF_LINE_FLAGS;
+		flags |= ((line->flags & ~ML_MAPPED) != (ml[i].flags & ~ML_MAPPED)) << SF_LINE_FLAGS;
 		flags |= (line->special != ml[i].special) << SF_LINE_SPECIAL;
 		flags |= (!!line->id) << SF_LINE_TAG;
 		flags |= (line->arg0 != ml[i].arg0) << SF_LINE_TAG;
@@ -1335,15 +1319,10 @@ static uint32_t svcb_thing(mobj_t* mo)
 	if (mo->translation)
 	{
 		if (mo->translation >= blood_translation &&
-		    mo->translation <
-		        blood_translation + blood_color_count * 256)
-			thing.translation =
-			    0x4000 |
-			    ((mo->translation - blood_translation) / 256);
+		    mo->translation < blood_translation + blood_color_count * 256)
+			thing.translation = 0x4000 | ((mo->translation - blood_translation) / 256);
 		else
-			thing.translation =
-			    0x8000 |
-			    ((mo->translation - render_translation) / 256);
+			thing.translation = 0x8000 | ((mo->translation - render_translation) / 256);
 	}
 	else
 		thing.translation = 0;
@@ -1420,11 +1399,9 @@ static inline void sv_put_players()
 
 		plr.health = pl->health;
 		plr.armor_points = pl->armorpoints;
-		plr.armor_type =
-		    pl->armortype ? mobjinfo[pl->armortype].alias : 0;
+		plr.armor_type = pl->armortype ? mobjinfo[pl->armortype].alias : 0;
 		plr.weapon_ready = pl->readyweapon ? pl->readyweapon->alias : 0;
-		plr.weapon_pending =
-		    pl->pendingweapon ? pl->pendingweapon->alias : 0;
+		plr.weapon_pending = pl->pendingweapon ? pl->pendingweapon->alias : 0;
 
 		plr.cheats = pl->cheats;
 		plr.refire = pl->refire;
@@ -1444,9 +1421,7 @@ static inline void sv_put_players()
 
 		for (uint32_t j = 0; j < NUMPSPRITES; j++)
 		{
-			plr.pspr[j].state = pl->psprites[j].state
-			                        ? pl->psprites[j].state - states
-			                        : 0;
+			plr.pspr[j].state = pl->psprites[j].state ? pl->psprites[j].state - states : 0;
 			plr.pspr[j].tics = pl->psprites[j].tics;
 		}
 
@@ -1461,9 +1436,7 @@ static inline void sv_put_players()
 		if (!pl->mo->inventory || pl->inv_sel < 0)
 			plr.inv_sel = 0;
 		else
-			plr.inv_sel =
-			    mobjinfo[pl->mo->inventory->slot[pl->inv_sel].type]
-				.alias;
+			plr.inv_sel = mobjinfo[pl->mo->inventory->slot[pl->inv_sel].type].alias;
 
 		plr.prop = pl->prop;
 
@@ -1708,21 +1681,18 @@ static __attribute((regparm(2), no_caller_saved_registers)) void do_save()
 		{
 			map_level_t* info = map_info + i;
 
-			if (info->cluster == map_level_info->cluster &&
-			    info != map_level_info && info->lump >= 0)
+			if (info->cluster == map_level_info->cluster && info != map_level_info && info->lump >= 0)
 			{
 				uint8_t name[32];
 				int32_t fd;
 
-				doom_sprintf(name, SAVE_DIR "\\%.8s.asv",
-				             lumpinfo[info->lump].name);
+				doom_sprintf(name, SAVE_DIR "\\%.8s.asv", lumpinfo[info->lump].name);
 				fd = doom_open_RD(name);
 				if (fd >= 0)
 				{
 					uint32_t tmp = doom_filelength(fd);
 					writer_add_u32(tmp);
-					writer_add_wame(
-					    &lumpinfo[info->lump].wame);
+					writer_add_wame(&lumpinfo[info->lump].wame);
 					writer_add_from_fd(fd, tmp);
 					doom_close(fd);
 				}
@@ -1752,8 +1722,7 @@ static uint32_t ld_get_armor(uint64_t alias)
 		return 0;
 
 	info = mobjinfo + type;
-	if (info->extra_type != ETYPE_ARMOR &&
-	    info->extra_type != ETYPE_ARMOR_BONUS)
+	if (info->extra_type != ETYPE_ARMOR && info->extra_type != ETYPE_ARMOR_BONUS)
 		return 0;
 
 	return type;
@@ -2056,8 +2025,7 @@ static inline uint32_t ld_get_specials()
 				return 1;
 
 			type -= STH__BUTTON;
-			slot =
-			    anim_switch_make(type, lines + sw.line, sw.texture);
+			slot = anim_switch_make(type, lines + sw.line, sw.texture);
 			if (!slot)
 				break;
 
@@ -2078,8 +2046,7 @@ static inline uint32_t ld_get_specials()
 			if (sav.line >= numlines)
 				return 1;
 
-			now =
-			    Z_Malloc(sizeof(line_scroll_t), PU_LEVELSPEC, NULL);
+			now = Z_Malloc(sizeof(line_scroll_t), PU_LEVELSPEC, NULL);
 
 			now->line = lines + sav.line;
 			now->x = sav.x;
@@ -2109,20 +2076,15 @@ static inline uint32_t ld_get_specials()
 			sec = sectors + sav.sector;
 
 			if (type == STH_ACE_CEILING)
-				gm = generic_ceiling(sec, sav.direction,
-				                     sav.sndseq & 3,
-				                     sav.sndseq & 128);
+				gm = generic_ceiling(sec, sav.direction, sav.sndseq & 3, sav.sndseq & 128);
 			else if (type == STH_ACE_FLOOR)
-				gm = generic_floor(sec, sav.direction,
-				                   sav.sndseq & 3,
-				                   sav.sndseq & 128);
+				gm = generic_floor(sec, sav.direction, sav.sndseq & 3, sav.sndseq & 128);
 
 			if (!gm)
 				return 1;
 
 			if (sav.flags & MVF_SET_TEXTURE)
-				gm->texture =
-				    flat_num_get((uint8_t*)&sav.texture);
+				gm->texture = flat_num_get((uint8_t*)&sav.texture);
 
 			gm->type = sav.type;
 			gm->direction = sav.direction;
@@ -2265,8 +2227,7 @@ static inline uint32_t ld_get_specials()
 			now->tag = sav.tag;
 
 			now->sector->specialdata = now;
-			now->thinker.function =
-			    (void*)T_MoveCeiling + doom_code_segment;
+			now->thinker.function = (void*)T_MoveCeiling + doom_code_segment;
 
 			P_AddThinker(&now->thinker);
 			P_AddActiveCeiling(now);
@@ -2300,8 +2261,7 @@ static inline uint32_t ld_get_specials()
 			now->topcountdown = sav.topcountdown;
 
 			now->sector->specialdata = now;
-			now->thinker.function =
-			    (void*)T_VerticalDoor + doom_code_segment;
+			now->thinker.function = (void*)T_VerticalDoor + doom_code_segment;
 
 			P_AddThinker(&now->thinker);
 		}
@@ -2332,8 +2292,7 @@ static inline uint32_t ld_get_specials()
 			now->speed = sav.speed;
 
 			now->sector->specialdata = now;
-			now->thinker.function =
-			    (void*)T_MoveFloor + doom_code_segment;
+			now->thinker.function = (void*)T_MoveFloor + doom_code_segment;
 
 			P_AddThinker(&now->thinker);
 		}
@@ -2367,8 +2326,7 @@ static inline uint32_t ld_get_specials()
 			now->high = sav.high;
 
 			now->sector->specialdata = now;
-			now->thinker.function =
-			    (void*)T_PlatRaise + doom_code_segment;
+			now->thinker.function = (void*)T_PlatRaise + doom_code_segment;
 
 			P_AddThinker(&now->thinker);
 			P_AddActivePlat(now);
@@ -2388,8 +2346,7 @@ static inline uint32_t ld_get_specials()
 			if (sav.sector >= numsectors)
 				return 1;
 
-			now =
-			    Z_Malloc(sizeof(lightflash_t), PU_LEVELSPEC, NULL);
+			now = Z_Malloc(sizeof(lightflash_t), PU_LEVELSPEC, NULL);
 
 			now->sector = sectors + sav.sector;
 			now->maxlight = sav.maxlight;
@@ -2398,8 +2355,7 @@ static inline uint32_t ld_get_specials()
 			now->maxtime = sav.maxtime;
 			now->mintime = sav.mintime;
 
-			now->thinker.function =
-			    (void*)T_LightFlash + doom_code_segment;
+			now->thinker.function = (void*)T_LightFlash + doom_code_segment;
 
 			P_AddThinker(&now->thinker);
 		}
@@ -2424,8 +2380,7 @@ static inline uint32_t ld_get_specials()
 			now->darktime = sav.darktime;
 			now->brighttime = sav.brighttime;
 
-			now->thinker.function =
-			    (void*)T_StrobeFlash + doom_code_segment;
+			now->thinker.function = (void*)T_StrobeFlash + doom_code_segment;
 
 			P_AddThinker(&now->thinker);
 		}
@@ -2448,8 +2403,7 @@ static inline uint32_t ld_get_specials()
 			now->maxlight = sav.maxlight;
 			now->direction = sav.direction;
 
-			now->thinker.function =
-			    (void*)T_Glow + doom_code_segment;
+			now->thinker.function = (void*)T_Glow + doom_code_segment;
 
 			P_AddThinker(&now->thinker);
 		}
@@ -2465,16 +2419,14 @@ static inline uint32_t ld_get_specials()
 			if (sav.sector >= numsectors)
 				return 1;
 
-			now =
-			    Z_Malloc(sizeof(fireflicker_t), PU_LEVELSPEC, NULL);
+			now = Z_Malloc(sizeof(fireflicker_t), PU_LEVELSPEC, NULL);
 
 			now->sector = sectors + sav.sector;
 			now->maxlight = sav.maxlight;
 			now->minlight = sav.minlight;
 			now->count = sav.count;
 
-			now->thinker.function =
-			    (void*)T_FireFlicker + doom_code_segment;
+			now->thinker.function = (void*)T_FireFlicker + doom_code_segment;
 
 			P_AddThinker(&now->thinker);
 		}
@@ -2644,9 +2596,8 @@ static inline uint32_t ld_get_things(uint32_t hub_data)
 			if (thing.player < MAXPLAYERS)
 			{
 				mo->player = players + thing.player;
-				mo->player->backpack =
-				    1; // fake backpack for 'inventory_give';
-				       // will be overwritten later
+				mo->player->backpack = 1; // fake backpack for 'inventory_give';
+				                          // will be overwritten later
 			}
 			else
 				mo->player = NULL;
@@ -2683,10 +2634,8 @@ static inline uint32_t ld_get_things(uint32_t hub_data)
 	{
 		sector_t* sec = sectors + i;
 		sec->soundtarget = mobj_by_netid((uint32_t)sec->soundtarget);
-		sec->extra->action.enter =
-		    mobj_by_netid((uint32_t)sec->extra->action.enter);
-		sec->extra->action.leave =
-		    mobj_by_netid((uint32_t)sec->extra->action.leave);
+		sec->extra->action.enter = mobj_by_netid((uint32_t)sec->extra->action.enter);
+		sec->extra->action.leave = mobj_by_netid((uint32_t)sec->extra->action.leave);
 	}
 
 	// version check
@@ -2779,8 +2728,7 @@ static inline uint32_t ld_get_players(uint32_t hub_data)
 				return 1;
 			if (plr.pspr[i].state)
 			{
-				pl->psprites[i].state =
-				    states + plr.pspr[i].state;
+				pl->psprites[i].state = states + plr.pspr[i].state;
 				pl->psprites[i].tics = plr.pspr[i].tics;
 			}
 			else
@@ -3189,8 +3137,7 @@ static __attribute((regparm(2), no_caller_saved_registers)) void do_load()
 
 			while (size)
 			{
-				uint32_t len =
-				    size > sizeof(buff) ? sizeof(buff) : size;
+				uint32_t len = size > sizeof(buff) ? sizeof(buff) : size;
 				uint32_t ret;
 
 				if (reader_get(buff, len))
@@ -3243,8 +3190,7 @@ error_fail:
 //
 // hooks
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-setup_save_slots()
+static __attribute((regparm(2), no_caller_saved_registers)) void setup_save_slots()
 {
 	int fd;
 
@@ -3269,8 +3215,7 @@ setup_save_slots()
 	}
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-select_load(uint32_t slot)
+static __attribute((regparm(2), no_caller_saved_registers)) void select_load(uint32_t slot)
 {
 	saveslot = slot;
 	gameaction = ga_loadgame;
@@ -3285,28 +3230,25 @@ void init_saveload() { doom_mkdir(SAVE_DIR); }
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// replace call to 'G_DoLoadGame' in 'G_Ticker'
-	{0x00020515, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)do_load},
-	// replace call to 'G_DoSaveGame' in 'G_Ticker'
-	{0x0002051F, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)do_save},
-	// replace 'M_ReadSaveStrings'
-	{0x00021D70, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)setup_save_slots},
-	// replace 'M_LoadSelect'
-	{0x00021F80, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)select_load},
-	// change text in 'M_SaveSelect'
-	{0x00022196, CODE_HOOK | HOOK_UINT32, (uint32_t)empty_slot},
-	// replace 'M_DrawLoad' in menu structure
-	{0x00012510 + offsetof(menu_t, draw), DATA_HOOK | HOOK_UINT32,
-         (uint32_t)&draw_load_menu},
-	{0x00012510 + offsetof(menu_t, x), DATA_HOOK | HOOK_UINT16, -1},
-	// replace 'M_DrawSave' in menu structure
-	{0x0001258C + offsetof(menu_t, draw), DATA_HOOK | HOOK_UINT32,
-         (uint32_t)&draw_save_menu},
-	{0x0001258C + offsetof(menu_t, x), DATA_HOOK | HOOK_UINT16, -1},
-	// brain targets hack
-	{0x00028AFC, CODE_HOOK | HOOK_IMPORT, (uint32_t)&brain_sound_id},
-	// import variables
-	{0x0002B568, DATA_HOOK | HOOK_IMPORT, (uint32_t)&save_name},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // replace call to 'G_DoLoadGame' in 'G_Ticker'
+    {0x00020515, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)do_load},
+    // replace call to 'G_DoSaveGame' in 'G_Ticker'
+    {0x0002051F, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)do_save},
+    // replace 'M_ReadSaveStrings'
+    {0x00021D70, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)setup_save_slots},
+    // replace 'M_LoadSelect'
+    {0x00021F80, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)select_load},
+    // change text in 'M_SaveSelect'
+    {0x00022196, CODE_HOOK | HOOK_UINT32, (uint32_t)empty_slot},
+    // replace 'M_DrawLoad' in menu structure
+    {0x00012510 + offsetof(menu_t, draw), DATA_HOOK | HOOK_UINT32, (uint32_t)&draw_load_menu},
+    {0x00012510 + offsetof(menu_t, x), DATA_HOOK | HOOK_UINT16, -1},
+    // replace 'M_DrawSave' in menu structure
+    {0x0001258C + offsetof(menu_t, draw), DATA_HOOK | HOOK_UINT32, (uint32_t)&draw_save_menu},
+    {0x0001258C + offsetof(menu_t, x), DATA_HOOK | HOOK_UINT16, -1},
+    // brain targets hack
+    {0x00028AFC, CODE_HOOK | HOOK_IMPORT, (uint32_t)&brain_sound_id},
+    // import variables
+    {0x0002B568, DATA_HOOK | HOOK_IMPORT, (uint32_t)&save_name},
 };

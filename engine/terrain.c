@@ -77,63 +77,27 @@ static const terrain_splash_t default_splash = {
 
 // splash attributes
 static const attr_t splash_attr[] = {
-    {.name = "smallclass",
-     .type = IT_MOBJ_TYPE,
-     .offset = offsetof(terrain_splash_t, smallclass)},
-    {.name = "smallsound",
-     .type = IT_SOUND,
-     .offset = offsetof(terrain_splash_t, smallsound)},
-    {.name = "smallclip",
-     .type = IT_U8,
-     .offset = offsetof(terrain_splash_t, smallclip)},
-    {.name = "baseclass",
-     .type = IT_MOBJ_TYPE,
-     .offset = offsetof(terrain_splash_t, baseclass)},
-    {.name = "chunkclass",
-     .type = IT_MOBJ_TYPE,
-     .offset = offsetof(terrain_splash_t, chunkclass)},
-    {.name = "chunkxvelshift",
-     .type = IT_U8,
-     .offset = offsetof(terrain_splash_t, sx)},
-    {.name = "chunkyvelshift",
-     .type = IT_U8,
-     .offset = offsetof(terrain_splash_t, sy)},
-    {.name = "chunkzvelshift",
-     .type = IT_U8,
-     .offset = offsetof(terrain_splash_t, sz)},
-    {.name = "chunkbasezvel",
-     .type = IT_FIXED,
-     .offset = offsetof(terrain_splash_t, bz)},
-    {.name = "sound",
-     .type = IT_SOUND,
-     .offset = offsetof(terrain_splash_t, sound)},
-    {.name = "noalert",
-     .type = IT_FLAG,
-     .offset = offsetof(terrain_splash_t, flags),
-     .flag = TRN_SPLASH_NOALERT},
+    {.name = "smallclass", .type = IT_MOBJ_TYPE, .offset = offsetof(terrain_splash_t, smallclass)},
+    {.name = "smallsound", .type = IT_SOUND, .offset = offsetof(terrain_splash_t, smallsound)},
+    {.name = "smallclip", .type = IT_U8, .offset = offsetof(terrain_splash_t, smallclip)},
+    {.name = "baseclass", .type = IT_MOBJ_TYPE, .offset = offsetof(terrain_splash_t, baseclass)},
+    {.name = "chunkclass", .type = IT_MOBJ_TYPE, .offset = offsetof(terrain_splash_t, chunkclass)},
+    {.name = "chunkxvelshift", .type = IT_U8, .offset = offsetof(terrain_splash_t, sx)},
+    {.name = "chunkyvelshift", .type = IT_U8, .offset = offsetof(terrain_splash_t, sy)},
+    {.name = "chunkzvelshift", .type = IT_U8, .offset = offsetof(terrain_splash_t, sz)},
+    {.name = "chunkbasezvel", .type = IT_FIXED, .offset = offsetof(terrain_splash_t, bz)},
+    {.name = "sound", .type = IT_SOUND, .offset = offsetof(terrain_splash_t, sound)},
+    {.name = "noalert", .type = IT_FLAG, .offset = offsetof(terrain_splash_t, flags), .flag = TRN_SPLASH_NOALERT},
     // terminator
     {.name = NULL}};
 // terrain attributes
 static const attr_t terrain_attr[] = {
-    {.name = "splash",
-     .type = IT_SPLASH,
-     .offset = offsetof(terrain_terrain_t, splash)},
-    {.name = "friction",
-     .type = IT_FIXED,
-     .offset = offsetof(terrain_terrain_t, friction)},
-    {.name = "damagetype",
-     .type = IT_DAMAGE_TYPE,
-     .offset = offsetof(terrain_terrain_t, damagetype)},
-    {.name = "damageamount",
-     .type = IT_U16,
-     .offset = offsetof(terrain_terrain_t, damageamount)},
-    {.name = "damagetimemask",
-     .type = IT_U8,
-     .offset = offsetof(terrain_terrain_t, damagetimemask)},
-    {.name = "liquid",
-     .type = IT_FLAG,
-     .offset = offsetof(terrain_terrain_t, flags),
-     .flag = TRN_SPLASH_NOALERT},
+    {.name = "splash", .type = IT_SPLASH, .offset = offsetof(terrain_terrain_t, splash)},
+    {.name = "friction", .type = IT_FIXED, .offset = offsetof(terrain_terrain_t, friction)},
+    {.name = "damagetype", .type = IT_DAMAGE_TYPE, .offset = offsetof(terrain_terrain_t, damagetype)},
+    {.name = "damageamount", .type = IT_U16, .offset = offsetof(terrain_terrain_t, damageamount)},
+    {.name = "damagetimemask", .type = IT_U8, .offset = offsetof(terrain_terrain_t, damagetimemask)},
+    {.name = "liquid", .type = IT_FLAG, .offset = offsetof(terrain_terrain_t, flags), .flag = TRN_SPLASH_NOALERT},
     {.name = "allowprotection",
      .type = IT_FLAG,
      .offset = offsetof(terrain_terrain_t, flags),
@@ -222,26 +186,18 @@ static uint32_t parse_attributes(const attr_t* attr_def, void* dest)
 		switch (attr->type)
 		{
 		case IT_U8:
-			if (doom_sscanf(kv, "%u", &value.u32) != 1 ||
-			    value.u32 > 255)
-				engine_error("TERRAIN",
-				             "Unable to parse number '%s'!",
-				             kv);
+			if (doom_sscanf(kv, "%u", &value.u32) != 1 || value.u32 > 255)
+				engine_error("TERRAIN", "Unable to parse number '%s'!", kv);
 			*((uint8_t*)(dest + attr->offset)) = value.u32;
 			break;
 		case IT_U16:
-			if (doom_sscanf(kv, "%u", &value.u32) != 1 ||
-			    value.u32 > 65535)
-				engine_error("TERRAIN",
-				             "Unable to parse number '%s'!",
-				             kv);
+			if (doom_sscanf(kv, "%u", &value.u32) != 1 || value.u32 > 65535)
+				engine_error("TERRAIN", "Unable to parse number '%s'!", kv);
 			*((uint16_t*)(dest + attr->offset)) = value.u32;
 			break;
 		case IT_FIXED:
 			if (tp_parse_fixed(kv, &value.s32, FRACBITS))
-				engine_error("TERRAIN",
-				             "Unable to parse number '%s'!",
-				             kv);
+				engine_error("TERRAIN", "Unable to parse number '%s'!", kv);
 			*((fixed_t*)(dest + attr->offset)) = value.s32;
 			break;
 		case IT_SOUND:
@@ -260,8 +216,7 @@ static uint32_t parse_attributes(const attr_t* attr_def, void* dest)
 			break;
 		case IT_DAMAGE_TYPE:
 			strlwr(kv);
-			*((uint8_t*)(dest + attr->offset)) =
-			    dec_get_custom_damage(kv, "TERRAIN");
+			*((uint8_t*)(dest + attr->offset)) = dec_get_custom_damage(kv, "TERRAIN");
 			break;
 		case IT_FLAG:
 			*((uint8_t*)(dest + attr->offset)) |= attr->flag;
@@ -293,9 +248,7 @@ static void cb_count_stuff(lumpinfo_t* li)
 				break;
 
 			if (num_terrain_splash >= MAX_TERRAIN_COUNT)
-				engine_error("TERRAIN",
-				             "Too many %s definitions!",
-				             "splash");
+				engine_error("TERRAIN", "Too many %s definitions!", "splash");
 
 			splash_alias[num_terrain_splash++] = tp_hash64(kw);
 
@@ -310,9 +263,7 @@ static void cb_count_stuff(lumpinfo_t* li)
 				break;
 
 			if (num_terrain >= MAX_TERRAIN_COUNT)
-				engine_error("TERRAIN",
-				             "Too many %s definitions!",
-				             "terrain");
+				engine_error("TERRAIN", "Too many %s definitions!", "terrain");
 
 			terrain_alias[num_terrain++] = tp_hash64(kw);
 
@@ -373,9 +324,7 @@ static void cb_terrain(lumpinfo_t* li)
 			terrain_splash[num_terrain_splash] = default_splash;
 
 			// get properties
-			if (parse_attributes(splash_attr,
-			                     terrain_splash +
-			                         num_terrain_splash))
+			if (parse_attributes(splash_attr, terrain_splash + num_terrain_splash))
 				break;
 
 			num_terrain_splash++;
@@ -393,8 +342,7 @@ static void cb_terrain(lumpinfo_t* li)
 			terrain[num_terrain].splash = 255;
 
 			// get properties
-			if (parse_attributes(terrain_attr,
-			                     terrain + num_terrain))
+			if (parse_attributes(terrain_attr, terrain + num_terrain))
 				break;
 
 			num_terrain++;
@@ -432,8 +380,7 @@ static void cb_terrain(lumpinfo_t* li)
 //
 // splash
 
-static void splash_sound(terrain_splash_t* spl, fixed_t x, fixed_t y,
-                         mobj_t* th, uint32_t id)
+static void splash_sound(terrain_splash_t* spl, fixed_t x, fixed_t y, mobj_t* th, uint32_t id)
 {
 	// Limit emmited sounds during single tics.
 	fixed_t dist;
@@ -498,8 +445,7 @@ void init_terrain()
 	flatterrain = ldr_malloc(numflats + num_texture_flats);
 	memset(flatterrain, 0xFF, numflats + num_texture_flats);
 
-	size = num_terrain * sizeof(terrain_terrain_t) +
-	       num_terrain_splash * sizeof(terrain_splash_t);
+	size = num_terrain * sizeof(terrain_terrain_t) + num_terrain_splash * sizeof(terrain_splash_t);
 	ptr = ldr_malloc(size);
 	memset(ptr, 0, size);
 	terrain = ptr;
@@ -514,8 +460,7 @@ void init_terrain()
 	wad_handle_lump("TERRAIN", cb_terrain);
 }
 
-uint32_t terrain_hit_splash(mobj_t* mo, fixed_t x, fixed_t y, fixed_t z,
-                            int32_t flat)
+uint32_t terrain_hit_splash(mobj_t* mo, fixed_t x, fixed_t y, fixed_t z, int32_t flat)
 {
 	terrain_terrain_t* trn;
 	terrain_splash_t* spl;
@@ -542,8 +487,7 @@ uint32_t terrain_hit_splash(mobj_t* mo, fixed_t x, fixed_t y, fixed_t z,
 
 	if (mo)
 	{
-		if ((mo->flags1 & MF1_ISMONSTER || mo->player) &&
-		    mo->momz > -6 * FRACUNIT)
+		if ((mo->flags1 & MF1_ISMONSTER || mo->player) && mo->momz > -6 * FRACUNIT)
 			return 1;
 #if 0
 		if(mo->player && trn->flags & TRN_SPLASH_NOALERT)
@@ -572,11 +516,9 @@ uint32_t terrain_hit_splash(mobj_t* mo, fixed_t x, fixed_t y, fixed_t z,
 			th = P_SpawnMobj(x, y, z, spl->chunkclass);
 			th->target = mo;
 			if (spl->sx != 255)
-				th->momx = (128 - (int32_t)P_Random())
-				           << (spl->sx + 1);
+				th->momx = (128 - (int32_t)P_Random()) << (spl->sx + 1);
 			if (spl->sy != 255)
-				th->momy = (128 - (int32_t)P_Random())
-				           << (spl->sy + 1);
+				th->momy = (128 - (int32_t)P_Random()) << (spl->sy + 1);
 			if (spl->sz != 255)
 				th->momz = P_Random() << spl->sz;
 			th->momz += spl->bz;
@@ -621,8 +563,7 @@ void terrain_explosion_splash(mobj_t* mo, fixed_t dist)
 	{
 		if (mo->z - *select->height > dist)
 			return;
-		terrain_hit_splash(NULL, mo->x, mo->y, *select->height,
-		                   select->source->ceilingpic);
+		terrain_hit_splash(NULL, mo->x, mo->y, *select->height, select->source->ceilingpic);
 		return;
 	}
 
@@ -644,8 +585,7 @@ void terrain_sound()
 	{
 		if (splash_slot[slot].sound_tick != leveltime)
 			continue;
-		S_StartSound(splash_slot[slot].sound_source,
-		             splash_slot[slot].sound_id);
+		S_StartSound(splash_slot[slot].sound_source, splash_slot[slot].sound_id);
 	}
 }
 

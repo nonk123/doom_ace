@@ -71,8 +71,7 @@ void mover_tick(mobj_t* mo)
 		}
 
 		// setup next point right away
-		mo->reactiontime =
-		    ((uint32_t)mo->target->special.arg[2] * 35) / 8;
+		mo->reactiontime = ((uint32_t)mo->target->special.arg[2] * 35) / 8;
 		mo->reactiontime++;
 	}
 
@@ -91,8 +90,7 @@ void mover_tick(mobj_t* mo)
 			mo->pitch = mo->target->pitch;
 
 			// move time
-			mo->threshold =
-			    ((uint32_t)mo->target->special.arg[1] * 35) / 8;
+			mo->threshold = ((uint32_t)mo->target->special.arg[1] * 35) / 8;
 			mo->threshold++;
 
 			// get new point
@@ -123,14 +121,11 @@ void mover_tick(mobj_t* mo)
 					if (angle > 0x80000000)
 					{
 						angle = -angle;
-						mo->mover.angle =
-						    angle / mo->threshold;
-						mo->mover.angle =
-						    -mo->mover.angle;
+						mo->mover.angle = angle / mo->threshold;
+						mo->mover.angle = -mo->mover.angle;
 					}
 					else
-						mo->mover.angle =
-						    angle / mo->threshold;
+						mo->mover.angle = angle / mo->threshold;
 				}
 				else
 					mo->mover.angle = 0;
@@ -140,9 +135,7 @@ void mover_tick(mobj_t* mo)
 			{
 				if (th->pitch != mo->pitch)
 				{
-					mo->mover.pitch =
-					    (int32_t)(th->pitch + ANG90) -
-					    (int32_t)(mo->pitch + ANG90);
+					mo->mover.pitch = (int32_t)(th->pitch + ANG90) - (int32_t)(mo->pitch + ANG90);
 					mo->mover.pitch /= mo->threshold;
 				}
 				else

@@ -39,8 +39,7 @@ extern uint8_t* flatterrain;
 //
 
 void init_terrain();
-uint32_t terrain_hit_splash(mobj_t* mo, fixed_t x, fixed_t y, fixed_t z,
-                            int32_t flat);
+uint32_t terrain_hit_splash(mobj_t* mo, fixed_t x, fixed_t y, fixed_t z, int32_t flat);
 void terrain_explosion_splash(mobj_t* mo, fixed_t dist);
 void terrain_sound();
 void terrain_reset();

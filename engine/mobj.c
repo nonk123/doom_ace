@@ -89,8 +89,7 @@ P_SetMobjState(mobj_t* mo, uint32_t state, uint16_t extra)
 		case STATE_SET_ANIMATION:
 			mo->animation = extra & STATE_EXTRA_MASK;
 			if (state == 0xFFFFFFFF)
-				state = dec_resolve_animation(
-				    mo->info, 0, mo->animation, num_states);
+				state = dec_resolve_animation(mo->info, 0, mo->animation, num_states);
 			break;
 		}
 
@@ -110,9 +109,7 @@ P_SetMobjState(mobj_t* mo, uint32_t state, uint16_t extra)
 
 		if (st->tics != 0xFFFF)
 		{
-			if (st->tics > 1 &&
-			    (fastparm || gameskill == sk_nightmare) &&
-			    st->frame & FF_FAST)
+			if (st->tics > 1 && (fastparm || gameskill == sk_nightmare) && st->frame & FF_FAST)
 				mo->tics = (st->tics + 1) >> 1;
 			else
 				mo->tics = st->tics;
@@ -146,14 +143,13 @@ P_SetMobjState(mobj_t* mo, uint32_t state, uint16_t extra)
 	return 1;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-mobj_set_animation(mobj_t* mo, uint8_t anim)
+__attribute((regparm(2), no_caller_saved_registers)) void mobj_set_animation(mobj_t* mo, uint8_t anim)
 {
 	P_SetMobjState(mo, 0xFFFFFFFF, anim | STATE_SET_ANIMATION);
 }
 
-__attribute((regparm(3), no_caller_saved_registers)) static uint32_t
-mobj_inv_change(mobj_t* mo, uint32_t state, uint16_t extra)
+__attribute((regparm(3), no_caller_saved_registers)) static uint32_t mobj_inv_change(mobj_t* mo, uint32_t state,
+                                                                                     uint16_t extra)
 {
 	// defer state change for later
 	mo->custom_extra = extra;
@@ -171,8 +167,7 @@ static uint32_t mobj_inv_loop(mobj_t* mo, uint32_t state)
 
 	while (1)
 	{
-		state = dec_reslove_state(mo->custom_inventory, oldstate, state,
-		                          extra);
+		state = dec_reslove_state(mo->custom_inventory, oldstate, state, extra);
 
 		if (state <= 1)
 		{
@@ -233,8 +228,7 @@ static inline void check_nightmare(mobj_t* mo)
 //
 // inventory handling
 
-static uint32_t give_ammo(mobj_t* mo, uint16_t type, uint16_t count,
-                          uint32_t dropped)
+static uint32_t give_ammo(mobj_t* mo, uint16_t type, uint16_t count, uint32_t dropped)
 {
 	uint32_t left;
 
@@ -248,8 +242,7 @@ static uint32_t give_ammo(mobj_t* mo, uint16_t type, uint16_t count,
 			count = 1;
 	}
 
-	if (!(mobjinfo[type].eflags & MFE_INVENTORY_IGNORESKILL) &&
-	    (gameskill == sk_baby || gameskill == sk_nightmare))
+	if (!(mobjinfo[type].eflags & MFE_INVENTORY_IGNORESKILL) && (gameskill == sk_baby || gameskill == sk_nightmare))
 		count *= 2;
 
 	left = inventory_give(mo, type, count);
@@ -341,8 +334,7 @@ static uint32_t give_power(mobj_t* mo, mobjinfo_t* info)
 	if (!duration)
 		return 1;
 
-	if (!(info->eflags & MFE_INVENTORY_ALWAYSPICKUP) &&
-	    mo->player->powers[info->powerup.type])
+	if (!(info->eflags & MFE_INVENTORY_ALWAYSPICKUP) && mo->player->powers[info->powerup.type])
 		return 0;
 
 	powerup_give(mo->player, info);
@@ -398,8 +390,7 @@ static uint32_t give_special(mobj_t* mo, mobjinfo_t* info)
 		// berserk
 		mobj_give_health(mo, 100, 0);
 		mo->player->powers[pw_strength] = 1;
-		if (mo->player->readyweapon != mobjinfo + MOBJ_IDX_FIST &&
-		    inventory_check(mo, MOBJ_IDX_FIST))
+		if (mo->player->readyweapon != mobjinfo + MOBJ_IDX_FIST && inventory_check(mo, MOBJ_IDX_FIST))
 			mo->player->pendingweapon = mobjinfo + MOBJ_IDX_FIST;
 		break;
 	}
@@ -415,8 +406,7 @@ static uint32_t pick_custom_inv(mobj_t* mo, mobjinfo_t* info)
 		return 1;
 
 	if (mo->custom_inventory)
-		engine_error("MOBJ",
-		             "Nested CustomInventory is not supported!");
+		engine_error("MOBJ", "Nested CustomInventory is not supported!");
 
 	mo->custom_inventory = info;
 	ret = mobj_inv_loop(mo, info->st_custinv.pickup);
@@ -433,8 +423,7 @@ static uint32_t use_custom_inv(mobj_t* mo, mobjinfo_t* info)
 		return 1;
 
 	if (mo->custom_inventory)
-		engine_error("MOBJ",
-		             "Nested CustomInventory is not supported!");
+		engine_error("MOBJ", "Nested CustomInventory is not supported!");
 
 	mo->custom_inventory = info;
 	return mobj_inv_loop(mo, info->st_custinv.use);
@@ -495,8 +484,7 @@ static void touch_mobj(mobj_t* mo, mobj_t* toucher)
 	{
 	case ETYPE_HEALTH:
 		// health pickup
-		if (!mobj_give_health(toucher, info->inventory.count,
-		                      info->inventory.max_count) &&
+		if (!mobj_give_health(toucher, info->inventory.count, info->inventory.max_count) &&
 		    !(info->eflags & MFE_INVENTORY_ALWAYSPICKUP))
 			// can't pickup
 			return;
@@ -509,8 +497,7 @@ static void touch_mobj(mobj_t* mo, mobj_t* toucher)
 				return;
 			if (!mo->inventory)
 				return;
-			if (net_inventory > 2 && mo->threshold >= 0 &&
-			    toucher->player - players != mo->threshold)
+			if (net_inventory > 2 && mo->threshold >= 0 && toucher->player - players != mo->threshold)
 				return;
 			// backpack
 			toucher->player->backpack |= mo->reactiontime & 1;
@@ -519,8 +506,7 @@ static void touch_mobj(mobj_t* mo, mobj_t* toucher)
 			{
 				invitem_t* item = mo->inventory->slot + i;
 				if (item->type)
-					inventory_give(toucher, item->type,
-					               item->count);
+					inventory_give(toucher, item->type, item->count);
 			}
 			// update status bar
 			toucher->player->stbar_update |= STU_EVERYTHING;
@@ -533,8 +519,7 @@ static void touch_mobj(mobj_t* mo, mobj_t* toucher)
 		break;
 	case ETYPE_INVENTORY:
 		// add to inventory
-		if (inventory_give(toucher, mo->type, info->inventory.count) >=
-		    info->inventory.count)
+		if (inventory_give(toucher, mo->type, info->inventory.count) >= info->inventory.count)
 			// can't pickup
 			return;
 		break;
@@ -552,12 +537,10 @@ static void touch_mobj(mobj_t* mo, mobj_t* toucher)
 				given = use_custom_inv(toucher, info);
 			// give as item
 			if (!given)
-				given = inventory_give(toucher, mo->type,
-				                       info->inventory.count) <
-				        info->inventory.count;
+				given =
+				    inventory_give(toucher, mo->type, info->inventory.count) < info->inventory.count;
 			// check
-			if (!given &&
-			    !(info->eflags & MFE_INVENTORY_ALWAYSPICKUP))
+			if (!given && !(info->eflags & MFE_INVENTORY_ALWAYSPICKUP))
 				return;
 		}
 		break;
@@ -566,19 +549,16 @@ static void touch_mobj(mobj_t* mo, mobj_t* toucher)
 		if (weapons_stay && mo->spawnpoint.options == mo->type)
 		{
 			// TODO: this does not work well for multi-weapons
-			if (inventory_check(toucher, mo->type) >=
-			    mobjinfo[mo->type].inventory.max_count)
+			if (inventory_check(toucher, mo->type) >= mobjinfo[mo->type].inventory.max_count)
 				return;
 			do_remove = 0;
 		}
-		given =
-		    inventory_give(toucher, mo->type, info->inventory.count);
+		given = inventory_give(toucher, mo->type, info->inventory.count);
 		if (!given)
 		{
 			pl->stbar_update |= STU_WEAPON_NEW; // evil grin
 			// auto-weapon-switch optional
-			if (pl->readyweapon != info &&
-			    player_info[pl - players].flags & PLF_AUTO_SWITCH)
+			if (pl->readyweapon != info && player_info[pl - players].flags & PLF_AUTO_SWITCH)
 				pl->pendingweapon = info;
 			if (!pl->psprites[0].state)
 				// fix 'no weapon' state
@@ -586,15 +566,11 @@ static void touch_mobj(mobj_t* mo, mobj_t* toucher)
 		}
 		given = given < info->inventory.count;
 		// primary ammo
-		given |= give_ammo(toucher, info->weapon.ammo_type[0],
-		                   info->weapon.ammo_give[0],
-		                   (mo->flags & MF_DROPPED) &&
-		                       !(mo->iflags & MFI_NOT_DROPPED));
+		given |= give_ammo(toucher, info->weapon.ammo_type[0], info->weapon.ammo_give[0],
+		                   (mo->flags & MF_DROPPED) && !(mo->iflags & MFI_NOT_DROPPED));
 		// secondary ammo
-		given |= give_ammo(toucher, info->weapon.ammo_type[1],
-		                   info->weapon.ammo_give[1],
-		                   (mo->flags & MF_DROPPED) &&
-		                       !(mo->iflags & MFI_NOT_DROPPED));
+		given |= give_ammo(toucher, info->weapon.ammo_type[1], info->weapon.ammo_give[1],
+		                   (mo->flags & MF_DROPPED) && !(mo->iflags & MFI_NOT_DROPPED));
 		// check
 		if (!given && !(info->eflags & MFE_INVENTORY_ALWAYSPICKUP))
 			return;
@@ -603,8 +579,7 @@ static void touch_mobj(mobj_t* mo, mobj_t* toucher)
 	case ETYPE_AMMO_LINK:
 		// add ammo to inventory
 		if (!give_ammo(toucher, mo->type, info->inventory.count,
-		               (mo->flags & MF_DROPPED) &&
-		                   !(mo->iflags & MFI_NOT_DROPPED)) &&
+		               (mo->flags & MF_DROPPED) && !(mo->iflags & MFI_NOT_DROPPED)) &&
 		    !(info->eflags & MFE_INVENTORY_ALWAYSPICKUP))
 			// can't pickup
 			return;
@@ -627,9 +602,7 @@ static void touch_mobj(mobj_t* mo, mobj_t* toucher)
 			given = give_armor(toucher, info);
 		// give as item
 		if (!given)
-			given = inventory_give(toucher, mo->type,
-			                       info->inventory.count) <
-			        info->inventory.count;
+			given = inventory_give(toucher, mo->type, info->inventory.count) < info->inventory.count;
 		// check
 		if (!given && !(info->eflags & MFE_INVENTORY_ALWAYSPICKUP))
 			return;
@@ -641,9 +614,7 @@ static void touch_mobj(mobj_t* mo, mobj_t* toucher)
 			given = give_power(toucher, info);
 		// give as item
 		if (!given)
-			given = inventory_give(toucher, mo->type,
-			                       info->inventory.count) <
-			        info->inventory.count;
+			given = inventory_give(toucher, mo->type, info->inventory.count) < info->inventory.count;
 		// check
 		if (!given && !(info->eflags & MFE_INVENTORY_ALWAYSPICKUP))
 			return;
@@ -652,13 +623,10 @@ static void touch_mobj(mobj_t* mo, mobj_t* toucher)
 		given = 0;
 		// autoactivate
 		if (info->eflags & MFE_INVENTORY_AUTOACTIVATE)
-			given = mobj_give_health(toucher, info->spawnhealth,
-			                         toucher->info->spawnhealth);
+			given = mobj_give_health(toucher, info->spawnhealth, toucher->info->spawnhealth);
 		// give as item
 		if (!given)
-			given = inventory_give(toucher, mo->type,
-			                       info->inventory.count) <
-			        info->inventory.count;
+			given = inventory_give(toucher, mo->type, info->inventory.count) < info->inventory.count;
 		// check
 		if (!given && !(info->eflags & MFE_INVENTORY_ALWAYSPICKUP))
 			return;
@@ -748,8 +716,7 @@ mobj_t* mobj_spawn_player(uint32_t idx, fixed_t x, fixed_t y, angle_t angle)
 		Z_ChangeTag2(pl->inventory, PU_LEVEL_INV);
 
 	// check for reset
-	if (pl->state == PST_REBORN || pl->state == PST_SPECTATE ||
-	    map_level_info->flags & MAP_FLAG_RESET_INVENTORY)
+	if (pl->state == PST_REBORN || pl->state == PST_SPECTATE || map_level_info->flags & MAP_FLAG_RESET_INVENTORY)
 	{
 		// cleanup
 		uint32_t killcount;
@@ -813,16 +780,13 @@ mobj_t* mobj_spawn_player(uint32_t idx, fixed_t x, fixed_t y, angle_t angle)
 
 			// default inventory
 			for (plrp_start_item_t* si = info->start_item.start;
-			     si < (plrp_start_item_t*)info->start_item.end;
-			     si++)
+			     si < (plrp_start_item_t*)info->start_item.end; si++)
 			{
 				mobj_give_inventory(mo, si->type, si->count);
 				if (!pl->pendingweapon)
 				{
-					if (mobjinfo[si->type].extra_type ==
-					    ETYPE_WEAPON)
-						pl->pendingweapon =
-						    mobjinfo + si->type;
+					if (mobjinfo[si->type].extra_type == ETYPE_WEAPON)
+						pl->pendingweapon = mobjinfo + si->type;
 				}
 			}
 
@@ -834,8 +798,7 @@ mobj_t* mobj_spawn_player(uint32_t idx, fixed_t x, fixed_t y, angle_t angle)
 				{
 					mobjinfo_t* info = mobjinfo + i;
 					if (info->extra_type == ETYPE_KEY)
-						inventory_give(mo, i,
-						               INV_MAX_COUNT);
+						inventory_give(mo, i, INV_MAX_COUNT);
 				}
 			}
 		}
@@ -908,14 +871,12 @@ mobj_t* mobj_spawn_player(uint32_t idx, fixed_t x, fixed_t y, angle_t angle)
 //
 // stuff
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-set_mobj_state(mobj_t* mo, uint32_t state)
+static __attribute((regparm(2), no_caller_saved_registers)) void set_mobj_state(mobj_t* mo, uint32_t state)
 {
 	P_SetMobjState(mo, state, 0);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-set_mobj_animation(mobj_t* mo, uint8_t anim)
+static __attribute((regparm(2), no_caller_saved_registers)) void set_mobj_animation(mobj_t* mo, uint8_t anim)
 {
 	if (anim == ANIM_HEAL)
 	{
@@ -933,8 +894,7 @@ set_mobj_animation(mobj_t* mo, uint8_t anim)
 	mobj_set_animation(mo, anim);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) mobjinfo_t*
-prepare_mobj(mobj_t* mo, uint32_t type)
+static __attribute((regparm(2), no_caller_saved_registers)) mobjinfo_t* prepare_mobj(mobj_t* mo, uint32_t type)
 {
 	mobjinfo_t* info = mobjinfo + type;
 	uint32_t hack = 0;
@@ -956,11 +916,9 @@ prepare_mobj(mobj_t* mo, uint32_t type)
 		uint32_t chance;
 
 		if (rng >= 16)
-			engine_error("MOBJ",
-			             "Possible recursive RandomSpawner!");
+			engine_error("MOBJ", "Possible recursive RandomSpawner!");
 
-		for (mobj_dropitem_t* drop = info->dropitem.start;
-		     drop < (mobj_dropitem_t*)info->dropitem.end; drop++)
+		for (mobj_dropitem_t* drop = info->dropitem.start; drop < (mobj_dropitem_t*)info->dropitem.end; drop++)
 		{
 			if (drop->amount)
 				weight += drop->amount;
@@ -1028,8 +986,7 @@ prepare_mobj(mobj_t* mo, uint32_t type)
 	return info;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-finish_mobj(mobj_t* mo)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t finish_mobj(mobj_t* mo)
 {
 	// add thinker
 	P_AddThinker(&mo->thinker);
@@ -1086,8 +1043,7 @@ finish_mobj(mobj_t* mo)
 	mo->type = mo->info - mobjinfo;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-mobj_kill(mobj_t* mo, mobj_t* source)
+__attribute((regparm(2), no_caller_saved_registers)) static void mobj_kill(mobj_t* mo, mobj_t* source)
 {
 	uint_fast8_t new_damage_type = DAMAGE_NORMAL;
 	uint32_t state = 0;
@@ -1124,8 +1080,7 @@ mobj_kill(mobj_t* mo, mobj_t* source)
 		if (!(mo->flags1 & MF1_DONTFALL))
 			mo->flags &= ~MF_NOGRAVITY;
 
-		if (mo->special.special &&
-		    (!(mo->flags & MF_SPECIAL) || mo->flags1 & MF1_ISMONSTER))
+		if (mo->special.special && (!(mo->flags & MF_SPECIAL) || mo->flags1 & MF1_ISMONSTER))
 		{
 			spec_special = mo->special.special;
 			spec_arg[0] = mo->special.arg[0];
@@ -1188,15 +1143,13 @@ mobj_kill(mobj_t* mo, mobj_t* source)
 			if (i < inv->numslots)
 			{
 				// spawn normal backpack
-				thing = P_SpawnMobj(mo->x, mo->y,
-				                    mo->z + (8 << FRACBITS),
+				thing = P_SpawnMobj(mo->x, mo->y, mo->z + (8 << FRACBITS),
 				                    71); // MT_MISC24 (backpack)
 				thing->angle = P_Random() << 24;
 				thing->momx = FRACUNIT - (P_Random() << 9);
 				thing->momy = FRACUNIT - (P_Random() << 9);
 				thing->momz = (4 << 16) + (P_Random() << 10);
-				thing->iflags |=
-				    MFI_PLAYER_DROP; // override function
+				thing->iflags |= MFI_PLAYER_DROP; // override function
 				thing->threshold = mo->player - players;
 				thing->reactiontime = mo->player->backpack;
 				if (!(thing->flags2 & MF2_DONTTRANSLATE))
@@ -1217,22 +1170,15 @@ mobj_kill(mobj_t* mo, mobj_t* source)
 				for (uint32_t i = 0; i < inv->numslots; i++)
 				{
 					invitem_t* item = inv->slot + i;
-					mobjinfo_t* info =
-					    mobjinfo + item->type;
+					mobjinfo_t* info = mobjinfo + item->type;
 
-					if (info->eflags &
-					        MFE_INVENTORY_UNTOSSABLE ||
-					    (keep_keys &&
-					     info->extra_type == ETYPE_KEY))
+					if (info->eflags & MFE_INVENTORY_UNTOSSABLE ||
+					    (keep_keys && info->extra_type == ETYPE_KEY))
 					{
 						// give
-						inventory_give(mo, item->type,
-						               item->count);
-						if (info->extra_type ==
-						    ETYPE_WEAPON)
-							mo->player
-							    ->readyweapon =
-							    info;
+						inventory_give(mo, item->type, item->count);
+						if (info->extra_type == ETYPE_WEAPON)
+							mo->player->readyweapon = info;
 						// clear original
 						item->type = 0;
 						item->count = 0;
@@ -1249,20 +1195,15 @@ mobj_kill(mobj_t* mo, mobj_t* source)
 	if (mo->damage_type)
 	{
 		if (mo->health < -mo->info->spawnhealth)
-			state = dec_mobj_custom_state(
-			    mo->info,
-			    damage_type_config[mo->damage_type].xdeath);
+			state = dec_mobj_custom_state(mo->info, damage_type_config[mo->damage_type].xdeath);
 		if (!state)
-			state = dec_mobj_custom_state(
-			    mo->info,
-			    damage_type_config[mo->damage_type].death);
+			state = dec_mobj_custom_state(mo->info, damage_type_config[mo->damage_type].death);
 		if (state)
 			new_damage_type = mo->damage_type;
 	}
 
 	// check generic ice death
-	if (!state && mo->damage_type == DAMAGE_ICE &&
-	    (mo->flags1 & MF1_ISMONSTER || mo->player) &&
+	if (!state && mo->damage_type == DAMAGE_ICE && (mo->flags1 & MF1_ISMONSTER || mo->player) &&
 	    !(mo->flags2 & MF2_NOICEDEATH))
 	{
 		state = STATE_ICE_DEATH_0;
@@ -1293,8 +1234,7 @@ mobj_kill(mobj_t* mo, mobj_t* source)
 	P_KillMobj(source, mo); // this function was modified
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-pit_check_thing(mobj_t* thing, mobj_t* tmthing)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t pit_check_thing(mobj_t* thing, mobj_t* tmthing)
 {
 	uint32_t damage;
 	uint32_t thsolid = 0;
@@ -1311,12 +1251,9 @@ pit_check_thing(mobj_t* thing, mobj_t* tmthing)
 	{
 		// players walk trough corpses in ZDoom
 		// this is not the exact emulation ...
-		if (!(thing->flags & MF_CORPSE) ||
-		    !(thing->flags1 & MF1_ISMONSTER) ||
-		    thing->flags2 & MF2_ICECORPSE)
+		if (!(thing->flags & MF_CORPSE) || !(thing->flags1 & MF1_ISMONSTER) || thing->flags2 & MF2_ICECORPSE)
 			thsolid = thing->flags & MF_SOLID;
-		if (!(tmthing->flags & MF_CORPSE) ||
-		    !(tmthing->flags1 & MF1_ISMONSTER) ||
+		if (!(tmthing->flags & MF_CORPSE) || !(tmthing->flags1 & MF1_ISMONSTER) ||
 		    tmthing->flags2 & MF2_ICECORPSE)
 			tmsolid = tmthing->flags & MF_SOLID;
 	}
@@ -1334,9 +1271,7 @@ pit_check_thing(mobj_t* thing, mobj_t* tmthing)
 		thing->iflags |= MFI_MOBJONMOBJ;
 
 		if ((tmthing->z >= thing->z + thing->height) ||
-		    (tmthing->player &&
-		     tmthing->z + tmthing->info->step_height >=
-		         thing->z + thing->height))
+		    (tmthing->player && tmthing->z + tmthing->info->step_height >= thing->z + thing->height))
 		{
 			if (tmfloorz < thing->z + thing->height)
 				tmfloorz = thing->z + thing->height;
@@ -1393,34 +1328,27 @@ pit_check_thing(mobj_t* thing, mobj_t* tmthing)
 		if (tmthing->z + tmthing->height <= thing->z)
 			return 1;
 
-		if (thing->flags1 & MF1_SPECTRAL &&
-		    !(tmthing->flags1 & MF1_SPECTRAL))
+		if (thing->flags1 & MF1_SPECTRAL && !(tmthing->flags1 & MF1_SPECTRAL))
 			return 1;
 
-		if (thing->flags1 & MF1_GHOST &&
-		    tmthing->flags1 & MF1_THRUGHOST)
+		if (thing->flags1 & MF1_GHOST && tmthing->flags1 & MF1_THRUGHOST)
 			return 1;
 
 		if (!(thing->flags & MF_SHOOTABLE))
 			return !thsolid;
 
 		if (!dehacked.no_species &&
-		    (map_level_info->flags &
-		     (MAP_FLAG_TOTAL_INFIGHTING | MAP_FLAG_NO_INFIGHTING)) !=
+		    (map_level_info->flags & (MAP_FLAG_TOTAL_INFIGHTING | MAP_FLAG_NO_INFIGHTING)) !=
 		        MAP_FLAG_TOTAL_INFIGHTING &&
-		    tmthing->target &&
-		    thing->info->extra_type != ETYPE_PLAYERPAWN)
+		    tmthing->target && thing->info->extra_type != ETYPE_PLAYERPAWN)
 		{
-			if (thing->info->species ==
-			    tmthing->target->info->species)
+			if (thing->info->species == tmthing->target->info->species)
 				return 0;
 		}
 
-		if (!(thing->flags1 & MF1_DONTRIP) &&
-		    tmthing->flags1 & MF1_RIPPER)
+		if (!(thing->flags1 & MF1_DONTRIP) && tmthing->flags1 & MF1_RIPPER)
 		{
-			if (tmthing->rip_thing == thing &&
-			    tmthing->rip_tick == leveltime)
+			if (tmthing->rip_thing == thing && tmthing->rip_tick == leveltime)
 				return 1;
 			tmthing->rip_thing = thing;
 			tmthing->rip_tick = leveltime;
@@ -1441,22 +1369,18 @@ pit_check_thing(mobj_t* thing, mobj_t* tmthing)
 
 		if (is_ripper)
 		{
-			if (!(thing->flags & MF_NOBLOOD) &&
-			    !(tmthing->flags2 & MF2_BLOODLESSIMPACT))
+			if (!(thing->flags & MF_NOBLOOD) && !(tmthing->flags2 & MF2_BLOODLESSIMPACT))
 			{
 				mobj_t* mo;
-				mo = P_SpawnMobj(thing->x, thing->y,
-				                 thing->z + thing->height / 2,
+				mo = P_SpawnMobj(thing->x, thing->y, thing->z + thing->height / 2,
 				                 thing->info->blood_type);
 				mo->inside = thing;
 				mo->momx = (P_Random() - P_Random()) << 12;
 				mo->momy = (P_Random() - P_Random()) << 12;
 				if (!(mo->flags2 & MF2_DONTTRANSLATE))
-					mo->translation =
-					    thing->info->blood_trns;
+					mo->translation = thing->info->blood_trns;
 			}
-			if (thing->flags1 & MF1_PUSHABLE &&
-			    !(tmthing->flags1 & MF1_CANNOTPUSH))
+			if (thing->flags1 & MF1_PUSHABLE && !(tmthing->flags1 & MF1_CANNOTPUSH))
 			{
 				thing->momx += tmthing->momx / 2;
 				thing->momy += tmthing->momy / 2;
@@ -1475,11 +1399,9 @@ pit_check_thing(mobj_t* thing, mobj_t* tmthing)
 				tmthing->tracer = NULL;
 			tmthing->target = thing;
 
-			angle = R_PointToAngle2(thing->x, thing->y, tmthing->x,
-			                        tmthing->y);
+			angle = R_PointToAngle2(thing->x, thing->y, tmthing->x, tmthing->y);
 
-			if (tmthing->info->fast_speed &&
-			    (fastparm || gameskill == sk_nightmare))
+			if (tmthing->info->fast_speed && (fastparm || gameskill == sk_nightmare))
 				speed = tmthing->info->fast_speed;
 			else
 				speed = tmthing->info->speed;
@@ -1490,23 +1412,18 @@ pit_check_thing(mobj_t* thing, mobj_t* tmthing)
 			{
 				if (tmthing->momz)
 				{
-					angle_t pitch = slope_to_angle(
-					    FixedDiv(tmthing->momz, speed));
+					angle_t pitch = slope_to_angle(FixedDiv(tmthing->momz, speed));
 					pitch >>= ANGLETOFINESHIFT;
 					speed /= 2;
-					tmthing->momz =
-					    FixedMul(speed, finesine[pitch]);
-					speed =
-					    FixedMul(speed, finecosine[pitch]);
+					tmthing->momz = FixedMul(speed, finesine[pitch]);
+					speed = FixedMul(speed, finecosine[pitch]);
 				}
 				else
 					speed /= 2;
 
 				angle >>= ANGLETOFINESHIFT;
-				tmthing->momx =
-				    FixedMul(speed, finecosine[angle]);
-				tmthing->momy =
-				    FixedMul(speed, finesine[angle]);
+				tmthing->momx = FixedMul(speed, finecosine[angle]);
+				tmthing->momy = FixedMul(speed, finesine[angle]);
 			}
 
 			return 1;
@@ -1541,8 +1458,7 @@ pit_check_thing(mobj_t* thing, mobj_t* tmthing)
 	return !thsolid;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-pit_check_line(mobj_t* tmthing, line_t* ld)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t pit_check_line(mobj_t* tmthing, line_t* ld)
 {
 	uint32_t is_safe = 0;
 	fixed_t z;
@@ -1567,14 +1483,12 @@ pit_check_line(mobj_t* tmthing, line_t* ld)
 		}
 		else
 		{
-			if (ld->flags & ML_BLOCKMONSTERS &&
-			    !(tmthing->flags2 & MF2_NOBLOCKMONST))
+			if (ld->flags & ML_BLOCKMONSTERS && !(tmthing->flags2 & MF2_NOBLOCKMONST))
 				goto blocked;
 		}
 	}
 
-	e3d_check_heights(tmthing, ld->frontsector,
-	                  tmthing->flags & MF_MISSILE);
+	e3d_check_heights(tmthing, ld->frontsector, tmthing->flags & MF_MISSILE);
 
 	if (tmceilingz > tmextraceiling)
 		tmceilingz = tmextraceiling;
@@ -1592,8 +1506,7 @@ pit_check_line(mobj_t* tmthing, line_t* ld)
 	if (tmfloorz < tmextrafloor)
 		tmfloorz = tmextrafloor;
 
-	if (tmextradrop <= tmthing->info->dropoff ||
-	    ld->backsector->floorheight >= tmthing->z - tmthing->info->dropoff)
+	if (tmextradrop <= tmthing->info->dropoff || ld->backsector->floorheight >= tmthing->z - tmthing->info->dropoff)
 		is_safe |= 2;
 
 	e3d_check_midtex(tmthing, ld, tmthing->flags & MF_MISSILE);
@@ -1631,8 +1544,7 @@ pit_check_line(mobj_t* tmthing, line_t* ld)
 	if (is_safe != 3 && lowfloor < tmdropoffz)
 		tmdropoffz = lowfloor;
 
-	if (!(tmthing->flags & MF_TELEPORT) && ld->special &&
-	    numspechit < MAXSPECIALCROSS)
+	if (!(tmthing->flags & MF_TELEPORT) && ld->special && numspechit < MAXSPECIALCROSS)
 	{
 		spechit[numspechit] = ld;
 		numspechit++;
@@ -1654,13 +1566,11 @@ blocked:
 	return 0;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-PIT_ChangeSector(mobj_t* thing)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t PIT_ChangeSector(mobj_t* thing)
 {
 	uint32_t onfloor;
 
-	onfloor =
-	    (thing->z <= thing->floorz) && !(thing->flags2 & MF2_NOLIFTDROP);
+	onfloor = (thing->z <= thing->floorz) && !(thing->flags2 & MF2_NOLIFTDROP);
 
 	P_CheckPosition(thing, thing->x, thing->y);
 
@@ -1680,8 +1590,7 @@ PIT_ChangeSector(mobj_t* thing)
 
 	if (!(thing->flags1 & MF1_DONTGIB))
 	{
-		if (thing->flags2 & MF2_ICECORPSE &&
-		    !(thing->iflags & MFI_SHATTERING))
+		if (thing->flags2 & MF2_ICECORPSE && !(thing->iflags & MFI_SHATTERING))
 		{
 			thing->tics = 1;
 			thing->iflags |= MFI_SHATTERING;
@@ -1699,8 +1608,7 @@ PIT_ChangeSector(mobj_t* thing)
 				if (!thing->info->state_crush)
 				{
 					state = 895;
-					thing->translation =
-					    thing->info->blood_trns;
+					thing->translation = thing->info->blood_trns;
 				}
 				else
 					state = thing->info->state_crush;
@@ -1743,9 +1651,7 @@ PIT_ChangeSector(mobj_t* thing)
 		{
 			mobj_t* mo;
 
-			mo = P_SpawnMobj(thing->x, thing->y,
-			                 thing->z + thing->height / 2,
-			                 thing->info->blood_type);
+			mo = P_SpawnMobj(thing->x, thing->y, thing->z + thing->height / 2, thing->info->blood_type);
 			mo->inside = thing;
 			mo->momx = (P_Random() - P_Random()) << 12;
 			mo->momy = (P_Random() - P_Random()) << 12;
@@ -1757,8 +1663,7 @@ PIT_ChangeSector(mobj_t* thing)
 	return 1;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-try_move_check(mobj_t* mo, fixed_t x)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t try_move_check(mobj_t* mo, fixed_t x)
 {
 	fixed_t y;
 	uint32_t ret;
@@ -1777,8 +1682,7 @@ try_move_check(mobj_t* mo, fixed_t x)
 	return ret;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-check_position_extra(sector_t* sec)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t check_position_extra(sector_t* sec)
 {
 	ceilingline = NULL;
 	floorline = NULL;
@@ -1885,9 +1789,7 @@ uint8_t* mobj_check_keylock(mobj_t* mo, uint32_t lockdef, uint32_t is_remote)
 				if (!item->type)
 					continue;
 
-				if (item->count &&
-				    mobjinfo[item->type].extra_type ==
-				        ETYPE_KEY)
+				if (item->count && mobjinfo[item->type].extra_type == ETYPE_KEY)
 				{
 					have_key = 1;
 					break;
@@ -1938,8 +1840,7 @@ void mobj_use_item(mobj_t* mo, invitem_t* item)
 			return;
 		break;
 	case ETYPE_HEALTH_PICKUP:
-		if (!mobj_give_health(mo, info->spawnhealth,
-		                      mo->info->spawnhealth))
+		if (!mobj_give_health(mo, info->spawnhealth, mo->info->spawnhealth))
 			return;
 		break;
 	default:
@@ -1960,9 +1861,8 @@ uint32_t mobj_give_inventory(mobj_t* mo, uint16_t type, uint16_t count)
 	switch (info->extra_type)
 	{
 	case ETYPE_HEALTH:
-		return mobj_give_health(
-		    mo, (uint32_t)count * (uint32_t)info->inventory.count,
-		    info->inventory.max_count);
+		return mobj_give_health(mo, (uint32_t)count * (uint32_t)info->inventory.count,
+		                        info->inventory.max_count);
 	case ETYPE_INV_SPECIAL:
 		return give_special(mo, info);
 	case ETYPE_INVENTORY:
@@ -1988,11 +1888,9 @@ uint32_t mobj_give_inventory(mobj_t* mo, uint16_t type, uint16_t count)
 			}
 			// give as item(s)
 			if (!given || count)
-				given |=
-				    inventory_give(mo, type, count) < count;
+				given |= inventory_give(mo, type, count) < count;
 			// check
-			if (!given &&
-			    !(info->eflags & MFE_INVENTORY_ALWAYSPICKUP))
+			if (!given && !(info->eflags & MFE_INVENTORY_ALWAYSPICKUP))
 				return 0;
 		}
 		return 1;
@@ -2016,8 +1914,7 @@ uint32_t mobj_give_inventory(mobj_t* mo, uint16_t type, uint16_t count)
 	case ETYPE_POWERUP:
 		given = 0;
 		// autoactivate
-		if (info->eflags & MFE_INVENTORY_AUTOACTIVATE ||
-		    !info->inventory.max_count)
+		if (info->eflags & MFE_INVENTORY_AUTOACTIVATE || !info->inventory.max_count)
 		{
 			given = give_power(mo, info);
 			if (given)
@@ -2035,8 +1932,7 @@ uint32_t mobj_give_inventory(mobj_t* mo, uint16_t type, uint16_t count)
 		// autoactivate
 		if (info->eflags & MFE_INVENTORY_AUTOACTIVATE)
 		{
-			given = mobj_give_health(mo, info->spawnhealth,
-			                         mo->info->spawnhealth);
+			given = mobj_give_health(mo, info->spawnhealth, mo->info->spawnhealth);
 			if (given)
 				count--;
 		}
@@ -2110,8 +2006,7 @@ mobj_t* mobj_by_netid(uint32_t netid)
 	return NULL;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-mobj_remove(mobj_t* mo)
+__attribute((regparm(2), no_caller_saved_registers)) void mobj_remove(mobj_t* mo)
 {
 	for (uint32_t i = 0; i < numsectors; i++)
 	{
@@ -2174,8 +2069,7 @@ mobj_remove(mobj_t* mo)
 	P_RemoveThinker((thinker_t*)mo);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-mobj_plane_bounce(mobj_t* mo, fixed_t momz)
+static __attribute((regparm(2), no_caller_saved_registers)) void mobj_plane_bounce(mobj_t* mo, fixed_t momz)
 {
 	if (mo->bounce_count && !--mo->bounce_count)
 	{
@@ -2183,8 +2077,7 @@ mobj_plane_bounce(mobj_t* mo, fixed_t momz)
 		return;
 	}
 
-	mo->angle =
-	    R_PointToAngle2(mo->x, mo->y, mo->x + mo->momx, mo->y + mo->momy);
+	mo->angle = R_PointToAngle2(mo->x, mo->y, mo->x + mo->momx, mo->y + mo->momy);
 
 	mo->momx = FixedMul(mo->momx, mo->info->bounce_factor);
 	mo->momy = FixedMul(mo->momy, mo->info->bounce_factor);
@@ -2193,8 +2086,7 @@ mobj_plane_bounce(mobj_t* mo, fixed_t momz)
 	S_StartSound(mo, mo->info->bouncesound);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-mobj_explode_missile(mobj_t* mo)
+__attribute((regparm(2), no_caller_saved_registers)) void mobj_explode_missile(mobj_t* mo)
 {
 	uint32_t animation = ANIM_DEATH;
 
@@ -2239,12 +2131,10 @@ mobj_explode_missile(mobj_t* mo)
 
 	mo->flags &= ~MF_MISSILE;
 
-	S_StartSound(mo->flags2 & MF2_FULLVOLDEATH ? NULL : mo,
-	             mo->info->deathsound);
+	S_StartSound(mo->flags2 & MF2_FULLVOLDEATH ? NULL : mo, mo->info->deathsound);
 }
 
-uint32_t mobj_range_check(mobj_t* mo, mobj_t* target, fixed_t range,
-                          uint32_t check_z)
+uint32_t mobj_range_check(mobj_t* mo, mobj_t* target, fixed_t range, uint32_t check_z)
 {
 	fixed_t dist;
 
@@ -2268,8 +2158,7 @@ uint32_t mobj_range_check(mobj_t* mo, mobj_t* target, fixed_t range,
 	return 1;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) uint32_t
-mobj_check_melee_range(mobj_t* mo)
+__attribute((regparm(2), no_caller_saved_registers)) uint32_t mobj_check_melee_range(mobj_t* mo)
 {
 	mobj_t* target;
 	fixed_t dist;
@@ -2285,8 +2174,7 @@ mobj_check_melee_range(mobj_t* mo)
 	if (target->flags1 & MF1_NOTARGET)
 		return 0;
 
-	if (!mobj_range_check(mo, target,
-	                      mo->info->range_melee + target->info->radius,
+	if (!mobj_range_check(mo, target, mo->info->range_melee + target->info->radius,
 	                      !(mo->flags2 & MF2_NOVERTICALMELEERANGE)))
 		return 0;
 
@@ -2296,8 +2184,7 @@ mobj_check_melee_range(mobj_t* mo)
 	return 1;
 }
 
-void mobj_damage(mobj_t* target, mobj_t* inflictor, mobj_t* source,
-                 uint32_t damage, mobjinfo_t* pufftype)
+void mobj_damage(mobj_t* target, mobj_t* inflictor, mobj_t* source, uint32_t damage, mobjinfo_t* pufftype)
 {
 	// target = what is damaged
 	// inflictor = damage source (projectile or ...)
@@ -2356,8 +2243,7 @@ void mobj_damage(mobj_t* target, mobj_t* inflictor, mobj_t* source,
 	case DAMAGE_IS_MATH_FUNC:
 	{
 		int32_t temp = damage & 0xFFFF;
-		temp =
-		    actarg_integer(inflictor, mobjinfo[temp].damage_func, 0, 0);
+		temp = actarg_integer(inflictor, mobjinfo[temp].damage_func, 0, 0);
 		if (temp < 0)
 			damage = 0;
 		else
@@ -2374,8 +2260,7 @@ void mobj_damage(mobj_t* target, mobj_t* inflictor, mobj_t* source,
 
 	if (damage < 1000000)
 	{
-		if (target->flags1 & MF1_SPECTRAL &&
-		    !(if_flags1 & MF1_SPECTRAL))
+		if (target->flags1 & MF1_SPECTRAL && !(if_flags1 & MF1_SPECTRAL))
 			return;
 	}
 
@@ -2392,14 +2277,11 @@ void mobj_damage(mobj_t* target, mobj_t* inflictor, mobj_t* source,
 	if (damage < 1000000)
 	{
 		// friendly fire
-		if (no_friendly_fire && source && source != target &&
-		    source->player && target->player)
+		if (no_friendly_fire && source && source != target && source->player && target->player)
 			return;
 
 		if (target->info->damage_factor[damage_type] != 8)
-			damage = (damage *
-			          target->info->damage_factor[damage_type]) /
-			         8;
+			damage = (damage * target->info->damage_factor[damage_type]) / 8;
 	}
 
 	if (!damage && !(target->flags1 & MF1_NODAMAGE))
@@ -2429,14 +2311,13 @@ void mobj_damage(mobj_t* target, mobj_t* inflictor, mobj_t* source,
 	if (target->flags1 & MF1_INVULNERABLE && !forced)
 		return;
 
-	if (inflictor && kickback && !(target->flags1 & MF1_DONTTHRUST) &&
-	    !(target->flags & MF_NOCLIP) && !(if_flags1 & MF1_NODAMAGETHRUST))
+	if (inflictor && kickback && !(target->flags1 & MF1_DONTTHRUST) && !(target->flags & MF_NOCLIP) &&
+	    !(if_flags1 & MF1_NODAMAGETHRUST))
 	{
 		angle_t angle;
 		int32_t thrust;
 
-		angle = R_PointToAngle2(inflictor->x, inflictor->y, target->x,
-		                        target->y);
+		angle = R_PointToAngle2(inflictor->x, inflictor->y, target->x, target->y);
 		thrust = damage > 10000 ? 10000 : damage;
 
 		thrust = (thrust * (FRACUNIT >> 5) * 100 / target->info->mass);
@@ -2448,10 +2329,8 @@ void mobj_damage(mobj_t* target, mobj_t* inflictor, mobj_t* source,
 		if (kickback != 100)
 			thrust = (thrust * kickback) / 100;
 
-		if (!(target->flags1 & (MF1_NOFORWARDFALL | MF1_INVULNERABLE |
-		                        MF1_BUDDHA | MF1_NODAMAGE)) &&
-		    !(if_flags1 & MF1_NOFORWARDFALL) && damage < 40 &&
-		    damage > target->health &&
+		if (!(target->flags1 & (MF1_NOFORWARDFALL | MF1_INVULNERABLE | MF1_BUDDHA | MF1_NODAMAGE)) &&
+		    !(if_flags1 & MF1_NOFORWARDFALL) && damage < 40 && damage > target->health &&
 		    target->z - inflictor->z > 64 * FRACUNIT && P_Random() & 1)
 		{
 			angle += ANG180;
@@ -2471,17 +2350,13 @@ void mobj_damage(mobj_t* target, mobj_t* inflictor, mobj_t* source,
 
 	if (player)
 	{
-		if (target->subsector->sector->special == 11 &&
-		    damage >= target->health)
+		if (target->subsector->sector->special == 11 && damage >= target->health)
 			damage = target->health - 1;
 
 		if (player->armortype && !forced && !skip_armor)
 		{
 			uint32_t saved;
-			saved = ((damage *
-			          mobjinfo[player->armortype].armor.percent) +
-			         25) /
-			        100;
+			saved = ((damage * mobjinfo[player->armortype].armor.percent) + 25) / 100;
 			if (player->armorpoints <= saved)
 			{
 				saved = player->armorpoints;
@@ -2526,22 +2401,16 @@ void mobj_damage(mobj_t* target, mobj_t* inflictor, mobj_t* source,
 			{
 				if (if_flags1 & MF1_NOEXTREMEDEATH)
 				{
-					if (target->health <
-					    -target->info->spawnhealth)
-						target->health =
-						    -target->info->spawnhealth;
+					if (target->health < -target->info->spawnhealth)
+						target->health = -target->info->spawnhealth;
 				}
 				else if (if_flags1 & MF1_EXTREMEDEATH)
 				{
-					if (target->health >=
-					    -target->info->spawnhealth)
-						target->health =
-						    -target->info->spawnhealth -
-						    1;
+					if (target->health >= -target->info->spawnhealth)
+						target->health = -target->info->spawnhealth - 1;
 				}
 
-				target->damage_type =
-				    damage_type; // seems like ZDoom does this
+				target->damage_type = damage_type; // seems like ZDoom does this
 
 				mobj_kill(target,
 				          source); // replaces P_KillMobj;
@@ -2553,16 +2422,14 @@ void mobj_damage(mobj_t* target, mobj_t* inflictor, mobj_t* source,
 	}
 
 	if (!(if_flags1 & MF1_PAINLESS) && !(target->flags2 & MF2_NOPAIN) &&
-	    P_Random() < target->info->painchance[damage_type] &&
-	    !(target->flags & MF_SKULLFLY))
+	    P_Random() < target->info->painchance[damage_type] && !(target->flags & MF_SKULLFLY))
 	{
 		uint32_t state = 0;
 
 		target->flags |= MF_JUSTHIT;
 
 		if (damage_type)
-			state = dec_mobj_custom_state(
-			    target->info, damage_type_config[damage_type].pain);
+			state = dec_mobj_custom_state(target->info, damage_type_config[damage_type].pain);
 
 		if (!state)
 			state = target->info->state_pain;
@@ -2577,15 +2444,13 @@ void mobj_damage(mobj_t* target, mobj_t* inflictor, mobj_t* source,
 	target->reactiontime = 0;
 
 	if (((source && source->player) ||
-	     (!dehacked.no_infight &&
-	      !(map_level_info->flags & MAP_FLAG_NO_INFIGHTING))) &&
-	    (!target->threshold || target->flags1 & MF1_QUICKTORETALIATE) &&
-	    source && source != target && !(source->flags1 & MF1_NOTARGET))
+	     (!dehacked.no_infight && !(map_level_info->flags & MAP_FLAG_NO_INFIGHTING))) &&
+	    (!target->threshold || target->flags1 & MF1_QUICKTORETALIATE) && source && source != target &&
+	    !(source->flags1 & MF1_NOTARGET))
 	{
 		target->target = source;
 		target->threshold = 100;
-		if (target->info->state_see &&
-		    target->state == states + target->info->state_spawn)
+		if (target->info->state_see && target->state == states + target->info->state_spawn)
 			mobj_set_animation(target, ANIM_SEE);
 	}
 }
@@ -2596,12 +2461,9 @@ static void mobj_fall_damage(mobj_t* mo)
 	int32_t mom;
 	int32_t dist;
 
-	if (mo->momz <= -63 * FRACUNIT ||
-	    (!mo->player &&
-	     !(map_level_info->flags & MAP_FLAG_MONSTER_FALL_DMG)))
+	if (mo->momz <= -63 * FRACUNIT || (!mo->player && !(map_level_info->flags & MAP_FLAG_MONSTER_FALL_DMG)))
 	{
-		mobj_damage(mo, NULL, NULL,
-		            DAMAGE_WITH_TYPE(1000000, DAMAGE_FALLING), NULL);
+		mobj_damage(mo, NULL, NULL, DAMAGE_WITH_TYPE(1000000, DAMAGE_FALLING), NULL);
 		return;
 	}
 
@@ -2611,12 +2473,10 @@ static void mobj_fall_damage(mobj_t* mo)
 	if (mo->momz > -39 * FRACUNIT && damage > mo->health && mo->health != 1)
 		damage = mo->health - 1;
 
-	mobj_damage(mo, NULL, NULL, DAMAGE_WITH_TYPE(damage, DAMAGE_FALLING),
-	            NULL);
+	mobj_damage(mo, NULL, NULL, DAMAGE_WITH_TYPE(damage, DAMAGE_FALLING), NULL);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-P_XYMovement(mobj_t* mo)
+static __attribute((regparm(2), no_caller_saved_registers)) void P_XYMovement(mobj_t* mo)
 {
 	uint32_t dropoff;
 	player_t* pl = mo->player;
@@ -2692,23 +2552,12 @@ P_XYMovement(mobj_t* mo)
 				}
 				else if (mo->flags & MF_MISSILE)
 				{
-					if (!(mo->flags1 & MF1_SKYEXPLODE) &&
-					    ceilingline &&
-					    ceilingline->backsector)
+					if (!(mo->flags1 & MF1_SKYEXPLODE) && ceilingline && ceilingline->backsector)
 					{
-						if ((ceilingline->backsector
-						             ->ceilingpic ==
-						         skyflatnum &&
-						     mo->z + mo->height >=
-						         ceilingline->backsector
-						             ->ceilingheight) ||
-						    (ceilingline->frontsector
-						             ->ceilingpic ==
-						         skyflatnum &&
-						     mo->z + mo->height >=
-						         ceilingline
-						             ->frontsector
-						             ->ceilingheight))
+						if ((ceilingline->backsector->ceilingpic == skyflatnum &&
+						     mo->z + mo->height >= ceilingline->backsector->ceilingheight) ||
+						    (ceilingline->frontsector->ceilingpic == skyflatnum &&
+						     mo->z + mo->height >= ceilingline->frontsector->ceilingheight))
 							mobj_remove(mo);
 					}
 					// TODO: floorline check
@@ -2743,25 +2592,22 @@ P_XYMovement(mobj_t* mo)
 		// no friction for projectiles
 		return;
 
-	if (mo->z > mo->floorz && mo->waterlevel <= 1 &&
-	    (!pl || !(mo->flags & MF_NOGRAVITY)))
+	if (mo->z > mo->floorz && mo->waterlevel <= 1 && (!pl || !(mo->flags & MF_NOGRAVITY)))
 		// no friction in air
 		return;
 
 	if (mo->flags & MF_CORPSE)
 	{
 		// sliding corpses, yay
-		if (mo->momx > FRACUNIT / 4 || mo->momx < -FRACUNIT / 4 ||
-		    mo->momy > FRACUNIT / 4 || mo->momy < -FRACUNIT / 4)
+		if (mo->momx > FRACUNIT / 4 || mo->momx < -FRACUNIT / 4 || mo->momy > FRACUNIT / 4 ||
+		    mo->momy < -FRACUNIT / 4)
 		{
-			if (mo->floorz != mo->subsector->sector->floorheight &&
-			    !mo->subsector->sector->exfloor)
+			if (mo->floorz != mo->subsector->sector->floorheight && !mo->subsector->sector->exfloor)
 				return;
 		}
 	}
 
-	if (mo->momx > -STOPSPEED && mo->momx < STOPSPEED &&
-	    mo->momy > -STOPSPEED && mo->momy < STOPSPEED &&
+	if (mo->momx > -STOPSPEED && mo->momx < STOPSPEED && mo->momy > -STOPSPEED && mo->momy < STOPSPEED &&
 	    (!pl || (pl->cmd.forwardmove == 0 && pl->cmd.sidemove == 0)))
 	{
 		if (pl && mo->animation == ANIM_SEE)
@@ -2772,15 +2618,13 @@ P_XYMovement(mobj_t* mo)
 	else
 	{
 		// friction
-		fixed_t friction =
-		    mo->waterlevel <= 1 ? FRICTION : FRICTION_WATER;
+		fixed_t friction = mo->waterlevel <= 1 ? FRICTION : FRICTION_WATER;
 		mo->momx = FixedMul(mo->momx, friction);
 		mo->momy = FixedMul(mo->momy, friction);
 	}
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-P_ZMovement(mobj_t* mo)
+__attribute((regparm(2), no_caller_saved_registers)) static void P_ZMovement(mobj_t* mo)
 {
 	fixed_t oldz = mo->z;
 	fixed_t momz = mo->momz;
@@ -2790,9 +2634,7 @@ P_ZMovement(mobj_t* mo)
 	if (mo->player && mo->player->mo == mo && mo->z < mo->floorz)
 	{
 		mo->player->viewheight -= mo->floorz - mo->z;
-		mo->player->deltaviewheight =
-		    (mo->info->player.view_height - mo->player->viewheight) >>
-		    3;
+		mo->player->deltaviewheight = (mo->info->player.view_height - mo->player->viewheight) >> 3;
 	}
 
 	// adjust height
@@ -2848,8 +2690,7 @@ P_ZMovement(mobj_t* mo)
 
 		if (!(mo->flags & MF_SKULLFLY) && !(mo->flags & MF_INFLOAT))
 		{
-			dist = P_AproxDistance(mo->x - mo->target->x,
-			                       mo->y - mo->target->y);
+			dist = P_AproxDistance(mo->x - mo->target->x, mo->y - mo->target->y);
 			delta = (mo->target->z + (mo->height >> 1)) - mo->z;
 			if (delta < 0 && dist < delta * -3)
 				mo->z -= FLOATSPEED;
@@ -2870,47 +2711,35 @@ P_ZMovement(mobj_t* mo)
 			pl = mo->subsector->sector->exfloor;
 			while (pl)
 			{
-				if (!(pl->flags & E3D_SWAP_PLANES) &&
-				    *pl->height > mo->floorz &&
-				    mo->z <= *pl->height &&
-				    oldz > *pl->height &&
-				    pl->source->ceilingpic <
-				        numflats + num_texture_flats &&
-				    flatterrain[pl->source->ceilingpic] !=
-				        255 &&
-				    terrain[flatterrain[pl->source->ceilingpic]]
-				            .splash != 255)
+				if (!(pl->flags & E3D_SWAP_PLANES) && *pl->height > mo->floorz &&
+				    mo->z <= *pl->height && oldz > *pl->height &&
+				    pl->source->ceilingpic < numflats + num_texture_flats &&
+				    flatterrain[pl->source->ceilingpic] != 255 &&
+				    terrain[flatterrain[pl->source->ceilingpic]].splash != 255)
 				{
 					int32_t flat = pl->source->ceilingpic;
 					if (mo->info->mass < TERRAIN_LOW_MASS)
 						flat = -flat;
-					if (terrain_hit_splash(mo, mo->x, mo->y,
-					                       *pl->height,
-					                       flat))
+					if (terrain_hit_splash(mo, mo->x, mo->y, *pl->height, flat))
 					{
 						splash |= 1;
-						remove =
-						    !!(pl->flags & E3D_SOLID);
+						remove = !!(pl->flags & E3D_SOLID);
 					}
 				}
 				pl = pl->next;
 			}
 
-			if (!(mo->iflags & MFI_MOBJONMOBJ) &&
-			    mo->z <= mo->floorz &&
+			if (!(mo->iflags & MFI_MOBJONMOBJ) && mo->z <= mo->floorz &&
 			    mo->floorz == mo->subsector->sector->floorheight)
 			{
-				if (terrain_hit_splash(
-					mo, mo->x, mo->y, mo->floorz,
-					mo->subsector->sector->floorpic))
+				if (terrain_hit_splash(mo, mo->x, mo->y, mo->floorz, mo->subsector->sector->floorpic))
 				{
 					splash |= 1;
 					remove = 1;
 				}
 			}
 
-			if (remove && mo->flags2 & MF2_BOUNCEONFLOORS &&
-			    mo->flags & MF_MISSILE)
+			if (remove && mo->flags2 & MF2_BOUNCEONFLOORS && mo->flags & MF_MISSILE)
 			{
 				if (mo->flags2 & MF2_EXPLODEONWATER)
 				{
@@ -2934,20 +2763,15 @@ P_ZMovement(mobj_t* mo)
 			pl = mo->subsector->sector->exfloor;
 			while (pl)
 			{
-				if (!(pl->flags & E3D_SWAP_PLANES) &&
-				    t0 < *pl->height && t1 >= *pl->height &&
-				    pl->source->ceilingpic <
-				        numflats + num_texture_flats &&
-				    flatterrain[pl->source->ceilingpic] !=
-				        255 &&
-				    terrain[flatterrain[pl->source->ceilingpic]]
-				            .splash != 255)
+				if (!(pl->flags & E3D_SWAP_PLANES) && t0 < *pl->height && t1 >= *pl->height &&
+				    pl->source->ceilingpic < numflats + num_texture_flats &&
+				    flatterrain[pl->source->ceilingpic] != 255 &&
+				    terrain[flatterrain[pl->source->ceilingpic]].splash != 255)
 				{
 					int32_t flat = pl->source->ceilingpic;
 					if (mo->info->mass < TERRAIN_LOW_MASS)
 						flat = -flat;
-					terrain_hit_splash(mo, mo->x, mo->y,
-					                   *pl->height, flat);
+					terrain_hit_splash(mo, mo->x, mo->y, *pl->height, flat);
 				}
 				pl = pl->next;
 			}
@@ -2964,13 +2788,9 @@ P_ZMovement(mobj_t* mo)
 			{
 				if (mo->player && mo->health > 0)
 				{
-					mo->player->deltaviewheight =
-					    mo->momz >> 3;
+					mo->player->deltaviewheight = mo->momz >> 3;
 					if (!splash)
-						S_StartSound(
-						    SOUND_CHAN_BODY(mo),
-						    mo->info->player.sound
-							.land);
+						S_StartSound(SOUND_CHAN_BODY(mo), mo->info->player.sound.land);
 				}
 
 				if (mo->flags2 & MF2_ICECORPSE)
@@ -2984,8 +2804,7 @@ P_ZMovement(mobj_t* mo)
 			{
 				if (mo->player)
 				{
-					if (map_level_info->flags &
-					    MAP_FLAG_FALLING_DAMAGE)
+					if (map_level_info->flags & MAP_FLAG_FALLING_DAMAGE)
 					{
 						mobj_fall_damage(mo);
 						P_NoiseAlert(mo, mo);
@@ -2994,8 +2813,7 @@ P_ZMovement(mobj_t* mo)
 				else
 				{
 					if (map_level_info->flags &
-					    (MAP_FLAG_MONSTER_FALL_DMG_KILL |
-					     MAP_FLAG_MONSTER_FALL_DMG))
+					    (MAP_FLAG_MONSTER_FALL_DMG_KILL | MAP_FLAG_MONSTER_FALL_DMG))
 						mobj_fall_damage(mo);
 				}
 			}
@@ -3007,10 +2825,8 @@ P_ZMovement(mobj_t* mo)
 
 		if (mo->flags & MF_MISSILE && !(mo->flags & MF_NOCLIP))
 		{
-			if (mo->flags1 & MF1_SKYEXPLODE || !mo->subsector ||
-			    !mo->subsector->sector ||
-			    mo->subsector->sector->floorheight < mo->z ||
-			    mo->subsector->sector->floorpic != skyflatnum)
+			if (mo->flags1 & MF1_SKYEXPLODE || !mo->subsector || !mo->subsector->sector ||
+			    mo->subsector->sector->floorheight < mo->z || mo->subsector->sector->floorpic != skyflatnum)
 			{
 				mobj_hit_thing = NULL;
 				if (mo->flags2 & MF2_BOUNCEONFLOORS)
@@ -3034,15 +2850,11 @@ P_ZMovement(mobj_t* mo)
 			if (mo->damage_type)
 			{
 				if (mo->health < -mo->info->spawnhealth)
-					state = dec_mobj_custom_state(
-					    mo->info,
-					    damage_type_config[mo->damage_type]
-						.xcrash);
+					state =
+					    dec_mobj_custom_state(mo->info, damage_type_config[mo->damage_type].xcrash);
 				if (!state)
-					state = dec_mobj_custom_state(
-					    mo->info,
-					    damage_type_config[mo->damage_type]
-						.crash);
+					state =
+					    dec_mobj_custom_state(mo->info, damage_type_config[mo->damage_type].crash);
 			}
 
 			// look for normal damage now
@@ -3063,8 +2875,7 @@ P_ZMovement(mobj_t* mo)
 	}
 	else if (!(mo->flags & MF_NOGRAVITY) && mo->waterlevel <= 1)
 	{
-		if (mo->momz == 0 &&
-		    (oldfloorz > mo->floorz && mo->z == oldfloorz))
+		if (mo->momz == 0 && (oldfloorz > mo->floorz && mo->z == oldfloorz))
 			mo->momz = mo->gravity * -2;
 		else
 			mo->momz -= mo->gravity;
@@ -3080,10 +2891,8 @@ P_ZMovement(mobj_t* mo)
 
 		if ((mo->flags & MF_MISSILE) && !(mo->flags & MF_NOCLIP))
 		{
-			if (mo->flags1 & MF1_SKYEXPLODE || !mo->subsector ||
-			    !mo->subsector->sector ||
-			    mo->subsector->sector->ceilingheight >
-			        mo->z + mo->height ||
+			if (mo->flags1 & MF1_SKYEXPLODE || !mo->subsector || !mo->subsector->sector ||
+			    mo->subsector->sector->ceilingheight > mo->z + mo->height ||
 			    mo->subsector->sector->ceilingpic != skyflatnum)
 			{
 				mobj_hit_thing = NULL;
@@ -3099,8 +2908,7 @@ P_ZMovement(mobj_t* mo)
 	}
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-PIT_StompThing(mobj_t* thing)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t PIT_StompThing(mobj_t* thing)
 {
 	fixed_t blockdist;
 
@@ -3124,8 +2932,7 @@ PIT_StompThing(mobj_t* thing)
 	if (abs(thing->y - tmthing->y) >= blockdist)
 		return 1;
 
-	mobj_damage(thing, tmthing, tmthing,
-	            DAMAGE_WITH_TYPE(1000000, DAMAGE_TELEFRAG), NULL);
+	mobj_damage(thing, tmthing, tmthing, DAMAGE_WITH_TYPE(1000000, DAMAGE_TELEFRAG), NULL);
 
 	return 1;
 }
@@ -3151,8 +2958,7 @@ void mobj_telestomp(mobj_t* mo, fixed_t x, fixed_t y)
 			P_BlockThingsIterator(bx, by, PIT_StompThing);
 }
 
-uint32_t mobj_teleport(mobj_t* mo, fixed_t x, fixed_t y, fixed_t z,
-                       angle_t angle, uint32_t flags)
+uint32_t mobj_teleport(mobj_t* mo, fixed_t x, fixed_t y, fixed_t z, angle_t angle, uint32_t flags)
 {
 	fixed_t xx, yy, zz, fz, cz, ff;
 	uint32_t blocked;
@@ -3207,8 +3013,7 @@ uint32_t mobj_teleport(mobj_t* mo, fixed_t x, fixed_t y, fixed_t z,
 	{
 		fixed_t speed, pitch;
 
-		if (mo->info->fast_speed &&
-		    (fastparm || gameskill == sk_nightmare))
+		if (mo->info->fast_speed && (fastparm || gameskill == sk_nightmare))
 			speed = mo->info->fast_speed;
 		else
 			speed = mo->info->speed;
@@ -3283,8 +3088,7 @@ void mobj_spawn_puff(divline_t* trace, mobj_t* target, uint32_t puff_type)
 	mobj_t* mo;
 	uint32_t state = 0;
 
-	if (target && !(target->flags & MF_NOBLOOD) &&
-	    !(target->flags1 & MF1_DORMANT) &&
+	if (target && !(target->flags & MF_NOBLOOD) && !(target->flags1 & MF1_DORMANT) &&
 	    !(mobjinfo[mo_puff_type].flags1 & MF1_PUFFONACTORS))
 		return;
 
@@ -3335,8 +3139,7 @@ void mobj_spawn_puff(divline_t* trace, mobj_t* target, uint32_t puff_type)
 	mo->angle = shootthing->angle + ANG180;
 }
 
-void mobj_spawn_blood(divline_t* trace, mobj_t* target, uint32_t damage,
-                      uint32_t puff_type)
+void mobj_spawn_blood(divline_t* trace, mobj_t* target, uint32_t damage, uint32_t puff_type)
 {
 	// hitscan only!
 	mobj_t* mo;
@@ -3351,8 +3154,7 @@ void mobj_spawn_blood(divline_t* trace, mobj_t* target, uint32_t damage,
 	if (puff_type && mobjinfo[puff_type].flags2 & MF2_BLOODLESSIMPACT)
 		return;
 
-	mo = P_SpawnMobj(trace->x, trace->y, trace->dx,
-	                 target->info->blood_type);
+	mo = P_SpawnMobj(trace->x, trace->y, trace->dx, target->info->blood_type);
 	mo->inside = target;
 	mo->angle = shootthing->angle;
 	mo->momz = FRACUNIT * 2;
@@ -3378,8 +3180,7 @@ void mobj_spawn_blood(divline_t* trace, mobj_t* target, uint32_t damage,
 	P_SetMobjState(mo, state, 0);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) uint32_t
-mobj_change_sector(sector_t* sec, uint32_t crush)
+__attribute((regparm(2), no_caller_saved_registers)) uint32_t mobj_change_sector(sector_t* sec, uint32_t crush)
 {
 	// sector based
 	for (mobj_t* mo = sec->thinglist; mo; mo = mo->snext)
@@ -3420,17 +3221,14 @@ mobj_change_sector(sector_t* sec, uint32_t crush)
 	nofit = 0;
 	crushchange = crush;
 
-	for (int32_t x = sec->blockbox[BOXLEFT]; x <= sec->blockbox[BOXRIGHT];
-	     x++)
-		for (int32_t y = sec->blockbox[BOXBOTTOM];
-		     y <= sec->blockbox[BOXTOP]; y++)
+	for (int32_t x = sec->blockbox[BOXLEFT]; x <= sec->blockbox[BOXRIGHT]; x++)
+		for (int32_t y = sec->blockbox[BOXBOTTOM]; y <= sec->blockbox[BOXTOP]; y++)
 			P_BlockThingsIterator(x, y, PIT_ChangeSector);
 
 	return nofit;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) mobj_t*
-spawn_missile(mobj_t* source, mobj_t* target)
+static __attribute((regparm(2), no_caller_saved_registers)) mobj_t* spawn_missile(mobj_t* source, mobj_t* target)
 {
 	mobj_t* th;
 	uint32_t type;
@@ -3438,8 +3236,7 @@ spawn_missile(mobj_t* source, mobj_t* target)
 	fixed_t z, dist, speed;
 
 	{
-		register uint32_t tmp asm(
-		    "ebx"); // hack to extract 3rd argument
+		register uint32_t tmp asm("ebx"); // hack to extract 3rd argument
 		type = tmp;
 	}
 
@@ -3515,8 +3312,7 @@ static void mobj_sector_action(mobj_t* mo, mobj_t** actptr)
 //
 // new thinker
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-P_MobjThinker(mobj_t* mo)
+__attribute((regparm(2), no_caller_saved_registers)) void P_MobjThinker(mobj_t* mo)
 {
 	angle_t angle;
 
@@ -3524,8 +3320,8 @@ P_MobjThinker(mobj_t* mo)
 		// archvile ressurection or something
 		mo->iflags &= ~MFI_CRASHED;
 
-	if (!mo->momz && !(mo->flags & MF_NOGRAVITY) && mo->z <= mo->floorz &&
-	    mo->flags & MF_CORPSE && !(mo->iflags & MFI_CRASHED))
+	if (!mo->momz && !(mo->flags & MF_NOGRAVITY) && mo->z <= mo->floorz && mo->flags & MF_CORPSE &&
+	    !(mo->iflags & MFI_CRASHED))
 		// fake some Z movement for crash states
 		mo->momz = -1;
 
@@ -3543,8 +3339,7 @@ P_MobjThinker(mobj_t* mo)
 	}
 
 	// XY movement
-	if (mo->momx || mo->momy || mo->flags & MF_MISSILE ||
-	    mo->iflags & MFI_MOBJONMOBJ)
+	if (mo->momx || mo->momy || mo->flags & MF_MISSILE || mo->iflags & MFI_MOBJONMOBJ)
 	{
 		P_XYMovement(mo);
 		if (mo->thinker.function == (void*)-1)
@@ -3614,8 +3409,7 @@ skip_move:
 	{
 		mo->tics--;
 		if (mo->tics <= 0)
-			if (!P_SetMobjState(mo, mo->state->nextstate,
-			                    mo->state->next_extra))
+			if (!P_SetMobjState(mo, mo->state->nextstate, mo->state->next_extra))
 				return;
 	}
 	else
@@ -3628,8 +3422,7 @@ skip_move:
 //
 // hooks
 
-static const hook_t hooks[] __attribute__((used, section(".hooks"),
-                                           aligned(4))) = {
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
     // replace call to 'memset' in 'P_SpawnMobj'
     {0x00031569, CODE_HOOK | HOOK_UINT16, 0xEA89},
     {0x00031571, CODE_HOOK | HOOK_UINT32, 0x90C38900},
@@ -3681,27 +3474,16 @@ static const hook_t hooks[] __attribute__((used, section(".hooks"),
     {0x00031EA6, CODE_HOOK | HOOK_UINT32, (uint32_t)P_MobjThinker},
     {0x0002767F, CODE_HOOK | HOOK_UINT32, (uint32_t)P_MobjThinker},
     // replace 'P_SetMobjState' with new animation system
-    {0x00027776, CODE_HOOK | HOOK_UINT32,
-     0x909000B2 | (ANIM_SEE << 8)}, // A_Look
-    {0x00027779, CODE_HOOK | HOOK_CALL_ACE,
-     (uint32_t)set_mobj_animation}, // A_Look
-    {0x0002782A, CODE_HOOK | HOOK_UINT32,
-     0x909000B2 | (ANIM_SPAWN << 8)}, // A_Chase
-    {0x0002782D, CODE_HOOK | HOOK_CALL_ACE,
-     (uint32_t)set_mobj_animation}, // A_Chase
-    {0x0002789D, CODE_HOOK | HOOK_UINT32,
-     0x909000B2 | (ANIM_MELEE << 8)}, // A_Chase
-    {0x000278A0, CODE_HOOK | HOOK_CALL_ACE,
-     (uint32_t)set_mobj_animation}, // A_Chase
-    {0x000278DD, CODE_HOOK | HOOK_UINT32,
-     0x909000B2 | (ANIM_MISSILE << 8)}, // A_Chase
-    {0x000278E0, CODE_HOOK | HOOK_CALL_ACE,
-     (uint32_t)set_mobj_animation},                   // A_Chase
-    {0x000281DF, CODE_HOOK | HOOK_UINT32, ANIM_HEAL}, // A_VileChase
-    {0x000281E3, CODE_HOOK | HOOK_CALL_ACE,
-     (uint32_t)set_mobj_animation}, // A_VileChase
-    {0x000281FF, CODE_HOOK | HOOK_UINT32,
-     0x909000B2 | (ANIM_RAISE << 8)}, // A_VileChase
-    {0x00028202, CODE_HOOK | HOOK_CALL_ACE,
-     (uint32_t)set_mobj_animation}, // A_VileChase
+    {0x00027776, CODE_HOOK | HOOK_UINT32, 0x909000B2 | (ANIM_SEE << 8)},     // A_Look
+    {0x00027779, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)set_mobj_animation},   // A_Look
+    {0x0002782A, CODE_HOOK | HOOK_UINT32, 0x909000B2 | (ANIM_SPAWN << 8)},   // A_Chase
+    {0x0002782D, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)set_mobj_animation},   // A_Chase
+    {0x0002789D, CODE_HOOK | HOOK_UINT32, 0x909000B2 | (ANIM_MELEE << 8)},   // A_Chase
+    {0x000278A0, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)set_mobj_animation},   // A_Chase
+    {0x000278DD, CODE_HOOK | HOOK_UINT32, 0x909000B2 | (ANIM_MISSILE << 8)}, // A_Chase
+    {0x000278E0, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)set_mobj_animation},   // A_Chase
+    {0x000281DF, CODE_HOOK | HOOK_UINT32, ANIM_HEAL},                        // A_VileChase
+    {0x000281E3, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)set_mobj_animation},   // A_VileChase
+    {0x000281FF, CODE_HOOK | HOOK_UINT32, 0x909000B2 | (ANIM_RAISE << 8)},   // A_VileChase
+    {0x00028202, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)set_mobj_animation},   // A_VileChase
 };

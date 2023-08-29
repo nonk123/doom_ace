@@ -27,9 +27,9 @@
 
 #include "act_const.h"
 
-#define MAKE_CONST(x)                                                          \
-	{                                                                      \
-		.name = #x, .value = (x)                                       \
+#define MAKE_CONST(x)                                                                                                  \
+	{                                                                                                              \
+		.name = #x, .value = (x)                                                                               \
 	}
 
 #define MATHFRAC 10 // signed 22.10
@@ -231,132 +231,130 @@ static uint8_t math_op[] = {[MATH_LOR] = 1,
                             // contents lowest priority is required
                             [MATH_TERMINATOR] = 0};
 
-static const math_var_t math_variable[] = {
-    {"X", offsetof(mobj_t, x), AT_FIXED},
-    {"Y", offsetof(mobj_t, y), AT_FIXED},
-    {"Z", offsetof(mobj_t, z), AT_FIXED},
-    {"ANGLE", offsetof(mobj_t, angle), AT_ANGLE},
-    {"CEILINGZ", offsetof(mobj_t, ceilingz), AT_FIXED},
-    {"FLOORZ", offsetof(mobj_t, floorz), AT_FIXED},
-    {"PITCH", offsetof(mobj_t, pitch), AT_ANGLE},
-    {"VELX", offsetof(mobj_t, momx), AT_FIXED},
-    {"VELY", offsetof(mobj_t, momy), AT_FIXED},
-    {"VELZ", offsetof(mobj_t, momz), AT_FIXED},
-    {"ALPHA", offsetof(mobj_t, render_alpha), AT_ALPHA},
-    {"ARGS[0]", offsetof(mobj_t, special.arg[0]), AT_S16},
-    {"ARGS[1]", offsetof(mobj_t, special.arg[1]), AT_S16},
-    {"ARGS[2]", offsetof(mobj_t, special.arg[2]), AT_S16},
-    {"ARGS[3]", offsetof(mobj_t, special.arg[3]), AT_S16},
-    {"ARGS[4]", offsetof(mobj_t, special.arg[4]), AT_S16},
-    {"HEALTH", offsetof(mobj_t, health), AT_S32},
-    {"HEIGHT", offsetof(mobj_t, height), AT_FIXED},
-    {"RADIUS", offsetof(mobj_t, radius), AT_FIXED},
-    {"REACTIONTIME", offsetof(mobj_t, reactiontime), AT_S32},
-    {"SCALEX", offsetof(mobj_t, scale), AT_FIXED},
-    {"SCALEY", offsetof(mobj_t, scale), AT_FIXED},
-    {"SPECIAL", offsetof(mobj_t, special.special), AT_U8},
-    {"TID", offsetof(mobj_t, special.tid), AT_U16},
-    {"THRESHOLD", offsetof(mobj_t, threshold), AT_S32},
-    {"WATERLEVEL", offsetof(mobj_t, waterlevel), AT_U8},
-    //
-    {"MASS", offsetof(mobjinfo_t, mass), AT_FIXED, 1},
-    {"SPEED", offsetof(mobjinfo_t, speed), AT_FIXED, 1},
-    // terminator
-    {NULL}};
+static const math_var_t math_variable[] = {{"X", offsetof(mobj_t, x), AT_FIXED},
+                                           {"Y", offsetof(mobj_t, y), AT_FIXED},
+                                           {"Z", offsetof(mobj_t, z), AT_FIXED},
+                                           {"ANGLE", offsetof(mobj_t, angle), AT_ANGLE},
+                                           {"CEILINGZ", offsetof(mobj_t, ceilingz), AT_FIXED},
+                                           {"FLOORZ", offsetof(mobj_t, floorz), AT_FIXED},
+                                           {"PITCH", offsetof(mobj_t, pitch), AT_ANGLE},
+                                           {"VELX", offsetof(mobj_t, momx), AT_FIXED},
+                                           {"VELY", offsetof(mobj_t, momy), AT_FIXED},
+                                           {"VELZ", offsetof(mobj_t, momz), AT_FIXED},
+                                           {"ALPHA", offsetof(mobj_t, render_alpha), AT_ALPHA},
+                                           {"ARGS[0]", offsetof(mobj_t, special.arg[0]), AT_S16},
+                                           {"ARGS[1]", offsetof(mobj_t, special.arg[1]), AT_S16},
+                                           {"ARGS[2]", offsetof(mobj_t, special.arg[2]), AT_S16},
+                                           {"ARGS[3]", offsetof(mobj_t, special.arg[3]), AT_S16},
+                                           {"ARGS[4]", offsetof(mobj_t, special.arg[4]), AT_S16},
+                                           {"HEALTH", offsetof(mobj_t, health), AT_S32},
+                                           {"HEIGHT", offsetof(mobj_t, height), AT_FIXED},
+                                           {"RADIUS", offsetof(mobj_t, radius), AT_FIXED},
+                                           {"REACTIONTIME", offsetof(mobj_t, reactiontime), AT_S32},
+                                           {"SCALEX", offsetof(mobj_t, scale), AT_FIXED},
+                                           {"SCALEY", offsetof(mobj_t, scale), AT_FIXED},
+                                           {"SPECIAL", offsetof(mobj_t, special.special), AT_U8},
+                                           {"TID", offsetof(mobj_t, special.tid), AT_U16},
+                                           {"THRESHOLD", offsetof(mobj_t, threshold), AT_S32},
+                                           {"WATERLEVEL", offsetof(mobj_t, waterlevel), AT_U8},
+                                           //
+                                           {"MASS", offsetof(mobjinfo_t, mass), AT_FIXED, 1},
+                                           {"SPEED", offsetof(mobjinfo_t, speed), AT_FIXED, 1},
+                                           // terminator
+                                           {NULL}};
 
-static const math_con_t math_constant[] = {
-    {"TRUE", 1},
-    {"FALSE", 0},
-    {"STYLE_NORMAL", RS_NORMAL},
-    {"STYLE_FUZZY", RS_FUZZ},
-    {"STYLE_SHADOW", RS_SHADOW},
-    {"STYLE_TRANSLUCENT", RS_TRANSLUCENT},
-    {"STYLE_ADD", RS_ADDITIVE},
-    {"STYLE_NONE", RS_INVISIBLE},
-    MAKE_CONST(GFF_NOEXTCHANGE),
-    MAKE_CONST(CHAN_BODY),
-    MAKE_CONST(CHAN_WEAPON),
-    MAKE_CONST(CHAN_VOICE),
-    MAKE_CONST(ATTN_NORM),
-    MAKE_CONST(ATTN_NONE),
-    MAKE_CONST(VAF_DMGTYPEAPPLYTODIRECT),
-    MAKE_CONST(WRF_NOBOB),
-    MAKE_CONST(WRF_NOFIRE),
-    MAKE_CONST(WRF_NOSWITCH),
-    MAKE_CONST(WRF_DISABLESWITCH),
-    MAKE_CONST(WRF_NOPRIMARY),
-    MAKE_CONST(WRF_NOSECONDARY),
-    MAKE_CONST(CMF_AIMOFFSET),
-    MAKE_CONST(CMF_AIMDIRECTION),
-    MAKE_CONST(CMF_TRACKOWNER),
-    MAKE_CONST(CMF_CHECKTARGETDEAD),
-    MAKE_CONST(CMF_ABSOLUTEPITCH),
-    MAKE_CONST(CMF_OFFSETPITCH),
-    MAKE_CONST(CMF_SAVEPITCH),
-    MAKE_CONST(CMF_ABSOLUTEANGLE),
-    MAKE_CONST(FPF_AIMATANGLE),
-    MAKE_CONST(FPF_TRANSFERTRANSLATION),
-    MAKE_CONST(FPF_NOAUTOAIM),
-    MAKE_CONST(FBF_USEAMMO),
-    MAKE_CONST(FBF_NOFLASH),
-    MAKE_CONST(FBF_NORANDOM),
-    MAKE_CONST(FBF_NORANDOMPUFFZ),
-    MAKE_CONST(CBAF_AIMFACING),
-    MAKE_CONST(CBAF_NORANDOM),
-    MAKE_CONST(CBAF_NORANDOMPUFFZ),
-    MAKE_CONST(CPF_USEAMMO),
-    MAKE_CONST(CPF_PULLIN),
-    MAKE_CONST(CPF_NORANDOMPUFFZ),
-    MAKE_CONST(CPF_NOTURN),
-    MAKE_CONST(SMF_LOOK),
-    MAKE_CONST(SMF_PRECISE),
-    MAKE_CONST(SXF_TRANSFERTRANSLATION),
-    MAKE_CONST(SXF_ABSOLUTEPOSITION),
-    MAKE_CONST(SXF_ABSOLUTEANGLE),
-    MAKE_CONST(SXF_ABSOLUTEVELOCITY),
-    MAKE_CONST(SXF_SETMASTER),
-    MAKE_CONST(SXF_NOCHECKPOSITION),
-    MAKE_CONST(SXF_TELEFRAG),
-    MAKE_CONST(SXF_TRANSFERAMBUSHFLAG),
-    MAKE_CONST(SXF_TRANSFERPITCH),
-    MAKE_CONST(SXF_TRANSFERPOINTERS),
-    MAKE_CONST(SXF_USEBLOODCOLOR),
-    MAKE_CONST(SXF_CLEARCALLERTID),
-    MAKE_CONST(SXF_SETTARGET),
-    MAKE_CONST(SXF_SETTRACER),
-    MAKE_CONST(SXF_NOPOINTERS),
-    MAKE_CONST(SXF_ORIGINATOR),
-    MAKE_CONST(SXF_ISTARGET),
-    MAKE_CONST(SXF_ISMASTER),
-    MAKE_CONST(SXF_ISTRACER),
-    MAKE_CONST(SXF_MULTIPLYSPEED),
-    MAKE_CONST(CVF_RELATIVE),
-    MAKE_CONST(CVF_REPLACE),
-    MAKE_CONST(WARPF_ABSOLUTEOFFSET),
-    MAKE_CONST(WARPF_ABSOLUTEANGLE),
-    MAKE_CONST(WARPF_ABSOLUTEPOSITION),
-    MAKE_CONST(WARPF_USECALLERANGLE),
-    MAKE_CONST(WARPF_NOCHECKPOSITION),
-    MAKE_CONST(WARPF_STOP),
-    MAKE_CONST(WARPF_MOVEPTR),
-    MAKE_CONST(WARPF_COPYVELOCITY),
-    MAKE_CONST(WARPF_COPYPITCH),
-    MAKE_CONST(XF_HURTSOURCE),
-    MAKE_CONST(XF_NOTMISSILE),
-    MAKE_CONST(XF_THRUSTZ),
-    MAKE_CONST(XF_NOSPLASH),
-    MAKE_CONST(PTROP_NOSAFEGUARDS),
-    MAKE_CONST(AAPTR_DEFAULT),
-    MAKE_CONST(AAPTR_TARGET),
-    MAKE_CONST(AAPTR_TRACER),
-    MAKE_CONST(AAPTR_MASTER),
-    MAKE_CONST(AAPTR_PLAYER1),
-    MAKE_CONST(AAPTR_PLAYER2),
-    MAKE_CONST(AAPTR_PLAYER3),
-    MAKE_CONST(AAPTR_PLAYER4),
-    MAKE_CONST(AAPTR_NULL),
-    // terminator
-    {NULL}};
+static const math_con_t math_constant[] = {{"TRUE", 1},
+                                           {"FALSE", 0},
+                                           {"STYLE_NORMAL", RS_NORMAL},
+                                           {"STYLE_FUZZY", RS_FUZZ},
+                                           {"STYLE_SHADOW", RS_SHADOW},
+                                           {"STYLE_TRANSLUCENT", RS_TRANSLUCENT},
+                                           {"STYLE_ADD", RS_ADDITIVE},
+                                           {"STYLE_NONE", RS_INVISIBLE},
+                                           MAKE_CONST(GFF_NOEXTCHANGE),
+                                           MAKE_CONST(CHAN_BODY),
+                                           MAKE_CONST(CHAN_WEAPON),
+                                           MAKE_CONST(CHAN_VOICE),
+                                           MAKE_CONST(ATTN_NORM),
+                                           MAKE_CONST(ATTN_NONE),
+                                           MAKE_CONST(VAF_DMGTYPEAPPLYTODIRECT),
+                                           MAKE_CONST(WRF_NOBOB),
+                                           MAKE_CONST(WRF_NOFIRE),
+                                           MAKE_CONST(WRF_NOSWITCH),
+                                           MAKE_CONST(WRF_DISABLESWITCH),
+                                           MAKE_CONST(WRF_NOPRIMARY),
+                                           MAKE_CONST(WRF_NOSECONDARY),
+                                           MAKE_CONST(CMF_AIMOFFSET),
+                                           MAKE_CONST(CMF_AIMDIRECTION),
+                                           MAKE_CONST(CMF_TRACKOWNER),
+                                           MAKE_CONST(CMF_CHECKTARGETDEAD),
+                                           MAKE_CONST(CMF_ABSOLUTEPITCH),
+                                           MAKE_CONST(CMF_OFFSETPITCH),
+                                           MAKE_CONST(CMF_SAVEPITCH),
+                                           MAKE_CONST(CMF_ABSOLUTEANGLE),
+                                           MAKE_CONST(FPF_AIMATANGLE),
+                                           MAKE_CONST(FPF_TRANSFERTRANSLATION),
+                                           MAKE_CONST(FPF_NOAUTOAIM),
+                                           MAKE_CONST(FBF_USEAMMO),
+                                           MAKE_CONST(FBF_NOFLASH),
+                                           MAKE_CONST(FBF_NORANDOM),
+                                           MAKE_CONST(FBF_NORANDOMPUFFZ),
+                                           MAKE_CONST(CBAF_AIMFACING),
+                                           MAKE_CONST(CBAF_NORANDOM),
+                                           MAKE_CONST(CBAF_NORANDOMPUFFZ),
+                                           MAKE_CONST(CPF_USEAMMO),
+                                           MAKE_CONST(CPF_PULLIN),
+                                           MAKE_CONST(CPF_NORANDOMPUFFZ),
+                                           MAKE_CONST(CPF_NOTURN),
+                                           MAKE_CONST(SMF_LOOK),
+                                           MAKE_CONST(SMF_PRECISE),
+                                           MAKE_CONST(SXF_TRANSFERTRANSLATION),
+                                           MAKE_CONST(SXF_ABSOLUTEPOSITION),
+                                           MAKE_CONST(SXF_ABSOLUTEANGLE),
+                                           MAKE_CONST(SXF_ABSOLUTEVELOCITY),
+                                           MAKE_CONST(SXF_SETMASTER),
+                                           MAKE_CONST(SXF_NOCHECKPOSITION),
+                                           MAKE_CONST(SXF_TELEFRAG),
+                                           MAKE_CONST(SXF_TRANSFERAMBUSHFLAG),
+                                           MAKE_CONST(SXF_TRANSFERPITCH),
+                                           MAKE_CONST(SXF_TRANSFERPOINTERS),
+                                           MAKE_CONST(SXF_USEBLOODCOLOR),
+                                           MAKE_CONST(SXF_CLEARCALLERTID),
+                                           MAKE_CONST(SXF_SETTARGET),
+                                           MAKE_CONST(SXF_SETTRACER),
+                                           MAKE_CONST(SXF_NOPOINTERS),
+                                           MAKE_CONST(SXF_ORIGINATOR),
+                                           MAKE_CONST(SXF_ISTARGET),
+                                           MAKE_CONST(SXF_ISMASTER),
+                                           MAKE_CONST(SXF_ISTRACER),
+                                           MAKE_CONST(SXF_MULTIPLYSPEED),
+                                           MAKE_CONST(CVF_RELATIVE),
+                                           MAKE_CONST(CVF_REPLACE),
+                                           MAKE_CONST(WARPF_ABSOLUTEOFFSET),
+                                           MAKE_CONST(WARPF_ABSOLUTEANGLE),
+                                           MAKE_CONST(WARPF_ABSOLUTEPOSITION),
+                                           MAKE_CONST(WARPF_USECALLERANGLE),
+                                           MAKE_CONST(WARPF_NOCHECKPOSITION),
+                                           MAKE_CONST(WARPF_STOP),
+                                           MAKE_CONST(WARPF_MOVEPTR),
+                                           MAKE_CONST(WARPF_COPYVELOCITY),
+                                           MAKE_CONST(WARPF_COPYPITCH),
+                                           MAKE_CONST(XF_HURTSOURCE),
+                                           MAKE_CONST(XF_NOTMISSILE),
+                                           MAKE_CONST(XF_THRUSTZ),
+                                           MAKE_CONST(XF_NOSPLASH),
+                                           MAKE_CONST(PTROP_NOSAFEGUARDS),
+                                           MAKE_CONST(AAPTR_DEFAULT),
+                                           MAKE_CONST(AAPTR_TARGET),
+                                           MAKE_CONST(AAPTR_TRACER),
+                                           MAKE_CONST(AAPTR_MASTER),
+                                           MAKE_CONST(AAPTR_PLAYER1),
+                                           MAKE_CONST(AAPTR_PLAYER2),
+                                           MAKE_CONST(AAPTR_PLAYER3),
+                                           MAKE_CONST(AAPTR_PLAYER4),
+                                           MAKE_CONST(AAPTR_NULL),
+                                           // terminator
+                                           {NULL}};
 
 //
 // stuff
@@ -487,13 +485,9 @@ static int32_t calculate_value(int32_t v0, int32_t v1, uint32_t op)
 			num.w <<= MATHFRAC;
 
 			if (abs(v1) <= abs(num.w >> 31))
-				return (v1 ^ v0) & 0x80000000 ? 0x80000000
-				                              : 0x7FFFFFFF;
+				return (v1 ^ v0) & 0x80000000 ? 0x80000000 : 0x7FFFFFFF;
 
-			asm("idiv %%ecx"
-			    : "=a"(res)
-			    : "a"(num.a), "d"(num.b), "c"(v1)
-			    : "cc");
+			asm("idiv %%ecx" : "=a"(res) : "a"(num.a), "d"(num.b), "c"(v1) : "cc");
 
 			return res;
 		}
@@ -643,14 +637,12 @@ static int32_t math_calculate(mobj_t* mo, uint8_t* buff, uint32_t size)
 				uint8_t* sp = stack.ptr;
 
 				// this should be value
-				last_type[0] =
-				    stack_pop(&stack, last_value + 0);
+				last_type[0] = stack_pop(&stack, last_value + 0);
 				if (last_type[0] < MATH_VALUE)
 					goto math_fail;
 
 				// this should be operator
-				last_type[1] =
-				    stack_pop(&stack, last_value + 1);
+				last_type[1] = stack_pop(&stack, last_value + 1);
 				if (last_type[1] >= MATH_VALUE)
 					goto math_fail;
 
@@ -660,32 +652,24 @@ static int32_t math_calculate(mobj_t* mo, uint8_t* buff, uint32_t size)
 					// higher or same priority; process now
 
 					// this should be value
-					last_type[2] =
-					    stack_pop(&stack, last_value + 2);
+					last_type[2] = stack_pop(&stack, last_value + 2);
 					if (last_type[2] < MATH_VALUE)
 						goto math_fail;
 
 					// process variables
 					if (last_type[2] != MATH_VALUE)
-						last_value[2] = resolve_type(
-						    mo, last_type[2],
-						    last_value[2]);
+						last_value[2] = resolve_type(mo, last_type[2], last_value[2]);
 					if (last_type[0] != MATH_VALUE)
-						last_value[0] = resolve_type(
-						    mo, last_type[0],
-						    last_value[0]);
+						last_value[0] = resolve_type(mo, last_type[0], last_value[0]);
 
 					// for preprocessing stage
-					if (!mo && last_type[2] != MATH_VALUE ||
-					    last_type[0] != MATH_VALUE)
+					if (!mo && last_type[2] != MATH_VALUE || last_type[0] != MATH_VALUE)
 						// it's no longer possible to
 						// avoid math equation
 						parse_math_res = MATH_INVALID;
 
 					// do the operation
-					value = calculate_value(last_value[2],
-					                        last_value[0],
-					                        last_type[1]);
+					value = calculate_value(last_value[2], last_value[0], last_type[1]);
 
 					// push the result
 					stack_push(&stack, MATH_VALUE, value);
@@ -762,8 +746,7 @@ int32_t actarg_raw(mobj_t* mo, void* data, uint32_t arg, int32_t def)
 	case ARG_DEF_VALUE:
 		return *((int32_t*)(data + offs));
 	case ARG_DEF_RANDOM:
-		return resolve_type(mo, MATH_RANDOM,
-		                    *((int32_t*)(data + offs)));
+		return resolve_type(mo, MATH_RANDOM, *((int32_t*)(data + offs)));
 	}
 
 	return def;
@@ -771,8 +754,7 @@ int32_t actarg_raw(mobj_t* mo, void* data, uint32_t arg, int32_t def)
 
 fixed_t actarg_fixed(mobj_t* mo, void* data, uint32_t arg, fixed_t def)
 {
-	return actarg_raw(mo, data, arg, def >> (FRACBITS - MATHFRAC))
-	       << (FRACBITS - MATHFRAC);
+	return actarg_raw(mo, data, arg, def >> (FRACBITS - MATHFRAC)) << (FRACBITS - MATHFRAC);
 }
 
 int32_t actarg_integer(mobj_t* mo, void* data, uint32_t arg, int32_t def)
@@ -785,8 +767,7 @@ angle_t actarg_angle(mobj_t* mo, void* data, uint32_t arg)
 	return actarg_raw(mo, data, arg, 0) * ((4096 << MATHFRAC) / 360);
 }
 
-static mobj_t* actarg_pointer(mobj_t* mo, void* data, uint32_t arg,
-                              uint32_t def)
+static mobj_t* actarg_pointer(mobj_t* mo, void* data, uint32_t arg, uint32_t def)
 {
 	def = actarg_raw(mo, data, arg, def);
 
@@ -829,8 +810,7 @@ static uint32_t actarg_magic(mobj_t* mo, void* data, uint32_t arg, uint32_t def)
 	return argoffs[1 + arg] & ARG_MAGIC_MASK;
 }
 
-static void* actarg_string(mobj_t* mo, void* data, uint32_t arg,
-                           uint32_t* lines)
+static void* actarg_string(mobj_t* mo, void* data, uint32_t arg, uint32_t* lines)
 {
 	act_str_t* as;
 	uint16_t* argoffs;
@@ -852,8 +832,7 @@ static void* actarg_string(mobj_t* mo, void* data, uint32_t arg,
 	return as->text;
 }
 
-static uint32_t actarg_moflag(mobj_t* mo, void* data, uint32_t arg,
-                              uint32_t* bits)
+static uint32_t actarg_moflag(mobj_t* mo, void* data, uint32_t arg, uint32_t* bits)
 {
 	act_moflag_t* arf;
 	uint16_t* argoffs;
@@ -871,8 +850,7 @@ static uint32_t actarg_moflag(mobj_t* mo, void* data, uint32_t arg,
 	return arf->offset;
 }
 
-static uint32_t actarg_state(mobj_t* mo, void* data, uint32_t arg,
-                             uint32_t* extra)
+static uint32_t actarg_state(mobj_t* mo, void* data, uint32_t arg, uint32_t* extra)
 {
 	act_state_t* st;
 	uint16_t* argoffs;
@@ -913,8 +891,7 @@ static uint32_t actarg_state(mobj_t* mo, void* data, uint32_t arg,
 //
 // iterators
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-PIT_Explode(mobj_t* thing)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t PIT_Explode(mobj_t* thing)
 {
 	fixed_t dx, dy, dz;
 	fixed_t dist;
@@ -923,16 +900,14 @@ PIT_Explode(mobj_t* thing)
 	if (!(thing->flags & MF_SHOOTABLE))
 		return 1;
 
-	if (thing->flags1 & MF1_NORADIUSDMG &&
-	    !(bombspot->flags2 & MF2_FORCERADIUSDMG))
+	if (thing->flags1 & MF1_NORADIUSDMG && !(bombspot->flags2 & MF2_FORCERADIUSDMG))
 		return 1;
 
 	if (thing == bombsource)
 	{
 		if (!(bombflags & XF_HURTSOURCE))
 			return 1;
-		if (thing->player &&
-		    bombspot->flags1 & MF1_SPECTRAL) // well ... this is obscure
+		if (thing->player && bombspot->flags1 & MF1_SPECTRAL) // well ... this is obscure
 			// and yet it does not match ZDoom
 			// in ZDoom, rocket jump is still applied
 			return 1;
@@ -945,8 +920,7 @@ PIT_Explode(mobj_t* thing)
 
 	dz = thing->z + thing->height;
 
-	if (!(thing->flags2 & MF2_OLDRADIUSDMG) &&
-	    (!bombspot || !(bombspot->flags2 & MF2_OLDRADIUSDMG)) &&
+	if (!(thing->flags2 & MF2_OLDRADIUSDMG) && (!bombspot || !(bombspot->flags2 & MF2_OLDRADIUSDMG)) &&
 	    (bombspot->z < thing->z || bombspot->z >= dz))
 	{
 		if (bombspot->z > thing->z)
@@ -1018,8 +992,7 @@ PIT_Explode(mobj_t* thing)
 	return 1;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-PIT_VileCheck(mobj_t* thing)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t PIT_VileCheck(mobj_t* thing)
 {
 	int32_t maxdist;
 	uint32_t ret;
@@ -1036,8 +1009,7 @@ PIT_VileCheck(mobj_t* thing)
 
 	maxdist = thing->info->radius + vileobj->radius;
 
-	if (abs(thing->x - viletryx) > maxdist ||
-	    abs(thing->y - viletryy) > maxdist)
+	if (abs(thing->x - viletryx) > maxdist || abs(thing->y - viletryy) > maxdist)
 		return 1;
 
 	corpsehit = thing;
@@ -1062,8 +1034,7 @@ PIT_VileCheck(mobj_t* thing)
 //
 // enemy search
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-PIT_EnemySearch(mobj_t* thing)
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t PIT_EnemySearch(mobj_t* thing)
 {
 	if (thing == enemy_looker)
 		return 1;
@@ -1197,8 +1168,7 @@ angle_t slope_to_angle(fixed_t slope)
 		if (slope < FRACUNIT)
 			return tantoangle[SlopeDiv(slope, FRACUNIT)];
 		else
-			return ANG90 - 1 -
-			       tantoangle[SlopeDiv(FRACUNIT, slope)];
+			return ANG90 - 1 - tantoangle[SlopeDiv(FRACUNIT, slope)];
 	}
 	else
 	{
@@ -1213,8 +1183,7 @@ angle_t slope_to_angle(fixed_t slope)
 //
 // player aim
 
-static uint32_t player_aim(player_t* pl, angle_t* angle, fixed_t* slope,
-                           uint32_t seeker)
+static uint32_t player_aim(player_t* pl, angle_t* angle, fixed_t* slope, uint32_t seeker)
 {
 	static player_t* cc_player;
 	static angle_t cc_angle;
@@ -1243,8 +1212,7 @@ static uint32_t player_aim(player_t* pl, angle_t* angle, fixed_t* slope,
 	cc_player = pl;
 	cc_angle = *angle;
 
-	if (player_info[pl - players].flags & PLF_AUTO_AIM ||
-	    map_level_info->flags & MAP_FLAG_NO_FREELOOK)
+	if (player_info[pl - players].flags & PLF_AUTO_AIM || map_level_info->flags & MAP_FLAG_NO_FREELOOK)
 	{
 		// autoaim enabled
 		sl = P_AimLineAttack(mo, an, AIMRANGE);
@@ -1320,11 +1288,9 @@ static uint32_t remove_ammo(mobj_t* mo)
 
 	// ammo use
 	if (take & 1 && weap->weapon.ammo_type[0])
-		inventory_take(mo, weap->weapon.ammo_type[0],
-		               weap->weapon.ammo_use[0]);
+		inventory_take(mo, weap->weapon.ammo_type[0], weap->weapon.ammo_use[0]);
 	if (take & 2 && weap->weapon.ammo_type[1])
-		inventory_take(mo, weap->weapon.ammo_type[1],
-		               weap->weapon.ammo_use[1]);
+		inventory_take(mo, weap->weapon.ammo_type[1], weap->weapon.ammo_use[1]);
 
 	return 0;
 }
@@ -1340,8 +1306,8 @@ fixed_t projectile_speed(mobjinfo_t* info)
 		return info->speed;
 }
 
-void missile_stuff(mobj_t* mo, mobj_t* source, mobj_t* target, fixed_t speed,
-                   angle_t angle, angle_t pitch, fixed_t slope)
+void missile_stuff(mobj_t* mo, mobj_t* source, mobj_t* target, fixed_t speed, angle_t angle, angle_t pitch,
+                   fixed_t slope)
 {
 	if (source && mo->flags2 & MF2_SPAWNSOUNDSOURCE)
 		S_StartSound(SOUND_CHAN_WEAPON(source), mo->info->seesound);
@@ -1472,8 +1438,7 @@ static void shatter_spawn(mobj_t* mo, uint32_t type)
 // these are not available for DECORATE
 // and so are only used in primary fire
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_OldProjectile(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_OldProjectile(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	uint16_t count;
 	uint16_t proj = (uint32_t)st->arg;
@@ -1510,12 +1475,10 @@ A_OldProjectile(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	z += mo->player->viewz - mo->z - mo->info->player.view_height;
 
 	th = P_SpawnMobj(mo->x, mo->y, z, proj);
-	missile_stuff(th, mo, NULL, projectile_speed(th->info), angle, pitch,
-	              slope);
+	missile_stuff(th, mo, NULL, projectile_speed(th->info), angle, pitch, slope);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_OldBullets(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_OldBullets(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	uint16_t count;
 	uint16_t sound = (uint32_t)st->arg;
@@ -1567,8 +1530,7 @@ A_OldBullets(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	angle = mo->angle;
 
 	if (!player_aim(pl, &angle, &bulletslope, 0))
-		bulletslope =
-		    finetangent[(pl->mo->pitch + ANG90) >> ANGLETOFINESHIFT];
+		bulletslope = finetangent[(pl->mo->pitch + ANG90) >> ANGLETOFINESHIFT];
 
 	for (uint32_t i = 0; i < count; i++)
 	{
@@ -1591,11 +1553,9 @@ A_OldBullets(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // hide / restore items
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_SpecialHide(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_SpecialHide(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
-	if (mo->spawnpoint.options != mo->type || !mo->tics ||
-	    mo->info->eflags & MFE_INVENTORY_NEVERRESPAWN)
+	if (mo->spawnpoint.options != mo->type || !mo->tics || mo->info->eflags & MFE_INVENTORY_NEVERRESPAWN)
 	{
 		mobj_remove(mo);
 		return;
@@ -1606,8 +1566,7 @@ A_SpecialHide(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	P_SetThingPosition(mo);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_SpecialRestore(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_SpecialRestore(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	P_UnsetThingPosition(mo);
 
@@ -1635,8 +1594,7 @@ A_SpecialRestore(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // weapon (logic)
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_Lower(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_Lower(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	player_t* pl = mo->player;
 	int32_t value;
@@ -1686,8 +1644,7 @@ A_Lower(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	stfunc(mo, pl->readyweapon->st_weapon.raise, 0);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_Raise(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_Raise(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	player_t* pl = mo->player;
 	int32_t value;
@@ -1714,8 +1671,7 @@ A_Raise(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_GunFlash
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_GunFlash(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_GunFlash(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	player_t* pl = mo->player;
 	uint32_t state, extra;
@@ -1753,8 +1709,7 @@ A_GunFlash(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	pl->psprites[1].tics = 0;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_DoomGunFlash(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_DoomGunFlash(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	// replacement for Doom codeptr
 	player_t* pl = mo->player;
@@ -1770,8 +1725,7 @@ A_DoomGunFlash(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_CheckReload
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_CheckReload(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_CheckReload(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	if (!mo->player)
 		return;
@@ -1783,24 +1737,21 @@ A_CheckReload(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // weapon (light)
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_Light0(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_Light0(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	if (!mo->player)
 		return;
 	mo->player->extralight = 0;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_Light1(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_Light1(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	if (!mo->player)
 		return;
 	mo->player->extralight = 1;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_Light2(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_Light2(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	if (!mo->player)
 		return;
@@ -1810,8 +1761,7 @@ A_Light2(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // weapon (attack)
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_WeaponReady(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_WeaponReady(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	player_t* pl = mo->player;
 	uint32_t flags;
@@ -1846,13 +1796,10 @@ A_WeaponReady(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	}
 
 	// sound
-	if (pl->readyweapon->weapon.sound_ready &&
-	    st == states + pl->readyweapon->st_weapon.ready)
-		S_StartSound(SOUND_CHAN_WEAPON(mo),
-		             pl->readyweapon->weapon.sound_ready);
+	if (pl->readyweapon->weapon.sound_ready && st == states + pl->readyweapon->st_weapon.ready)
+		S_StartSound(SOUND_CHAN_WEAPON(mo), pl->readyweapon->weapon.sound_ready);
 
-	if (!(pl->readyweapon->eflags & MFE_WEAPON_NOAUTOFIRE) ||
-	    !pl->attackdown)
+	if (!(pl->readyweapon->eflags & MFE_WEAPON_NOAUTOFIRE) || !pl->attackdown)
 	{
 		// primary attack
 		if (pl->cmd.buttons & BT_ATTACK && !(flags & WRF_NOPRIMARY))
@@ -1883,8 +1830,7 @@ A_WeaponReady(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_Refire
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_ReFire(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_ReFire(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	player_t* pl = mo->player;
 	uint32_t btn, state, extra;
@@ -1921,8 +1867,7 @@ A_ReFire(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // basic sounds
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_Pain(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_Pain(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	if (mo->info->extra_type == ETYPE_PLAYERPAWN)
 	{
@@ -1935,14 +1880,12 @@ A_Pain(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	S_StartSound(mo, mo->info->painsound);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_Scream(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_Scream(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	S_StartSound(mo->flags1 & MF1_BOSS ? NULL : mo, mo->info->deathsound);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_XScream(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_XScream(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	if (mo->info->extra_type == ETYPE_PLAYERPAWN)
 	{
@@ -1952,8 +1895,8 @@ A_XScream(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	S_StartSound(mo, 31);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_PlayerScream(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_PlayerScream(mobj_t* mo, state_t* st,
+                                                                                stfunc_t stfunc)
 {
 	if (mo->info->extra_type == ETYPE_PLAYERPAWN)
 	{
@@ -1966,14 +1909,12 @@ A_PlayerScream(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	S_StartSound(mo, mo->info->deathsound);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_ActiveSound(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_ActiveSound(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	S_StartSound(mo, mo->info->activesound);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_BrainPain(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_BrainPain(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	S_StartSound(NULL, 97);
 }
@@ -1981,8 +1922,7 @@ A_BrainPain(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_StartSound
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_StartSound(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_StartSound(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	void* origin;
 	uint32_t sound;
@@ -2021,8 +1961,7 @@ A_StartSound(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_FaceTarget
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_FaceTarget(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_FaceTarget(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	if (!mo->target)
 		return;
@@ -2034,8 +1973,7 @@ A_FaceTarget(mobj_t* mo, state_t* st, stfunc_t stfunc)
 		mo->angle += (P_Random() - P_Random()) << 21;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_FaceTracer(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_FaceTracer(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	if (!mo->tracer)
 		return;
@@ -2047,8 +1985,7 @@ A_FaceTracer(mobj_t* mo, state_t* st, stfunc_t stfunc)
 		mo->angle += (P_Random() - P_Random()) << 21;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_FaceMaster(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_FaceMaster(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	if (!mo->master)
 		return;
@@ -2063,8 +2000,7 @@ A_FaceMaster(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_NoBlocking
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_NoBlocking(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_NoBlocking(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	mobj_t* inside = mo;
 
@@ -2078,8 +2014,7 @@ A_NoBlocking(mobj_t* mo, state_t* st, stfunc_t stfunc)
 		return;
 
 	// drop items
-	for (mobj_dropitem_t* drop = mo->info->dropitem.start;
-	     drop < (mobj_dropitem_t*)mo->info->dropitem.end; drop++)
+	for (mobj_dropitem_t* drop = mo->info->dropitem.start; drop < (mobj_dropitem_t*)mo->info->dropitem.end; drop++)
 	{
 		mobj_t* item;
 
@@ -2089,8 +2024,7 @@ A_NoBlocking(mobj_t* mo, state_t* st, stfunc_t stfunc)
 		if (drop->chance < 255 && drop->chance <= P_Random())
 			continue;
 
-		item = P_SpawnMobj(mo->x, mo->y, mo->z + (8 << FRACBITS),
-		                   drop->type);
+		item = P_SpawnMobj(mo->x, mo->y, mo->z + (8 << FRACBITS), drop->type);
 		item->inside = mo;
 		item->flags |= MF_DROPPED;
 		item->angle = P_Random() << 24;
@@ -2104,16 +2038,15 @@ A_NoBlocking(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_Look
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_Look(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_Look(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	mobj_t* targ;
 
 	mo->threshold = 0;
 	targ = mo->subsector->sector->soundtarget;
 
-	if (targ && targ != mo && (targ->flags & MF_SHOOTABLE) &&
-	    !(targ->flags1 & MF1_NOTARGET) && targ->render_style < RS_INVISIBLE)
+	if (targ && targ != mo && (targ->flags & MF_SHOOTABLE) && !(targ->flags1 & MF1_NOTARGET) &&
+	    targ->render_style < RS_INVISIBLE)
 	{
 		mo->target = targ;
 		if (mo->flags & MF_AMBUSH)
@@ -2128,8 +2061,7 @@ A_Look(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	if (!P_LookForPlayers(mo, 0))
 		return;
 
-	if (mo->target->flags1 & MF1_NOTARGET ||
-	    mo->target->render_style >= RS_INVISIBLE)
+	if (mo->target->flags1 & MF1_NOTARGET || mo->target->render_style >= RS_INVISIBLE)
 	{
 		mo->target = NULL;
 		return;
@@ -2137,8 +2069,7 @@ A_Look(mobj_t* mo, state_t* st, stfunc_t stfunc)
 
 seeyou:
 	if (mo->info->seesound)
-		S_StartSound(mo->flags1 & MF1_BOSS ? NULL : mo,
-		             mo->info->seesound);
+		S_StartSound(mo->flags1 & MF1_BOSS ? NULL : mo, mo->info->seesound);
 
 	mobj_set_animation(mo, ANIM_SEE);
 }
@@ -2146,22 +2077,19 @@ seeyou:
 //
 // A_Chase
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_Chase(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_Chase(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	fixed_t speed, oldspeed;
 	state_t* state;
 
-	if (mo->target == mo ||
-	    (mo->target && mo->target->flags1 & MF1_NOTARGET))
+	if (mo->target == mo || (mo->target && mo->target->flags1 & MF1_NOTARGET))
 		mo->target = NULL;
 
 	oldspeed = mo->info->speed;
 
 	if (mo->iflags & MFI_FOLLOW_MOVE)
 		speed = 0;
-	else if (mo->info->fast_speed &&
-	         (fastparm || gameskill == sk_nightmare))
+	else if (mo->info->fast_speed && (fastparm || gameskill == sk_nightmare))
 		speed = mo->info->fast_speed;
 	else
 		speed = mo->info->speed;
@@ -2190,13 +2118,11 @@ A_Chase(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_VileChase
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_VileChase(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_VileChase(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	fixed_t speed;
 
-	if (mo->target == mo ||
-	    (mo->target && mo->target->flags1 & MF1_NOTARGET))
+	if (mo->target == mo || (mo->target && mo->target->flags1 & MF1_NOTARGET))
 		mo->target = NULL;
 
 	if (mo->info->fast_speed && fastparm || gameskill == sk_nightmare)
@@ -2219,8 +2145,8 @@ A_VileChase(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_SpawnProjectile
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_SpawnProjectile(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_SpawnProjectile(mobj_t* mo, state_t* st,
+                                                                                   stfunc_t stfunc)
 {
 	angle_t angle = mo->angle;
 	angle_t atmp;
@@ -2246,8 +2172,7 @@ A_SpawnProjectile(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	if (flags & CMF_AIMDIRECTION)
 		target = NULL;
 	else
-		target =
-		    actarg_pointer(mo, st->arg, 6, AAPTR_TARGET); // pointer
+		target = actarg_pointer(mo, st->arg, 6, AAPTR_TARGET); // pointer
 
 	if (!target)
 	{
@@ -2289,8 +2214,7 @@ A_SpawnProjectile(mobj_t* mo, state_t* st, stfunc_t stfunc)
 			angle += (P_Random() - P_Random()) << 20;
 	}
 
-	th = P_SpawnMobj(x, y, z,
-	                 actarg_magic(mo, st->arg, 0, 0)); // missiletype
+	th = P_SpawnMobj(x, y, z, actarg_magic(mo, st->arg, 0, 0)); // missiletype
 
 	speed = projectile_speed(th->info);
 
@@ -2301,8 +2225,7 @@ A_SpawnProjectile(mobj_t* mo, state_t* st, stfunc_t stfunc)
 		dist /= speed;
 		if (dist <= 0)
 			dist = 1;
-		dist = ((target->z + (target->height / 2)) - z) /
-		       dist; // TODO: propper aim for the middle?
+		dist = ((target->z + (target->height / 2)) - z) / dist; // TODO: propper aim for the middle?
 		th->momz = FixedDiv(dist, speed);
 		if (flags & CMF_OFFSETPITCH)
 			pitch = -actarg_angle(mo, st->arg, 5); // pitch
@@ -2317,8 +2240,8 @@ A_SpawnProjectile(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_CustomBulletAttack
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_CustomBulletAttack(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_CustomBulletAttack(mobj_t* mo, state_t* st,
+                                                                                      stfunc_t stfunc)
 {
 	uint32_t damage;
 	angle_t angle;
@@ -2346,8 +2269,7 @@ A_CustomBulletAttack(mobj_t* mo, state_t* st, stfunc_t stfunc)
 
 	if (!(flags & CBAF_AIMFACING))
 	{
-		angle =
-		    R_PointToAngle2(mo->x, mo->y, mo->target->x, mo->target->y);
+		angle = R_PointToAngle2(mo->x, mo->y, mo->target->x, mo->target->y);
 		mo->angle = angle;
 	}
 	else
@@ -2411,8 +2333,8 @@ A_CustomBulletAttack(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_CustomMeleeAttack
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_CustomMeleeAttack(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_CustomMeleeAttack(mobj_t* mo, state_t* st,
+                                                                                     stfunc_t stfunc)
 {
 	uint32_t damage;
 	uint32_t dtype;
@@ -2441,8 +2363,7 @@ A_CustomMeleeAttack(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_VileTarget
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_VileTarget(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_VileTarget(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	mobj_t* th;
 	uint32_t type;
@@ -2463,8 +2384,7 @@ A_VileTarget(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_VileAttack
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_VileAttack(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_VileAttack(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	int32_t xl, xh, yl, yh;
 	uint32_t damage;
@@ -2495,8 +2415,7 @@ A_VileAttack(mobj_t* mo, state_t* st, stfunc_t stfunc)
 
 	dist = actarg_fixed(mo, st->arg, 4, 0); // thrustfactor
 
-	mo->target->momz =
-	    FixedMul(1000 * FRACUNIT / mo->target->info->mass, dist);
+	mo->target->momz = FixedMul(1000 * FRACUNIT / mo->target->info->mass, dist);
 
 	an = mo->angle >> ANGLETOFINESHIFT;
 
@@ -2529,8 +2448,8 @@ A_VileAttack(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_FireProjectile
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_FireProjectile(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_FireProjectile(mobj_t* mo, state_t* st,
+                                                                                  stfunc_t stfunc)
 {
 	player_t* pl = mo->player;
 	mobj_t* th;
@@ -2560,8 +2479,7 @@ A_FireProjectile(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	if (flags & FPF_AIMATANGLE)
 		angle += aaa;
 
-	if (!player_aim(pl, &angle, &slope,
-	                mobjinfo[missiletype].flags1 & MF1_SEEKERMISSILE))
+	if (!player_aim(pl, &angle, &slope, mobjinfo[missiletype].flags1 & MF1_SEEKERMISSILE))
 		pitch += mo->pitch;
 
 	if (aaa && !(flags & FPF_AIMATANGLE))
@@ -2584,8 +2502,7 @@ A_FireProjectile(mobj_t* mo, state_t* st, stfunc_t stfunc)
 
 	th = P_SpawnMobj(x, y, z, missiletype);
 	if (th->flags & MF_MISSILE)
-		missile_stuff(th, mo, linetarget, projectile_speed(th->info),
-		              angle, pitch, slope);
+		missile_stuff(th, mo, linetarget, projectile_speed(th->info), angle, pitch, slope);
 
 	if (flags & FPF_TRANSFERTRANSLATION)
 		th->translation = mo->translation;
@@ -2594,8 +2511,7 @@ A_FireProjectile(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_FireBullets
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_FireBullets(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_FireBullets(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	player_t* pl = mo->player;
 	uint32_t spread, damage;
@@ -2652,8 +2568,7 @@ A_FireBullets(mobj_t* mo, state_t* st, stfunc_t stfunc)
 
 	angle = mo->angle;
 	if (!player_aim(pl, &angle, &slope, 0))
-		slope =
-		    finetangent[(pl->mo->pitch + ANG90) >> ANGLETOFINESHIFT];
+		slope = finetangent[(pl->mo->pitch + ANG90) >> ANGLETOFINESHIFT];
 
 	S_StartSound(SOUND_CHAN_WEAPON(mo), pl->readyweapon->attacksound);
 
@@ -2698,8 +2613,7 @@ A_FireBullets(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_CustomPunch
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_CustomPunch(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_CustomPunch(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	player_t* pl = mo->player;
 	uint32_t flags, damage;
@@ -2711,8 +2625,7 @@ A_CustomPunch(mobj_t* mo, state_t* st, stfunc_t stfunc)
 
 	flags = actarg_raw(mo, st->arg, 2, 0); // flags
 
-	if (!mo->custom_inventory && flags & CPF_USEAMMO &&
-	    !weapon_has_ammo(mo, pl->readyweapon, pl->attackdown))
+	if (!mo->custom_inventory && flags & CPF_USEAMMO && !weapon_has_ammo(mo, pl->readyweapon, pl->attackdown))
 		return;
 
 	damage = actarg_integer(mo, st->arg, 0, 0); // damage
@@ -2733,8 +2646,7 @@ A_CustomPunch(mobj_t* mo, state_t* st, stfunc_t stfunc)
 
 	angle = mo->angle;
 	if (!player_aim(pl, &angle, &slope, 0))
-		slope =
-		    finetangent[(pl->mo->pitch + ANG90) >> ANGLETOFINESHIFT];
+		slope = finetangent[(pl->mo->pitch + ANG90) >> ANGLETOFINESHIFT];
 
 	angle += (P_Random() - P_Random()) << 18;
 
@@ -2746,12 +2658,10 @@ A_CustomPunch(mobj_t* mo, state_t* st, stfunc_t stfunc)
 		if (flags & CPF_PULLIN)
 			mo->flags |= MF_JUSTATTACKED;
 		if (!(flags & CPF_NOTURN))
-			mo->angle = R_PointToAngle2(mo->x, mo->y, linetarget->x,
-			                            linetarget->y);
+			mo->angle = R_PointToAngle2(mo->x, mo->y, linetarget->x, linetarget->y);
 		if (!mo->custom_inventory && flags & CPF_USEAMMO)
 			remove_ammo(mo);
-		S_StartSound(SOUND_CHAN_WEAPON(mo),
-		             pl->readyweapon->attacksound);
+		S_StartSound(SOUND_CHAN_WEAPON(mo), pl->readyweapon->attacksound);
 	}
 
 	// must restore original puff!
@@ -2762,8 +2672,7 @@ A_CustomPunch(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_BFGSpray
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_BFGSpray(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_BFGSpray(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	mobj_t* source = mo->target;
 	uint32_t damage, type, count, dmgcnt;
@@ -2800,8 +2709,7 @@ A_BFGSpray(mobj_t* mo, state_t* st, stfunc_t stfunc)
 		if (!linetarget)
 			continue;
 
-		P_SpawnMobj(linetarget->x, linetarget->y,
-		            linetarget->z + (linetarget->height >> 2), type);
+		P_SpawnMobj(linetarget->x, linetarget->y, linetarget->z + (linetarget->height >> 2), type);
 
 		if (!dmg)
 		{
@@ -2817,8 +2725,8 @@ A_BFGSpray(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_SeekerMissile
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_SeekerMissile(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_SeekerMissile(mobj_t* mo, state_t* st,
+                                                                                 stfunc_t stfunc)
 {
 	mobj_t* target = mo->tracer;
 	uint32_t sub = 0;
@@ -2907,8 +2815,7 @@ A_SeekerMissile(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	}
 	else
 	{
-		if (target->z + target->height < mo->z ||
-		    mo->z + mo->height < target->z)
+		if (target->z + target->height < mo->z || mo->z + mo->height < target->z)
 			mo->momz = dist;
 	}
 
@@ -2920,8 +2827,7 @@ A_SeekerMissile(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_SpawnItemEx
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_SpawnItemEx(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_SpawnItemEx(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	player_t* pl = mo->player;
 	mobj_t *th, *origin;
@@ -3019,8 +2925,7 @@ A_SpawnItemEx(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	origin = mo;
 	if (!(flags & SXF_ORIGINATOR))
 	{
-		while (origin && (origin->flags & MF_MISSILE ||
-		                  origin->info->flags & MF_MISSILE))
+		while (origin && (origin->flags & MF_MISSILE || origin->info->flags & MF_MISSILE))
 			origin = origin->target;
 	}
 
@@ -3029,8 +2934,7 @@ A_SpawnItemEx(mobj_t* mo, state_t* st, stfunc_t stfunc)
 
 	if (th->flags1 & MF1_ISMONSTER)
 	{
-		if (!(flags & (SXF_NOCHECKPOSITION | SXF_TELEFRAG)) &&
-		    !P_CheckPosition(th, x, y))
+		if (!(flags & (SXF_NOCHECKPOSITION | SXF_TELEFRAG)) && !P_CheckPosition(th, x, y))
 		{
 			mobj_remove(th);
 			return;
@@ -3090,8 +2994,7 @@ A_SpawnItemEx(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_DropItem
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_DropItem(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_DropItem(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	mobj_t* item;
 	uint32_t chance, type;
@@ -3120,8 +3023,8 @@ A_DropItem(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_GiveInventory
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_GiveInventory(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_GiveInventory(mobj_t* mo, state_t* st,
+                                                                                 stfunc_t stfunc)
 {
 	uint32_t amount, type;
 
@@ -3141,8 +3044,8 @@ A_GiveInventory(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_TakeInventory
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_TakeInventory(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_TakeInventory(mobj_t* mo, state_t* st,
+                                                                                 stfunc_t stfunc)
 {
 	uint32_t amount, type;
 
@@ -3164,8 +3067,8 @@ A_TakeInventory(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_SelectWeapon
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_SelectWeapon(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_SelectWeapon(mobj_t* mo, state_t* st,
+                                                                                stfunc_t stfunc)
 {
 	uint32_t type;
 
@@ -3189,8 +3092,7 @@ A_SelectWeapon(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // text
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_Print(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_Print(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	fixed_t tics;
 	uint32_t font;
@@ -3221,8 +3123,7 @@ A_Print(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	}
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_PrintBold(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_PrintBold(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	uint32_t tics;
 	uint32_t font;
@@ -3253,8 +3154,7 @@ A_PrintBold(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_SetTranslation
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_SetTranslation(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_SetTranslation(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	uint32_t idx = actarg_magic(mo, st->arg, 0, 0); // transname
 	mo->translation = render_translation + 256 * idx;
@@ -3263,8 +3163,7 @@ A_SetTranslation(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_SetScale
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_SetScale(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_SetScale(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	mo->scale = actarg_fixed(mo, st->arg, 0, FRACUNIT); // scale
 }
@@ -3272,8 +3171,7 @@ A_SetScale(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_SetRenderStyle
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_SetRenderStyle(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_SetRenderStyle(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	fixed_t alpha;
 
@@ -3291,16 +3189,14 @@ A_SetRenderStyle(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_FadeOut
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_FadeOut(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_FadeOut(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	fixed_t sub;
 	fixed_t alpha;
 
 	sub = actarg_fixed(mo, st->arg, 0, FRACUNIT / 10); // reduce_amount
 
-	if (mo->render_style != RS_TRANSLUCENT &&
-	    mo->render_style != RS_ADDITIVE)
+	if (mo->render_style != RS_TRANSLUCENT && mo->render_style != RS_ADDITIVE)
 		mo->render_style = RS_TRANSLUCENT;
 
 	alpha = mo->render_alpha << 8;
@@ -3318,16 +3214,14 @@ A_FadeOut(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_FadeIn
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_FadeIn(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_FadeIn(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	fixed_t add;
 	fixed_t alpha;
 
 	add = actarg_fixed(mo, st->arg, 0, FRACUNIT / 10); // increase_amount
 
-	if (mo->render_style != RS_TRANSLUCENT &&
-	    mo->render_style != RS_ADDITIVE)
+	if (mo->render_style != RS_TRANSLUCENT && mo->render_style != RS_ADDITIVE)
 		mo->render_style = RS_TRANSLUCENT;
 
 	alpha = mo->render_alpha << 8;
@@ -3342,8 +3236,7 @@ A_FadeIn(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_CheckPlayerDone
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_CheckPlayerDone(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_CheckPlayerDone(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	if (mo->player)
 		return;
@@ -3355,8 +3248,7 @@ A_CheckPlayerDone(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_AlertMonsters
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_AlertMonsters(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_AlertMonsters(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	if (mo->player)
 	{
@@ -3377,8 +3269,7 @@ A_AlertMonsters(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_SetAngle
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_SetAngle(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_SetAngle(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	mobj_t* mm;
 	angle_t angle;
@@ -3395,8 +3286,7 @@ A_SetAngle(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_SetPitch
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_SetPitch(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_SetPitch(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	mobj_t* mm;
 	angle_t angle;
@@ -3413,8 +3303,7 @@ A_SetPitch(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_ChangeFlag
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_ChangeFlag(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_ChangeFlag(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	uint32_t* fs;
 	uint32_t bits, offs;
@@ -3434,8 +3323,8 @@ A_ChangeFlag(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_ChangeVelocity
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_ChangeVelocity(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_ChangeVelocity(mobj_t* mo, state_t* st,
+                                                                                  stfunc_t stfunc)
 {
 	angle_t ang;
 	fixed_t x, y;
@@ -3485,8 +3374,8 @@ A_ChangeVelocity(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_ScaleVelocity
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_ScaleVelocity(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_ScaleVelocity(mobj_t* mo, state_t* st,
+                                                                                 stfunc_t stfunc)
 {
 	fixed_t scale;
 
@@ -3504,8 +3393,7 @@ A_ScaleVelocity(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_Stop
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_Stop(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_Stop(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	mo->momx = 0;
 	mo->momy = 0;
@@ -3515,8 +3403,7 @@ A_Stop(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_SetTics
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_SetTics(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_SetTics(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	mo->tics = actarg_integer(mo, st->arg, 0, 0);
 }
@@ -3524,17 +3411,15 @@ A_SetTics(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_RearrangePointers
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_RearrangePointers(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_RearrangePointers(mobj_t* mo, state_t* st,
+                                                                                     stfunc_t stfunc)
 {
 	mobj_t* target = mo->target;
 	mobj_t* master = mo->master;
 	mobj_t* tracer = mo->tracer;
 
-	if (actarg_raw(mo, st->arg, 3, 0) !=
-	    PTROP_NOSAFEGUARDS) // flags; forced value
-		engine_error("DECORATE", "Missing %s in '%s'.",
-		             "PTROP_NOSAFEGUARDS", "a_rearrangepointers");
+	if (actarg_raw(mo, st->arg, 3, 0) != PTROP_NOSAFEGUARDS) // flags; forced value
+		engine_error("DECORATE", "Missing %s in '%s'.", "PTROP_NOSAFEGUARDS", "a_rearrangepointers");
 
 	switch (actarg_raw(mo, st->arg, 0, 0)) // target
 	{
@@ -3579,8 +3464,7 @@ A_RearrangePointers(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_BrainDie
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_BrainDie(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_BrainDie(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	secretexit = 0;
 	gameaction = ga_completed;
@@ -3590,8 +3474,7 @@ A_BrainDie(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_RaiseSelf
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_RaiseSelf(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_RaiseSelf(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	uint32_t ret;
 	uint32_t flags;
@@ -3635,8 +3518,7 @@ A_RaiseSelf(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_KeenDie
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_KeenDie(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_KeenDie(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	for (thinker_t* th = thinkercap.next; th != &thinkercap; th = th->next)
 	{
@@ -3667,8 +3549,7 @@ A_KeenDie(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_Warp
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_Warp(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_Warp(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	mobj_t* target;
 	fixed_t x, y, z;
@@ -3677,8 +3558,7 @@ A_Warp(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	uint32_t flags;
 	angle_t angle;
 
-	target =
-	    actarg_pointer(mo, st->arg, 0, AAPTR_DEFAULT); // ptr_destination
+	target = actarg_pointer(mo, st->arg, 0, AAPTR_DEFAULT); // ptr_destination
 	if (!target || target == mo)
 		return;
 
@@ -3776,8 +3656,7 @@ A_Warp(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_SetArg
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_SetArg(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_SetArg(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	uint32_t idx;
 
@@ -3798,24 +3677,24 @@ static void do_act_damage(mobj_t* mo, mobj_t* target, void* data)
 	mobj_damage(target, mo, mo, damage, 0);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_DamageTarget(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_DamageTarget(mobj_t* mo, state_t* st,
+                                                                                stfunc_t stfunc)
 {
 	if (!mo->target)
 		return;
 	do_act_damage(mo, mo->target, st->arg);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_DamageTracer(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_DamageTracer(mobj_t* mo, state_t* st,
+                                                                                stfunc_t stfunc)
 {
 	if (!mo->tracer)
 		return;
 	do_act_damage(mo, mo->tracer, st->arg);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_DamageMaster(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_DamageMaster(mobj_t* mo, state_t* st,
+                                                                                stfunc_t stfunc)
 {
 	if (!mo->master)
 		return;
@@ -3825,8 +3704,7 @@ A_DamageMaster(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_SetHealth
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_SetHealth(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_SetHealth(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	uint32_t amount;
 
@@ -3848,8 +3726,7 @@ A_SetHealth(mobj_t* mo, state_t* st, stfunc_t stfunc)
 
 //
 // A_Explode
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_Explode(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_Explode(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	int32_t xl, xh, yl, yh;
 	fixed_t dist;
@@ -3861,7 +3738,7 @@ A_Explode(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	bombdist = actarg_fixed(mo, st->arg, 1, 128 * FRACUNIT); // distance
 	bombflags = actarg_raw(mo, st->arg, 2, XF_HURTSOURCE);   // flags
 	alert = actarg_raw(mo, st->arg, 3, 0);                   // alert
-	bombfist = actarg_fixed(mo, st->arg, 4, 0); // fulldamagedistance
+	bombfist = actarg_fixed(mo, st->arg, 4, 0);              // fulldamagedistance
 
 	dist = bombdist + MAXRADIUS;
 	yh = (mo->y + dist - bmaporgy) >> MAPBLOCKSHIFT;
@@ -3895,8 +3772,7 @@ A_Explode(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_Jump
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_Jump(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_Jump(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	uint16_t* argoffs;
 	uint32_t idx;
@@ -3925,8 +3801,7 @@ A_Jump(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_JumpIf
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_JumpIf(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_JumpIf(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	uint32_t next, extra;
 
@@ -3942,8 +3817,8 @@ A_JumpIf(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_JumpIfInventory
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_JumpIfInventory(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_JumpIfInventory(mobj_t* mo, state_t* st,
+                                                                                   stfunc_t stfunc)
 {
 	mobjinfo_t* info;
 	uint32_t now, check, limit;
@@ -3973,8 +3848,7 @@ A_JumpIfInventory(mobj_t* mo, state_t* st, stfunc_t stfunc)
 
 	now = inventory_check(targ, next);
 
-	if (info->extra_type == ETYPE_AMMO && targ->player &&
-	    targ->player->backpack)
+	if (info->extra_type == ETYPE_AMMO && targ->player && targ->player->backpack)
 		limit = info->ammo.max_count;
 	else
 		limit = info->inventory.max_count;
@@ -3996,8 +3870,8 @@ do_jump:
 //
 // A_JumpIfHealthLower
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_JumpIfHealthLower(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_JumpIfHealthLower(mobj_t* mo, state_t* st,
+                                                                                     stfunc_t stfunc)
 {
 	uint32_t next, extra;
 	int32_t check;
@@ -4020,8 +3894,7 @@ A_JumpIfHealthLower(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_JumpIf*Closer
 
-static void do_dist_check(mobj_t* mo, mobj_t* target, void* data,
-                          stfunc_t stfunc)
+static void do_dist_check(mobj_t* mo, mobj_t* target, void* data, stfunc_t stfunc)
 {
 	uint32_t next, extra;
 	fixed_t range;
@@ -4037,8 +3910,8 @@ static void do_dist_check(mobj_t* mo, mobj_t* target, void* data,
 	stfunc(mo, next, extra);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_JumpIfCloser(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_JumpIfCloser(mobj_t* mo, state_t* st,
+                                                                                stfunc_t stfunc)
 {
 	// TODO: handle player weapon or inventory
 	if (mo->player)
@@ -4047,20 +3920,20 @@ A_JumpIfCloser(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	do_dist_check(mo, mo->target, st->arg, stfunc);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_JumpIfTracerCloser(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_JumpIfTracerCloser(mobj_t* mo, state_t* st,
+                                                                                      stfunc_t stfunc)
 {
 	do_dist_check(mo, mo->tracer, st->arg, stfunc);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_JumpIfMasterCloser(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_JumpIfMasterCloser(mobj_t* mo, state_t* st,
+                                                                                      stfunc_t stfunc)
 {
 	do_dist_check(mo, mo->master, st->arg, stfunc);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_JumpIfTargetInsideMeleeRange(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_JumpIfTargetInsideMeleeRange(mobj_t* mo, state_t* st,
+                                                                                                stfunc_t stfunc)
 {
 	uint32_t next, extra;
 
@@ -4088,8 +3961,7 @@ A_JumpIfTargetOutsideMeleeRange(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_CheckFloor
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_CheckFloor(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_CheckFloor(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	uint32_t next, extra;
 
@@ -4104,8 +3976,7 @@ A_CheckFloor(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_CheckFlag
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_CheckFlag(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_CheckFlag(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	uint32_t next, extra;
 	uint32_t* fs;
@@ -4133,8 +4004,8 @@ A_CheckFlag(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_MonsterRefire
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_MonsterRefire(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_MonsterRefire(mobj_t* mo, state_t* st,
+                                                                                 stfunc_t stfunc)
 {
 	uint32_t next, extra;
 
@@ -4143,8 +4014,7 @@ A_MonsterRefire(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	if (P_Random() < next)
 		return;
 
-	if (mo->target && mo->target->health > 0 &&
-	    P_CheckSight(mo, mo->target))
+	if (mo->target && mo->target->health > 0 && P_CheckSight(mo, mo->target))
 		return;
 
 	next = actarg_state(mo, st->arg, 1, &extra); // offset/state
@@ -4155,8 +4025,8 @@ A_MonsterRefire(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // A_CountdownArg
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_CountdownArg(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_CountdownArg(mobj_t* mo, state_t* st,
+                                                                                stfunc_t stfunc)
 {
 	uint32_t idx;
 
@@ -4187,8 +4057,7 @@ A_CountdownArg(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // chunks
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_Burst(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_Burst(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	uint32_t type;
 
@@ -4211,8 +4080,7 @@ A_Burst(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	mo->special.tid = 0;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_SkullPop(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_SkullPop(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	uint32_t type;
 	mobj_t* th;
@@ -4227,8 +4095,7 @@ A_SkullPop(mobj_t* mo, state_t* st, stfunc_t stfunc)
 
 	mo->player->viewheight = 6 * FRACUNIT;
 
-	th = P_SpawnMobj(mo->x, mo->y, mo->z + mo->info->player.view_height,
-	                 type);
+	th = P_SpawnMobj(mo->x, mo->y, mo->z + mo->info->player.view_height, type);
 	th->momx = (P_Random() - P_Random()) << 9;
 	th->momy = (P_Random() - P_Random()) << 9;
 	th->momz = FRACUNIT * 3 + (P_Random() << 6);
@@ -4245,8 +4112,7 @@ A_SkullPop(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // freeze death
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_FreezeDeath(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_FreezeDeath(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	mo->height <<= 2;
 	mo->flags |= MF_NOBLOOD | MF_SHOOTABLE | MF_SOLID | MF_SLIDE;
@@ -4269,21 +4135,18 @@ A_FreezeDeath(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	}
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_GenericFreezeDeath(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_GenericFreezeDeath(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	A_FreezeDeath(mo, st, stfunc);
 	mo->frame &= ~FF_FULLBRIGHT;
 	mo->translation = render_translation + TRANSLATION_ICE * 256;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_FreezeDeathChunks(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_FreezeDeathChunks(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	mobj_t* th;
 
-	if (!(mo->iflags & MFI_SHATTERING) &&
-	    (mo->momx || mo->momy || mo->momz))
+	if (!(mo->iflags & MFI_SHATTERING) && (mo->momx || mo->momy || mo->momz))
 	{
 		mo->tics = 105;
 		return;
@@ -4301,9 +4164,7 @@ A_FreezeDeathChunks(mobj_t* mo, state_t* st, stfunc_t stfunc)
 
 		mo->player->viewheight = 6 * FRACUNIT;
 
-		th = P_SpawnMobj(mo->x, mo->y,
-		                 mo->z + mo->info->player.view_height,
-		                 MOBJ_IDX_ICE_CHUNK_HEAD);
+		th = P_SpawnMobj(mo->x, mo->y, mo->z + mo->info->player.view_height, MOBJ_IDX_ICE_CHUNK_HEAD);
 		th->momx = (P_Random() - P_Random()) << 9;
 		th->momy = (P_Random() - P_Random()) << 9;
 		th->momz = FRACUNIT * 2 + (P_Random() << 6);
@@ -4331,8 +4192,7 @@ A_FreezeDeathChunks(mobj_t* mo, state_t* st, stfunc_t stfunc)
 	mo->special.tid = 0;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) void
-A_IceSetTics(mobj_t* mo, state_t* st, stfunc_t stfunc)
+__attribute((regparm(2), no_caller_saved_registers)) void A_IceSetTics(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	mo->tics = 70 + (P_Random() & 63);
 	switch (mo->subsector->sector->extra->damage.type & 0x7F)
@@ -4349,8 +4209,7 @@ A_IceSetTics(mobj_t* mo, state_t* st, stfunc_t stfunc)
 //
 // activate line special
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-A_LineSpecial(mobj_t* mo, state_t* st, stfunc_t stfunc)
+static __attribute((regparm(2), no_caller_saved_registers)) void A_LineSpecial(mobj_t* mo, state_t* st, stfunc_t stfunc)
 {
 	int32_t arg[5];
 	uint32_t spec;
@@ -4631,10 +4490,7 @@ static uint32_t handle_translation(uint8_t* kw)
 	return r_translation_find(kw);
 }
 
-static uint32_t handle_sound(uint8_t* kw)
-{
-	return sfx_by_alias(tp_hash64(kw));
-}
+static uint32_t handle_sound(uint8_t* kw) { return sfx_by_alias(tp_hash64(kw)); }
 
 static uint32_t handle_lump(uint8_t* kw) { return wad_get_lump(kw); }
 
@@ -4862,8 +4718,7 @@ uint8_t* action_parser(uint8_t* name)
 
 		if (!spec->special)
 			// not found
-			engine_error("DECORATE", "Unknown action '%s' in '%s'!",
-			             name, parse_actor_name);
+			engine_error("DECORATE", "Unknown action '%s' in '%s'!", name, parse_actor_name);
 
 		act = &line_action;
 	}
@@ -4895,14 +4750,12 @@ uint8_t* action_parser(uint8_t* name)
 
 				count++;
 
-				parse_action_arg =
-				    dec_es_alloc(count * sizeof(uint16_t));
+				parse_action_arg = dec_es_alloc(count * sizeof(uint16_t));
 				if (act == &line_action)
 				{
 					// line special hack
 					uint16_t* ac = parse_action_arg;
-					ac[6] =
-					    spec->special; // no extra markings
+					ac[6] = spec->special; // no extra markings
 				}
 			}
 
@@ -4911,8 +4764,7 @@ uint8_t* action_parser(uint8_t* name)
 				engine_error("DECORATE",
 				             "Failed to parse arg[%d] for "
 				             "action '%s' in '%s'!",
-				             parse_arg_idx, name,
-				             parse_actor_name);
+				             parse_arg_idx, name, parse_actor_name);
 
 			parse_arg_idx++;
 
@@ -4942,9 +4794,8 @@ uint8_t* action_parser(uint8_t* name)
 	}
 
 	if (parse_arg_idx < act->minarg)
-		engine_error("DECORATE",
-		             "Missing arg[%d] for action '%s' in '%s'!",
-		             parse_arg_idx, name, parse_actor_name);
+		engine_error("DECORATE", "Missing arg[%d] for action '%s' in '%s'!", parse_arg_idx, name,
+		             parse_actor_name);
 
 	return kw;
 }
@@ -4954,13 +4805,9 @@ uint8_t* action_parser(uint8_t* name)
 
 static const dec_action_t mobj_action[] = {
     // weapon
-    {"a_lower", A_Lower, 1, 0}, // lowerspeed
-    {"a_raise", A_Raise, 1, 0}, // raisespeed
-    {"a_gunflash",
-     A_GunFlash,
-     2,
-     -1,
-     {STRARG(0, STR_STATE)}}, // "flashlabel", flags
+    {"a_lower", A_Lower, 1, 0},                                // lowerspeed
+    {"a_raise", A_Raise, 1, 0},                                // raisespeed
+    {"a_gunflash", A_GunFlash, 2, -1, {STRARG(0, STR_STATE)}}, // "flashlabel", flags
     {"a_checkreload", A_CheckReload},
     {"a_light0", A_Light0},
     {"a_light1", A_Light1},
@@ -4974,12 +4821,8 @@ static const dec_action_t mobj_action[] = {
     {"a_playerscream", A_PlayerScream},
     {"a_activesound", A_ActiveSound},
     {"a_brainpain", A_BrainPain},
-    {"a_startsound",
-     A_StartSound,
-     5,
-     1,
-     {STRARG(0, STR_SOUND)}}, // "whattoplay", slot, flags, volume, attenuation
-			      // basic control
+    {"a_startsound", A_StartSound, 5, 1, {STRARG(0, STR_SOUND)}}, // "whattoplay", slot, flags, volume, attenuation
+								  // basic control
     {"a_facetarget", A_FaceTarget},
     {"a_facetracer", A_FaceTracer},
     {"a_facemaster", A_FaceMaster},
@@ -5005,292 +4848,191 @@ static const dec_action_t mobj_action[] = {
      A_CustomMeleeAttack,
      5,
      1,
-     {STRARG(1, STR_SOUND), STRARG(2, STR_SOUND),
-      STRARG(3, STR_DAMAGE_TYPE)}}, // damage, "meleesound", "misssound",
-				    // "damagetype", bleed
-    {"a_viletarget", A_VileTarget, 1, 0, {STRARG(0, STR_MOBJ_TYPE)}}, // "type"
+     {STRARG(1, STR_SOUND), STRARG(2, STR_SOUND), STRARG(3, STR_DAMAGE_TYPE)}}, // damage, "meleesound", "misssound",
+										// "damagetype", bleed
+    {"a_viletarget", A_VileTarget, 1, 0, {STRARG(0, STR_MOBJ_TYPE)}},           // "type"
     {"a_vileattack",
      A_VileAttack,
      7,
      0,
-     {STRARG(0, STR_SOUND),
-      STRARG(5, STR_DAMAGE_TYPE)}}, // "sound", initialdamage, blastdamage,
-				    // blastradius, thrustfactor, "damagetype",
-				    // flags player attack
+     {STRARG(0, STR_SOUND), STRARG(5, STR_DAMAGE_TYPE)}}, // "sound", initialdamage, blastdamage,
+							  // blastradius, thrustfactor, "damagetype",
+							  // flags player attack
     {"a_fireprojectile",
      A_FireProjectile,
      7,
      1,
-     {STRARG(0, STR_MOBJ_TYPE)}}, // "missiletype", angle, useammo, spawnofs_xy,
-				  // spawnheight, flags, pitch
-    {"a_firebullets",
-     A_FireBullets,
-     7,
-     4,
-     {STRARG(4, STR_MOBJ_TYPE)}}, // spread_horz, spread_vert, numbullets,
-				  // damage, "pufftype", flags, range
-    {"a_custompunch",
-     A_CustomPunch,
-     5,
-     1,
-     {STRARG(3, STR_MOBJ_TYPE)}}, // damage, norandom, flags, "pufftype", range
-				  // other attack
-    {"a_bfgspray",
-     A_BFGSpray,
-     7,
-     -1,
-     {STRARG(0, STR_MOBJ_TYPE)}}, // "spraytype", numrays, damagecnt, ang,
-				  // distance, vrange, defdamage
-    {"a_seekermissile", A_SeekerMissile, 5, 2}, // threshold, maxturnangle,
-                                                // flags, chance, distance spawn
-    {"a_spawnitemex",
-     A_SpawnItemEx,
-     11,
-     1,
-     {STRARG(0, STR_MOBJ_TYPE)}}, // "missile", xofs, yofs, zofs, xvel, yvel,
-				  // zvel, angle, flags, failchance, tid
-    {"a_dropitem",
-     A_DropItem,
-     3,
-     1,
-     {STRARG(0, STR_MOBJ_TYPE)}}, // "item", dropamount, chance
-				  // chunks
-    {"a_burst", A_Burst, 1, 1, {STRARG(0, STR_MOBJ_TYPE)}},       // "classname"
-    {"a_skullpop", A_SkullPop, 1, 1, {STRARG(0, STR_MOBJ_TYPE)}}, // "classname"
+     {STRARG(0, STR_MOBJ_TYPE)}},                                        // "missiletype", angle, useammo, spawnofs_xy,
+									 // spawnheight, flags, pitch
+    {"a_firebullets", A_FireBullets, 7, 4, {STRARG(4, STR_MOBJ_TYPE)}},  // spread_horz, spread_vert, numbullets,
+									 // damage, "pufftype", flags, range
+    {"a_custompunch", A_CustomPunch, 5, 1, {STRARG(3, STR_MOBJ_TYPE)}},  // damage, norandom, flags, "pufftype", range
+									 // other attack
+    {"a_bfgspray", A_BFGSpray, 7, -1, {STRARG(0, STR_MOBJ_TYPE)}},       // "spraytype", numrays, damagecnt, ang,
+									 // distance, vrange, defdamage
+    {"a_seekermissile", A_SeekerMissile, 5, 2},                          // threshold, maxturnangle,
+                                                                         // flags, chance, distance spawn
+    {"a_spawnitemex", A_SpawnItemEx, 11, 1, {STRARG(0, STR_MOBJ_TYPE)}}, // "missile", xofs, yofs, zofs, xvel, yvel,
+									 // zvel, angle, flags, failchance, tid
+    {"a_dropitem", A_DropItem, 3, 1, {STRARG(0, STR_MOBJ_TYPE)}},        // "item", dropamount, chance
+									 // chunks
+    {"a_burst", A_Burst, 1, 1, {STRARG(0, STR_MOBJ_TYPE)}},              // "classname"
+    {"a_skullpop", A_SkullPop, 1, 1, {STRARG(0, STR_MOBJ_TYPE)}},        // "classname"
     // freeze death
     {"a_freezedeath", A_FreezeDeath},
     {"a_genericfreezedeath", A_GenericFreezeDeath},
     {"a_freezedeathchunks", A_FreezeDeathChunks},
     // render
-    {"a_settranslation",
-     A_SetTranslation,
-     1,
-     1,
-     {STRARG(0, STR_TRANSLATION)}},               // "transname"
-    {"a_setscale", A_SetScale, 1, 1},             // scale
-    {"a_setrenderstyle", A_SetRenderStyle, 2, 2}, // alpha, style
-    {"a_fadeout", A_FadeOut, 1, 1},               // reduce_amount
-    {"a_fadein", A_FadeIn, 1, 1},                 // increase_amount
-                                                  // misc
+    {"a_settranslation", A_SetTranslation, 1, 1, {STRARG(0, STR_TRANSLATION)}}, // "transname"
+    {"a_setscale", A_SetScale, 1, 1},                                           // scale
+    {"a_setrenderstyle", A_SetRenderStyle, 2, 2},                               // alpha, style
+    {"a_fadeout", A_FadeOut, 1, 1},                                             // reduce_amount
+    {"a_fadein", A_FadeIn, 1, 1},                                               // increase_amount
+                                                                                // misc
     {"a_checkplayerdone", A_CheckPlayerDone},
     {"a_alertmonsters", A_AlertMonsters},
-    {"a_setangle", A_SetAngle, 3, 1}, // angle, flags, ptr
-    {"a_setpitch", A_SetPitch, 3, 1}, // pitch, flags, ptr
-    {"a_changeflag",
-     A_ChangeFlag,
-     2,
-     2,
-     {STRARG(0, STR_MOBJ_FLAG)}},                 // "flagname", value
-    {"a_changevelocity", A_ChangeVelocity, 5, 3}, // x, y, z, flags, ptr
-    {"a_scalevelocity", A_ScaleVelocity, 2, 1},   // scale, pointer
+    {"a_setangle", A_SetAngle, 3, 1},                                 // angle, flags, ptr
+    {"a_setpitch", A_SetPitch, 3, 1},                                 // pitch, flags, ptr
+    {"a_changeflag", A_ChangeFlag, 2, 2, {STRARG(0, STR_MOBJ_FLAG)}}, // "flagname", value
+    {"a_changevelocity", A_ChangeVelocity, 5, 3},                     // x, y, z, flags, ptr
+    {"a_scalevelocity", A_ScaleVelocity, 2, 1},                       // scale, pointer
     {"a_stop", A_Stop},
-    {"a_settics", A_SetTics, 1, 1}, // duration
-    {"a_rearrangepointers", A_RearrangePointers, 4,
-     4}, // target, master, tracer, flags
+    {"a_settics", A_SetTics, 1, 1},                     // duration
+    {"a_rearrangepointers", A_RearrangePointers, 4, 4}, // target, master, tracer, flags
     {"a_brainawake", doom_A_BrainAwake},
     {"a_brainspit", doom_A_BrainSpit},
     {"a_spawnfly", doom_A_SpawnFly},
     {"a_braindie", A_BrainDie},
     {"a_raiseself", A_RaiseSelf},
     {"a_keendie", A_KeenDie, 1, -1}, // tag
-    {"a_warp", A_Warp, 6, 1}, // ptr_destination, xofs, yofs, zofs, angle, flags
-    {"a_setarg", A_SetArg, 2, 2}, // position, value
-				  // damage
-    {"a_damagetarget",
-     A_DamageTarget,
-     2,
-     1,
-     {STRARG(1, STR_DAMAGE_TYPE)}}, // amount, "damagetype"
-    {"a_damagetracer",
-     A_DamageTracer,
-     2,
-     1,
-     {STRARG(1, STR_DAMAGE_TYPE)}}, // amount, "damagetype"
-    {"a_damagemaster",
-     A_DamageMaster,
-     2,
-     1,
-     {STRARG(1, STR_DAMAGE_TYPE)}}, // amount, "damagetype"
-    {"a_explode", A_Explode, 5,
-     1}, // damage, distance, flags, alert, fulldamagedistance
-	 // health
+    {"a_warp", A_Warp, 6, 1},        // ptr_destination, xofs, yofs, zofs, angle, flags
+    {"a_setarg", A_SetArg, 2, 2},    // position, value
+				     // damage
+    {"a_damagetarget", A_DamageTarget, 2, 1, {STRARG(1, STR_DAMAGE_TYPE)}}, // amount, "damagetype"
+    {"a_damagetracer", A_DamageTracer, 2, 1, {STRARG(1, STR_DAMAGE_TYPE)}}, // amount, "damagetype"
+    {"a_damagemaster", A_DamageMaster, 2, 1, {STRARG(1, STR_DAMAGE_TYPE)}}, // amount, "damagetype"
+    {"a_explode", A_Explode, 5, 1},     // damage, distance, flags, alert, fulldamagedistance
+					// health
     {"a_sethealth", A_SetHealth, 2, 1}, // health, pointer
 					// inventory
-    {"a_giveinventory",
-     A_GiveInventory,
-     3,
-     1,
-     {STRARG(0, STR_MOBJ_TYPE)}}, // "type", amount, giveto
-    {"a_takeinventory",
-     A_TakeInventory,
-     4,
-     1,
-     {STRARG(0, STR_MOBJ_TYPE)}}, // "type", amount, flags, takefrom
-    {"a_selectweapon",
-     A_SelectWeapon,
-     1,
-     1,
-     {STRARG(0, STR_MOBJ_TYPE)}}, // "whichweapon"
-				  // text
-    {"a_print",
-     A_Print,
-     3,
-     1,
-     {STRARG(0, STR_NORMAL), STRARG(2, STR_LUMP)}}, // "text", time, "fontname"
-    {"a_printbold",
-     A_PrintBold,
-     3,
-     1,
-     {STRARG(0, STR_NORMAL), STRARG(2, STR_LUMP)}}, // "text", time, "fontname"
-                                                    // jumps
-    {"a_jump", A_Jump, 10,
-     2}, // chance, "offset/state", ... // TODO: somehow make dynamic
-    {"a_jumpif",
-     A_JumpIf,
-     2,
-     2,
-     {STRARG(1, STR_STATE)}}, // expression, "offset/state"
+    {"a_giveinventory", A_GiveInventory, 3, 1, {STRARG(0, STR_MOBJ_TYPE)}},           // "type", amount, giveto
+    {"a_takeinventory", A_TakeInventory, 4, 1, {STRARG(0, STR_MOBJ_TYPE)}},           // "type", amount, flags, takefrom
+    {"a_selectweapon", A_SelectWeapon, 1, 1, {STRARG(0, STR_MOBJ_TYPE)}},             // "whichweapon"
+										      // text
+    {"a_print", A_Print, 3, 1, {STRARG(0, STR_NORMAL), STRARG(2, STR_LUMP)}},         // "text", time, "fontname"
+    {"a_printbold", A_PrintBold, 3, 1, {STRARG(0, STR_NORMAL), STRARG(2, STR_LUMP)}}, // "text", time, "fontname"
+                                                                                      // jumps
+    {"a_jump", A_Jump, 10, 2},                            // chance, "offset/state", ... // TODO: somehow make dynamic
+    {"a_jumpif", A_JumpIf, 2, 2, {STRARG(1, STR_STATE)}}, // expression, "offset/state"
     {"a_jumpifinventory",
      A_JumpIfInventory,
      4,
      3,
-     {STRARG(0, STR_MOBJ_TYPE),
-      STRARG(2, STR_STATE)}}, // "inventorytype", amount, "offset/state", owner
-    {"a_jumpifhealthlower",
-     A_JumpIfHealthLower,
-     3,
-     2,
-     {STRARG(1, STR_STATE)}}, //  health, "offset/state", pointer
-    {"a_jumpifcloser",
-     A_JumpIfCloser,
-     3,
-     2,
-     {STRARG(1, STR_STATE)}}, // distance, "offset/state", noz
-    {"a_jumpiftracercloser",
-     A_JumpIfTracerCloser,
-     3,
-     2,
-     {STRARG(1, STR_STATE)}}, // distance, "offset/state", noz
-    {"a_jumpifmastercloser",
-     A_JumpIfMasterCloser,
-     3,
-     2,
-     {STRARG(1, STR_STATE)}}, // distance, "offset/state", noz
-    {"a_jumpiftargetinsidemeleerange",
-     A_JumpIfTargetInsideMeleeRange,
-     1,
-     1,
-     {STRARG(0, STR_STATE)}}, // "offset/state"
+     {STRARG(0, STR_MOBJ_TYPE), STRARG(2, STR_STATE)}}, // "inventorytype", amount, "offset/state", owner
+    {"a_jumpifhealthlower", A_JumpIfHealthLower, 3, 2, {STRARG(1, STR_STATE)}},   //  health, "offset/state", pointer
+    {"a_jumpifcloser", A_JumpIfCloser, 3, 2, {STRARG(1, STR_STATE)}},             // distance, "offset/state", noz
+    {"a_jumpiftracercloser", A_JumpIfTracerCloser, 3, 2, {STRARG(1, STR_STATE)}}, // distance, "offset/state", noz
+    {"a_jumpifmastercloser", A_JumpIfMasterCloser, 3, 2, {STRARG(1, STR_STATE)}}, // distance, "offset/state", noz
+    {"a_jumpiftargetinsidemeleerange", A_JumpIfTargetInsideMeleeRange, 1, 1, {STRARG(0, STR_STATE)}}, // "offset/state"
     {"a_jumpiftargetoutsidemeleerange",
      A_JumpIfTargetOutsideMeleeRange,
      1,
      -1,
-     {STRARG(0, STR_STATE)}}, // "offset/state"
-    {"a_checkfloor",
-     A_CheckFloor,
-     1,
-     1,
-     {STRARG(0, STR_STATE)}}, // "offset/state"
+     {STRARG(0, STR_STATE)}},                                     // "offset/state"
+    {"a_checkfloor", A_CheckFloor, 1, 1, {STRARG(0, STR_STATE)}}, // "offset/state"
     {"a_checkflag",
      A_CheckFlag,
      3,
      2,
-     {STRARG(0, STR_MOBJ_FLAG),
-      STRARG(1, STR_STATE)}}, // "flagname", "offset/state", check_pointer
-    {"a_monsterrefire",
-     A_MonsterRefire,
-     2,
-     2,
-     {STRARG(1, STR_STATE)}},                 // chancecontinue, "offset/state"
-    {"a_countdownarg", A_CountdownArg, 1, 1}, // arg
-                                              // terminator
+     {STRARG(0, STR_MOBJ_FLAG), STRARG(1, STR_STATE)}},                 // "flagname", "offset/state", check_pointer
+    {"a_monsterrefire", A_MonsterRefire, 2, 2, {STRARG(1, STR_STATE)}}, // chancecontinue, "offset/state"
+    {"a_countdownarg", A_CountdownArg, 1, 1},                           // arg
+                                                                        // terminator
     {NULL}};
 
 //
 // table of line specials
 
-static const dec_linespec_t special_action[] = {
-    {2, 0xD877EE73},   // polyobj_rotateleft
-    {3, 0xE996A972},   // polyobj_rotateright
-    {4, 0xECA9BF65},   // polyobj_move
-    {7, 0x44356C3F},   // polyobj_doorswing
-    {8, 0x6C33AC3D},   // polyobj_doorslide
-    {10, 0xDE1BCF04},  // door_close
-    {12, 0x9E1BD7D0},  // door_raise
-    {13, 0x4B31BE7F},  // door_lockedraise
-    {15, 0x533D5021},  // autosave
-    {19, 0xC337C323},  // thing_stop
-    {20, 0xC37E579D},  // floor_lowerbyvalue
-    {23, 0xB6E06E7C},  // floor_raisebyvalue
-    {26, 0x2902D8F7},  // stairs_builddown
-    {27, 0x107509F7},  // stairs_buildup
-    {28, 0xCEC47CF0},  // floor_raiseandcrush
-    {31, 0x290E3EA4},  // stairs_builddownsync
-    {32, 0x75450939},  // stairs_buildupsync
-    {35, 0xFBC5CF4D},  // floor_raisebyvaluetimes8
-    {36, 0x8E5BF6AC},  // floor_lowerbyvaluetimes8
-    {37, 0xC7AA99E9},  // floor_movetovalue
-    {40, 0xA3792C24},  // ceiling_lowerbyvalue
-    {41, 0x40E73B7D},  // ceiling_raisebyvalue
-    {44, 0xE0F7256D},  // ceiling_crushstop
-    {47, 0xEF9E6C69},  // ceiling_movetovalue
-    {53, 0x760116CF},  // line_settextureoffset
-    {55, 0x30F4F914},  // line_setblocking
-    {62, 0x479A8B91},  // plat_downwaitupstay
-    {64, 0x51F51150},  // plat_upwaitdownstay
-    {70, 0xD0149077},  // teleport
-    {71, 0x238A5F6F},  // teleport_nofog
-    {72, 0x60DC0351},  // thrustthing
-    {73, 0x348DF105},  // damagething
-    {74, 0x828BDD2B},  // teleport_newmap
-    {76, 0x551B8263},  // teleportother
-    {97, 0xE245A737},  // ceiling_lowerandcrushdist
-    {99, 0x01D47C23},  // floor_raiseandcrushdoom
-    {110, 0xB0FCEF36}, // light_raisebyvalue
-    {111, 0xC562D6D7}, // light_lowerbyvalue
-    {112, 0xA2C2D323}, // light_changetovalue
-    {113, 0xD564762B}, // light_fade
-    {114, 0xD1EF423B}, // light_glow
-    {116, 0xF7F2236F}, // light_strobe
-    {117, 0xD02F237B}, // light_stop
-    {119, 0xB7759647}, // thing_damage
-    {127, 0xF3FEC436}, // thing_setspecial
-    {128, 0x60DC0339}, // thrustthingz
-    {130, 0xA56DCA06}, // thing_activate
-    {131, 0x92B9D076}, // thing_deactivate
-    {132, 0xA4F58726}, // thing_remove
-    {133, 0xE22B9F6E}, // thing_destroy
-    {134, 0x81758F1F}, // thing_projectile
-    {135, 0x22F9D323}, // thing_spawn
-    {136, 0x882D9A0D}, // thing_projectilegravity
-    {137, 0x3E085C1B}, // thing_spawnnofog
-    {139, 0x1A69123C}, // thing_spawnfacing
-    {172, 0xEB1D2D3A}, // plat_upnearestwaitdownstay
-    {173, 0x405E870E}, // noisealert
-    {176, 0xB4FBE637}, // thing_changetid
-    {179, 0x84313F32}, // changeskill
-    {191, 0x397204E7}, // setplayerproperty
-    {195, 0x3DC6716A}, // ceiling_crushraiseandstaya
-    {196, 0x881F352F}, // ceiling_crushandraisea
-    {198, 0x1AF42FAF}, // ceiling_raisebyvaluetimes8
-    {199, 0xF96A38F6}, // ceiling_lowerbyvaluetimes8
-    {200, 0xA1128F49}, // generic_floor
-    {201, 0xC3241445}, // generic_ceiling
-    {206, 0x4EAA8B95}, // plat_downwaitupstaylip
-    {212, 0xBB76B09B}, // sector_setcolor
-    {213, 0xEA5438A3}, // sector_setfade
-    {237, 0x66751637}, // changecamera
-    {239, 0xE2812E7A}, // floor_raisebyvaluetxty
-    {243, 0x5F1DDEF6}, // exit_normal
-    {244, 0x9E029A50}, // exit_secret
-    // terminator
-    {0}};
+static const dec_linespec_t special_action[] = {{2, 0xD877EE73},   // polyobj_rotateleft
+                                                {3, 0xE996A972},   // polyobj_rotateright
+                                                {4, 0xECA9BF65},   // polyobj_move
+                                                {7, 0x44356C3F},   // polyobj_doorswing
+                                                {8, 0x6C33AC3D},   // polyobj_doorslide
+                                                {10, 0xDE1BCF04},  // door_close
+                                                {12, 0x9E1BD7D0},  // door_raise
+                                                {13, 0x4B31BE7F},  // door_lockedraise
+                                                {15, 0x533D5021},  // autosave
+                                                {19, 0xC337C323},  // thing_stop
+                                                {20, 0xC37E579D},  // floor_lowerbyvalue
+                                                {23, 0xB6E06E7C},  // floor_raisebyvalue
+                                                {26, 0x2902D8F7},  // stairs_builddown
+                                                {27, 0x107509F7},  // stairs_buildup
+                                                {28, 0xCEC47CF0},  // floor_raiseandcrush
+                                                {31, 0x290E3EA4},  // stairs_builddownsync
+                                                {32, 0x75450939},  // stairs_buildupsync
+                                                {35, 0xFBC5CF4D},  // floor_raisebyvaluetimes8
+                                                {36, 0x8E5BF6AC},  // floor_lowerbyvaluetimes8
+                                                {37, 0xC7AA99E9},  // floor_movetovalue
+                                                {40, 0xA3792C24},  // ceiling_lowerbyvalue
+                                                {41, 0x40E73B7D},  // ceiling_raisebyvalue
+                                                {44, 0xE0F7256D},  // ceiling_crushstop
+                                                {47, 0xEF9E6C69},  // ceiling_movetovalue
+                                                {53, 0x760116CF},  // line_settextureoffset
+                                                {55, 0x30F4F914},  // line_setblocking
+                                                {62, 0x479A8B91},  // plat_downwaitupstay
+                                                {64, 0x51F51150},  // plat_upwaitdownstay
+                                                {70, 0xD0149077},  // teleport
+                                                {71, 0x238A5F6F},  // teleport_nofog
+                                                {72, 0x60DC0351},  // thrustthing
+                                                {73, 0x348DF105},  // damagething
+                                                {74, 0x828BDD2B},  // teleport_newmap
+                                                {76, 0x551B8263},  // teleportother
+                                                {97, 0xE245A737},  // ceiling_lowerandcrushdist
+                                                {99, 0x01D47C23},  // floor_raiseandcrushdoom
+                                                {110, 0xB0FCEF36}, // light_raisebyvalue
+                                                {111, 0xC562D6D7}, // light_lowerbyvalue
+                                                {112, 0xA2C2D323}, // light_changetovalue
+                                                {113, 0xD564762B}, // light_fade
+                                                {114, 0xD1EF423B}, // light_glow
+                                                {116, 0xF7F2236F}, // light_strobe
+                                                {117, 0xD02F237B}, // light_stop
+                                                {119, 0xB7759647}, // thing_damage
+                                                {127, 0xF3FEC436}, // thing_setspecial
+                                                {128, 0x60DC0339}, // thrustthingz
+                                                {130, 0xA56DCA06}, // thing_activate
+                                                {131, 0x92B9D076}, // thing_deactivate
+                                                {132, 0xA4F58726}, // thing_remove
+                                                {133, 0xE22B9F6E}, // thing_destroy
+                                                {134, 0x81758F1F}, // thing_projectile
+                                                {135, 0x22F9D323}, // thing_spawn
+                                                {136, 0x882D9A0D}, // thing_projectilegravity
+                                                {137, 0x3E085C1B}, // thing_spawnnofog
+                                                {139, 0x1A69123C}, // thing_spawnfacing
+                                                {172, 0xEB1D2D3A}, // plat_upnearestwaitdownstay
+                                                {173, 0x405E870E}, // noisealert
+                                                {176, 0xB4FBE637}, // thing_changetid
+                                                {179, 0x84313F32}, // changeskill
+                                                {191, 0x397204E7}, // setplayerproperty
+                                                {195, 0x3DC6716A}, // ceiling_crushraiseandstaya
+                                                {196, 0x881F352F}, // ceiling_crushandraisea
+                                                {198, 0x1AF42FAF}, // ceiling_raisebyvaluetimes8
+                                                {199, 0xF96A38F6}, // ceiling_lowerbyvaluetimes8
+                                                {200, 0xA1128F49}, // generic_floor
+                                                {201, 0xC3241445}, // generic_ceiling
+                                                {206, 0x4EAA8B95}, // plat_downwaitupstaylip
+                                                {212, 0xBB76B09B}, // sector_setcolor
+                                                {213, 0xEA5438A3}, // sector_setfade
+                                                {237, 0x66751637}, // changecamera
+                                                {239, 0xE2812E7A}, // floor_raisebyvaluetxty
+                                                {243, 0x5F1DDEF6}, // exit_normal
+                                                {244, 0x9E029A50}, // exit_secret
+                                                // terminator
+                                                {0}};
 
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// replace 'PIT_VileCheck'
-	{0x000281B0, CODE_HOOK | HOOK_UINT32, (uint32_t)PIT_VileCheck},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // replace 'PIT_VileCheck'
+    {0x000281B0, CODE_HOOK | HOOK_UINT32, (uint32_t)PIT_VileCheck},
 };

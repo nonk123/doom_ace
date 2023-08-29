@@ -256,8 +256,7 @@ static const mobjinfo_t default_player = {
     .render_alpha = 255,
     .painchance[DAMAGE_NORMAL] = 255,
     .speed = 1 << FRACBITS,
-    .flags = MF_SOLID | MF_SHOOTABLE | MF_DROPOFF | MF_PICKUP | MF_NOTDMATCH |
-             MF_SLIDE,
+    .flags = MF_SOLID | MF_SHOOTABLE | MF_DROPOFF | MF_PICKUP | MF_NOTDMATCH | MF_SLIDE,
     .flags1 = MF1_TELESTOMP,
     .player.view_height = 41 << FRACBITS,
     .player.attack_offs = 8 << FRACBITS,
@@ -491,8 +490,7 @@ static mobjinfo_t default_powerup = {.spawnhealth = 1000,
                                      .eflags = MFE_INVENTORY_ALWAYSPICKUP,
                                      .powerup.inventory.count = 1,
                                      .powerup.inventory.max_count = 25,
-                                     .powerup.inventory.hub_count =
-                                         INV_MAX_COUNT,
+                                     .powerup.inventory.hub_count = INV_MAX_COUNT,
                                      .powerup.inventory.sound_pickup = 93,
                                      .powerup.duration = 0,
                                      .powerup.type = 0,
@@ -513,104 +511,90 @@ static const dec_anim_t mobj_anim[] = {
     {"heal", ANIM_HEAL, ETYPE_NONE, offsetof(mobjinfo_t, state_heal)},
     {"crush", ANIM_CRUSH, ETYPE_NONE, offsetof(mobjinfo_t, state_crush)},
     {"crash", ANIM_CRASH, ETYPE_NONE, offsetof(mobjinfo_t, state_crash)},
-    {"crash.extreme", ANIM_XCRASH, ETYPE_NONE,
-     offsetof(mobjinfo_t, state_xcrash)},
+    {"crash.extreme", ANIM_XCRASH, ETYPE_NONE, offsetof(mobjinfo_t, state_xcrash)},
     // switchable decoration
-    {"active", ANIM_S_ACTIVE, ETYPE_SWITCHABLE,
-     offsetof(mobjinfo_t, st_switchable.active)},
-    {"inactive", ANIM_S_INACTIVE, ETYPE_SWITCHABLE,
-     offsetof(mobjinfo_t, st_switchable.inactive)},
+    {"active", ANIM_S_ACTIVE, ETYPE_SWITCHABLE, offsetof(mobjinfo_t, st_switchable.active)},
+    {"inactive", ANIM_S_INACTIVE, ETYPE_SWITCHABLE, offsetof(mobjinfo_t, st_switchable.inactive)},
     // weapon
-    {"ready", ANIM_W_READY, ETYPE_WEAPON,
-     offsetof(mobjinfo_t, st_weapon.ready)},
-    {"deselect", ANIM_W_LOWER, ETYPE_WEAPON,
-     offsetof(mobjinfo_t, st_weapon.lower)},
-    {"select", ANIM_W_RAISE, ETYPE_WEAPON,
-     offsetof(mobjinfo_t, st_weapon.raise)},
-    {"deadlowered", ANIM_W_DEADLOW, ETYPE_WEAPON,
-     offsetof(mobjinfo_t, st_weapon.deadlow)},
+    {"ready", ANIM_W_READY, ETYPE_WEAPON, offsetof(mobjinfo_t, st_weapon.ready)},
+    {"deselect", ANIM_W_LOWER, ETYPE_WEAPON, offsetof(mobjinfo_t, st_weapon.lower)},
+    {"select", ANIM_W_RAISE, ETYPE_WEAPON, offsetof(mobjinfo_t, st_weapon.raise)},
+    {"deadlowered", ANIM_W_DEADLOW, ETYPE_WEAPON, offsetof(mobjinfo_t, st_weapon.deadlow)},
     {"fire", ANIM_W_FIRE, ETYPE_WEAPON, offsetof(mobjinfo_t, st_weapon.fire)},
-    {"altfire", ANIM_W_FIRE_ALT, ETYPE_WEAPON,
-     offsetof(mobjinfo_t, st_weapon.fire_alt)},
+    {"altfire", ANIM_W_FIRE_ALT, ETYPE_WEAPON, offsetof(mobjinfo_t, st_weapon.fire_alt)},
     {"hold", ANIM_W_HOLD, ETYPE_WEAPON, offsetof(mobjinfo_t, st_weapon.hold)},
-    {"althold", ANIM_W_HOLD_ALT, ETYPE_WEAPON,
-     offsetof(mobjinfo_t, st_weapon.hold_alt)},
-    {"flash", ANIM_W_FLASH, ETYPE_WEAPON,
-     offsetof(mobjinfo_t, st_weapon.flash)},
-    {"altflash", ANIM_W_FLASH_ALT, ETYPE_WEAPON,
-     offsetof(mobjinfo_t, st_weapon.flash_alt)},
+    {"althold", ANIM_W_HOLD_ALT, ETYPE_WEAPON, offsetof(mobjinfo_t, st_weapon.hold_alt)},
+    {"flash", ANIM_W_FLASH, ETYPE_WEAPON, offsetof(mobjinfo_t, st_weapon.flash)},
+    {"altflash", ANIM_W_FLASH_ALT, ETYPE_WEAPON, offsetof(mobjinfo_t, st_weapon.flash_alt)},
     // custom inventory
-    {"pickup", ANIM_I_PICKUP, ETYPE_INVENTORY_CUSTOM,
-     offsetof(mobjinfo_t, st_custinv.pickup)},
-    {"use", ANIM_I_USE, ETYPE_INVENTORY_CUSTOM,
-     offsetof(mobjinfo_t, st_custinv.use)},
+    {"pickup", ANIM_I_PICKUP, ETYPE_INVENTORY_CUSTOM, offsetof(mobjinfo_t, st_custinv.pickup)},
+    {"use", ANIM_I_USE, ETYPE_INVENTORY_CUSTOM, offsetof(mobjinfo_t, st_custinv.use)},
     // terminator
     {NULL}};
 
 // mobj attributes
-static const dec_attr_t attr_mobj[] = {
-    {"spawnid", DT_U16, offsetof(mobjinfo_t, spawnid)},
-    //
-    {"health", DT_S32, offsetof(mobjinfo_t, spawnhealth)},
-    {"reactiontime", DT_S32, offsetof(mobjinfo_t, reactiontime)},
-    {"painchance", DT_PAINCHANCE},
-    {"damage", DT_DAMAGE, offsetof(mobjinfo_t, damage)},
-    {"damagetype", DT_DAMAGE_TYPE},
-    {"damagefactor", DT_DAMAGE_FACTOR},
-    {"speed", DT_FIXED, offsetof(mobjinfo_t, speed)},
-    //
-    {"radius", DT_FIXED, offsetof(mobjinfo_t, radius)},
-    {"height", DT_FIXED, offsetof(mobjinfo_t, height)},
-    {"mass", DT_S32, offsetof(mobjinfo_t, mass)},
-    {"gravity", DT_FIXED, offsetof(mobjinfo_t, gravity)},
-    //
-    {"cameraheight", DT_FIXED, offsetof(mobjinfo_t, camera_height)},
-    //
-    {"fastspeed", DT_FIXED, offsetof(mobjinfo_t, fast_speed)},
-    {"vspeed", DT_FIXED, offsetof(mobjinfo_t, vspeed)},
-    //
-    {"bouncecount", DT_U16, offsetof(mobjinfo_t, bounce_count)},
-    {"bouncefactor", DT_FIXED, offsetof(mobjinfo_t, bounce_factor)},
-    //
-    {"species", DT_ALIAS64, offsetof(mobjinfo_t, species)},
-    //
-    {"telefogsourcetype", DT_MOBJTYPE, offsetof(mobjinfo_t, telefog[0])},
-    {"telefogdesttype", DT_MOBJTYPE, offsetof(mobjinfo_t, telefog[1])},
-    //
-    {"bloodtype", DT_MOBJTYPE, offsetof(mobjinfo_t, blood_type)},
-    {"bloodcolor", DT_BLOODLATION},
-    //
-    {"dropitem", DT_DROPITEM},
-    //
-    {"activesound", DT_SOUND, offsetof(mobjinfo_t, activesound)},
-    {"attacksound", DT_SOUND, offsetof(mobjinfo_t, attacksound)},
-    {"deathsound", DT_SOUND, offsetof(mobjinfo_t, deathsound)},
-    {"painsound", DT_SOUND, offsetof(mobjinfo_t, painsound)},
-    {"seesound", DT_SOUND, offsetof(mobjinfo_t, seesound)},
-    {"bouncesound", DT_SOUND, offsetof(mobjinfo_t, bouncesound)},
-    //
-    {"maxstepheight", DT_FIXED, offsetof(mobjinfo_t, step_height)},
-    {"maxdropoffheight", DT_FIXED, offsetof(mobjinfo_t, dropoff)},
-    {"meleerange", DT_FIXED, offsetof(mobjinfo_t, range_melee)},
-    //
-    {"scale", DT_FIXED, offsetof(mobjinfo_t, scale)},
-    //
-    {"args", DT_ARGS},
-    //
-    {"renderstyle", DT_RENDER_STYLE},
-    {"alpha", DT_RENDER_ALPHA, offsetof(mobjinfo_t, render_alpha)},
-    {"stealthalpha", DT_RENDER_ALPHA, offsetof(mobjinfo_t, stealth_alpha)},
-    {"translation", DT_TRANSLATION},
-    //
-    {"monster", DT_MONSTER},
-    {"projectile", DT_PROJECTILE},
-    {"states", DT_STATES},
-    //
-    {"obituary", DT_SKIP1},
-    {"hitobituary", DT_SKIP1},
-    {"decal", DT_SKIP1},
-    // terminator
-    {NULL}};
+static const dec_attr_t attr_mobj[] = {{"spawnid", DT_U16, offsetof(mobjinfo_t, spawnid)},
+                                       //
+                                       {"health", DT_S32, offsetof(mobjinfo_t, spawnhealth)},
+                                       {"reactiontime", DT_S32, offsetof(mobjinfo_t, reactiontime)},
+                                       {"painchance", DT_PAINCHANCE},
+                                       {"damage", DT_DAMAGE, offsetof(mobjinfo_t, damage)},
+                                       {"damagetype", DT_DAMAGE_TYPE},
+                                       {"damagefactor", DT_DAMAGE_FACTOR},
+                                       {"speed", DT_FIXED, offsetof(mobjinfo_t, speed)},
+                                       //
+                                       {"radius", DT_FIXED, offsetof(mobjinfo_t, radius)},
+                                       {"height", DT_FIXED, offsetof(mobjinfo_t, height)},
+                                       {"mass", DT_S32, offsetof(mobjinfo_t, mass)},
+                                       {"gravity", DT_FIXED, offsetof(mobjinfo_t, gravity)},
+                                       //
+                                       {"cameraheight", DT_FIXED, offsetof(mobjinfo_t, camera_height)},
+                                       //
+                                       {"fastspeed", DT_FIXED, offsetof(mobjinfo_t, fast_speed)},
+                                       {"vspeed", DT_FIXED, offsetof(mobjinfo_t, vspeed)},
+                                       //
+                                       {"bouncecount", DT_U16, offsetof(mobjinfo_t, bounce_count)},
+                                       {"bouncefactor", DT_FIXED, offsetof(mobjinfo_t, bounce_factor)},
+                                       //
+                                       {"species", DT_ALIAS64, offsetof(mobjinfo_t, species)},
+                                       //
+                                       {"telefogsourcetype", DT_MOBJTYPE, offsetof(mobjinfo_t, telefog[0])},
+                                       {"telefogdesttype", DT_MOBJTYPE, offsetof(mobjinfo_t, telefog[1])},
+                                       //
+                                       {"bloodtype", DT_MOBJTYPE, offsetof(mobjinfo_t, blood_type)},
+                                       {"bloodcolor", DT_BLOODLATION},
+                                       //
+                                       {"dropitem", DT_DROPITEM},
+                                       //
+                                       {"activesound", DT_SOUND, offsetof(mobjinfo_t, activesound)},
+                                       {"attacksound", DT_SOUND, offsetof(mobjinfo_t, attacksound)},
+                                       {"deathsound", DT_SOUND, offsetof(mobjinfo_t, deathsound)},
+                                       {"painsound", DT_SOUND, offsetof(mobjinfo_t, painsound)},
+                                       {"seesound", DT_SOUND, offsetof(mobjinfo_t, seesound)},
+                                       {"bouncesound", DT_SOUND, offsetof(mobjinfo_t, bouncesound)},
+                                       //
+                                       {"maxstepheight", DT_FIXED, offsetof(mobjinfo_t, step_height)},
+                                       {"maxdropoffheight", DT_FIXED, offsetof(mobjinfo_t, dropoff)},
+                                       {"meleerange", DT_FIXED, offsetof(mobjinfo_t, range_melee)},
+                                       //
+                                       {"scale", DT_FIXED, offsetof(mobjinfo_t, scale)},
+                                       //
+                                       {"args", DT_ARGS},
+                                       //
+                                       {"renderstyle", DT_RENDER_STYLE},
+                                       {"alpha", DT_RENDER_ALPHA, offsetof(mobjinfo_t, render_alpha)},
+                                       {"stealthalpha", DT_RENDER_ALPHA, offsetof(mobjinfo_t, stealth_alpha)},
+                                       {"translation", DT_TRANSLATION},
+                                       //
+                                       {"monster", DT_MONSTER},
+                                       {"projectile", DT_PROJECTILE},
+                                       {"states", DT_STATES},
+                                       //
+                                       {"obituary", DT_SKIP1},
+                                       {"hitobituary", DT_SKIP1},
+                                       {"decal", DT_SKIP1},
+                                       // terminator
+                                       {NULL}};
 
 // mobj flags
 const dec_flag_t mobj_flags0[] = {
@@ -680,46 +664,44 @@ const dec_flag_t mobj_flags1[] = {{"ismonster", MF1_ISMONSTER},
                                   {"dontfall", MF1_DONTFALL},
                                   // terminator
                                   {NULL}};
-const dec_flag_t mobj_flags2[] = {
-    {"noicedeath", MF2_NOICEDEATH},
-    {"icecorpse", MF2_ICECORPSE},
-    {"spawnsoundsource", MF2_SPAWNSOUNDSOURCE},
-    {"donttranslate", MF2_DONTTRANSLATE},
-    {"notautoaimed", MF2_NOTAUTOAIMED},
-    {"puffgetsowner", MF2_PUFFGETSOWNER},
-    {"hittarget", MF2_HITTARGET},
-    {"hitmaster", MF2_HITMASTER},
-    {"hittracer", MF2_HITTRACER},
-    {"movewithsector", MF2_MOVEWITHSECTOR},
-    {"fullvoldeath", MF2_FULLVOLDEATH},
-    {"oldradiusdmg", MF2_OLDRADIUSDMG},
-    {"bloodlessimpact", MF2_BLOODLESSIMPACT},
-    {"synchronized", MF2_SYNCHRONIZED},
-    {"dontmorph", MF2_DONTMORPH},
-    {"dontsplash", MF2_DONTSPLASH},
-    {"thruactors", MF2_THRUACTORS},
-    {"bounceonfloors", MF2_BOUNCEONFLOORS},
-    {"bounceonceilings", MF2_BOUNCEONCEILINGS},
-    {"noblockmonst", MF2_NOBLOCKMONST},
-    {"dontcorpse", MF2_DONTCORPSE},
-    {"stealth", MF2_STEALTH},
-    {"explodeonwater", MF2_EXPLODEONWATER},
-    {"canbouncewater", MF2_CANBOUNCEWATER},
-    {"noverticalmeleerange", MF2_NOVERTICALMELEERANGE},
-    {"forceradiusdmg", MF2_FORCERADIUSDMG},
-    {"nopain", MF2_NOPAIN},
-    {"noliftdrop", MF2_NOLIFTDROP},
-    {"cantseek", MF2_CANTSEEK},
-    // terminator
-    {NULL}};
+const dec_flag_t mobj_flags2[] = {{"noicedeath", MF2_NOICEDEATH},
+                                  {"icecorpse", MF2_ICECORPSE},
+                                  {"spawnsoundsource", MF2_SPAWNSOUNDSOURCE},
+                                  {"donttranslate", MF2_DONTTRANSLATE},
+                                  {"notautoaimed", MF2_NOTAUTOAIMED},
+                                  {"puffgetsowner", MF2_PUFFGETSOWNER},
+                                  {"hittarget", MF2_HITTARGET},
+                                  {"hitmaster", MF2_HITMASTER},
+                                  {"hittracer", MF2_HITTRACER},
+                                  {"movewithsector", MF2_MOVEWITHSECTOR},
+                                  {"fullvoldeath", MF2_FULLVOLDEATH},
+                                  {"oldradiusdmg", MF2_OLDRADIUSDMG},
+                                  {"bloodlessimpact", MF2_BLOODLESSIMPACT},
+                                  {"synchronized", MF2_SYNCHRONIZED},
+                                  {"dontmorph", MF2_DONTMORPH},
+                                  {"dontsplash", MF2_DONTSPLASH},
+                                  {"thruactors", MF2_THRUACTORS},
+                                  {"bounceonfloors", MF2_BOUNCEONFLOORS},
+                                  {"bounceonceilings", MF2_BOUNCEONCEILINGS},
+                                  {"noblockmonst", MF2_NOBLOCKMONST},
+                                  {"dontcorpse", MF2_DONTCORPSE},
+                                  {"stealth", MF2_STEALTH},
+                                  {"explodeonwater", MF2_EXPLODEONWATER},
+                                  {"canbouncewater", MF2_CANBOUNCEWATER},
+                                  {"noverticalmeleerange", MF2_NOVERTICALMELEERANGE},
+                                  {"forceradiusdmg", MF2_FORCERADIUSDMG},
+                                  {"nopain", MF2_NOPAIN},
+                                  {"noliftdrop", MF2_NOLIFTDROP},
+                                  {"cantseek", MF2_CANTSEEK},
+                                  // terminator
+                                  {NULL}};
 static const dec_flag_t inventory_flags[] = {
     {"inventory.quiet", MFE_INVENTORY_QUIET},
     {"inventory.ignoreskill", MFE_INVENTORY_IGNORESKILL},
     {"inventory.autoactivate", MFE_INVENTORY_AUTOACTIVATE},
     {"inventory.alwayspickup", MFE_INVENTORY_ALWAYSPICKUP},
     {"inventory.invbar", MFE_INVENTORY_INVBAR},
-    {"inventory.hubpower",
-     MFE_INVENTORY_HUBPOWER}, // only for removal (PowerFlight), not planned
+    {"inventory.hubpower", MFE_INVENTORY_HUBPOWER}, // only for removal (PowerFlight), not planned
     //	{"inventory.persistentpower", MFE_INVENTORY_PERSISTENTPOWER},
     {"inventory.bigpowerup", MFE_INVENTORY_BIGPOWERUP}, // not implemented
     {"inventory.neverrespawn", MFE_INVENTORY_NEVERRESPAWN},
@@ -730,71 +712,61 @@ static const dec_flag_t inventory_flags[] = {
     //	{"inventory.transfer", MFE_INVENTORY_TRANSFER},
     //	{"inventory.noteleportfreeze", MFE_INVENTORY_NOTELEPORTFREEZE},
     {"inventory.noscreenblink", MFE_INVENTORY_NOSCREENBLINK},
-    {"inventory.untossable",
-     MFE_INVENTORY_UNTOSSABLE}, // for ZDoom compatibility, also used for items
-                                // that should not be netgame 'dropped'
+    {"inventory.untossable", MFE_INVENTORY_UNTOSSABLE}, // for ZDoom compatibility, also used for items
+                                                        // that should not be netgame 'dropped'
     // terminator
     {NULL}};
-static const dec_flag_t weapon_flags[] = {
-    {"weapon.noautofire", MFE_WEAPON_NOAUTOFIRE},
-    {"weapon.noalert", MFE_WEAPON_NOALERT},
-    {"weapon.ammo_optional", MFE_WEAPON_AMMO_OPTIONAL},
-    {"weapon.alt_ammo_optional", MFE_WEAPON_ALT_AMMO_OPTIONAL},
-    {"weapon.ammo_checkboth", MFE_WEAPON_AMMO_CHECKBOTH},
-    {"weapon.primary_uses_both", MFE_WEAPON_PRIMARY_USES_BOTH},
-    {"weapon.alt_uses_both", MFE_WEAPON_ALT_USES_BOTH},
-    {"weapon.noautoaim", MFE_WEAPON_NOAUTOAIM},
-    {"weapon.dontbob", MFE_WEAPON_DONTBOB},
-    // dummy
-    {"weapon.wimpy_weapon", 0},
-    {"weapon.meleeweapon", 0},
-    // terminator
-    {NULL}};
+static const dec_flag_t weapon_flags[] = {{"weapon.noautofire", MFE_WEAPON_NOAUTOFIRE},
+                                          {"weapon.noalert", MFE_WEAPON_NOALERT},
+                                          {"weapon.ammo_optional", MFE_WEAPON_AMMO_OPTIONAL},
+                                          {"weapon.alt_ammo_optional", MFE_WEAPON_ALT_AMMO_OPTIONAL},
+                                          {"weapon.ammo_checkboth", MFE_WEAPON_AMMO_CHECKBOTH},
+                                          {"weapon.primary_uses_both", MFE_WEAPON_PRIMARY_USES_BOTH},
+                                          {"weapon.alt_uses_both", MFE_WEAPON_ALT_USES_BOTH},
+                                          {"weapon.noautoaim", MFE_WEAPON_NOAUTOAIM},
+                                          {"weapon.dontbob", MFE_WEAPON_DONTBOB},
+                                          // dummy
+                                          {"weapon.wimpy_weapon", 0},
+                                          {"weapon.meleeweapon", 0},
+                                          // terminator
+                                          {NULL}};
 
 // 'PlayerPawn' attributes
-static const dec_attr_t attr_player[] = {
-    {"player.viewheight", DT_FIXED, offsetof(mobjinfo_t, player.view_height)},
-    {"player.attackzoffset", DT_FIXED,
-     offsetof(mobjinfo_t, player.attack_offs)},
-    {"player.jumpz", DT_FIXED, offsetof(mobjinfo_t, player.jump_z)},
-    {"player.viewbob", DT_FIXED, offsetof(mobjinfo_t, player.view_bob)},
-    {"player.displayname", DT_STRING, offsetof(mobjinfo_t, player.name)},
-    {"player.runhealth", DT_U16, offsetof(mobjinfo_t, player.run_health)},
-    {"player.soundclass", DT_SOUND_CLASS},
-    //
-    {"player.weaponslot", DT_PP_WPN_SLOT},
-    {"player.startitem", DT_PP_INV_SLOT},
-    //
-    {"player.colorrange", DT_COLOR_RANGE},
-    //
-    {"player.crouchsprite", DT_SKIP1},
-    // terminator
-    {NULL}};
+static const dec_attr_t attr_player[] = {{"player.viewheight", DT_FIXED, offsetof(mobjinfo_t, player.view_height)},
+                                         {"player.attackzoffset", DT_FIXED, offsetof(mobjinfo_t, player.attack_offs)},
+                                         {"player.jumpz", DT_FIXED, offsetof(mobjinfo_t, player.jump_z)},
+                                         {"player.viewbob", DT_FIXED, offsetof(mobjinfo_t, player.view_bob)},
+                                         {"player.displayname", DT_STRING, offsetof(mobjinfo_t, player.name)},
+                                         {"player.runhealth", DT_U16, offsetof(mobjinfo_t, player.run_health)},
+                                         {"player.soundclass", DT_SOUND_CLASS},
+                                         //
+                                         {"player.weaponslot", DT_PP_WPN_SLOT},
+                                         {"player.startitem", DT_PP_INV_SLOT},
+                                         //
+                                         {"player.colorrange", DT_COLOR_RANGE},
+                                         //
+                                         {"player.crouchsprite", DT_SKIP1},
+                                         // terminator
+                                         {NULL}};
 
 // 'Inventory' attributes
 static const dec_attr_t attr_inventory[] = {
     {"inventory.amount", DT_U16, offsetof(mobjinfo_t, inventory.count)},
     {"inventory.maxamount", DT_U16, offsetof(mobjinfo_t, inventory.max_count)},
-    {"inventory.interhubamount", DT_U16,
-     offsetof(mobjinfo_t, inventory.hub_count)},
+    {"inventory.interhubamount", DT_U16, offsetof(mobjinfo_t, inventory.hub_count)},
     {"inventory.icon", DT_ICON, offsetof(mobjinfo_t, inventory.icon)},
-    {"inventory.pickupflash", DT_MOBJTYPE,
-     offsetof(mobjinfo_t, inventory.flash_type)},
-    {"inventory.respawntics", DT_MOBJTYPE,
-     offsetof(mobjinfo_t, inventory.respawn_tics)},
+    {"inventory.pickupflash", DT_MOBJTYPE, offsetof(mobjinfo_t, inventory.flash_type)},
+    {"inventory.respawntics", DT_MOBJTYPE, offsetof(mobjinfo_t, inventory.respawn_tics)},
     {"inventory.usesound", DT_SOUND, offsetof(mobjinfo_t, inventory.sound_use)},
-    {"inventory.pickupsound", DT_SOUND,
-     offsetof(mobjinfo_t, inventory.sound_pickup)},
-    {"inventory.pickupmessage", DT_STRING,
-     offsetof(mobjinfo_t, inventory.message)},
+    {"inventory.pickupsound", DT_SOUND, offsetof(mobjinfo_t, inventory.sound_pickup)},
+    {"inventory.pickupmessage", DT_STRING, offsetof(mobjinfo_t, inventory.message)},
     {"inventory.althudicon", DT_SKIP1, 0},
     // terminator
     {NULL}};
 
 // 'DoomWeapon' attributes
 static const dec_attr_t attr_weapon[] = {
-    {"weapon.selectionorder", DT_U16,
-     offsetof(mobjinfo_t, weapon.selection_order)},
+    {"weapon.selectionorder", DT_U16, offsetof(mobjinfo_t, weapon.selection_order)},
     {"weapon.kickback", DT_U16, offsetof(mobjinfo_t, weapon.kickback)},
     {"weapon.ammouse", DT_U16, offsetof(mobjinfo_t, weapon.ammo_use[0])},
     {"weapon.ammouse1", DT_U16, offsetof(mobjinfo_t, weapon.ammo_use[0])},
@@ -803,48 +775,42 @@ static const dec_attr_t attr_weapon[] = {
     {"weapon.ammogive1", DT_U16, offsetof(mobjinfo_t, weapon.ammo_give[0])},
     {"weapon.ammogive2", DT_U16, offsetof(mobjinfo_t, weapon.ammo_give[1])},
     {"weapon.ammotype", DT_MOBJTYPE, offsetof(mobjinfo_t, weapon.ammo_type[0])},
-    {"weapon.ammotype1", DT_MOBJTYPE,
-     offsetof(mobjinfo_t, weapon.ammo_type[0])},
-    {"weapon.ammotype2", DT_MOBJTYPE,
-     offsetof(mobjinfo_t, weapon.ammo_type[1])},
+    {"weapon.ammotype1", DT_MOBJTYPE, offsetof(mobjinfo_t, weapon.ammo_type[0])},
+    {"weapon.ammotype2", DT_MOBJTYPE, offsetof(mobjinfo_t, weapon.ammo_type[1])},
     {"weapon.readysound", DT_SOUND, offsetof(mobjinfo_t, weapon.sound_ready)},
     {"weapon.upsound", DT_SOUND, offsetof(mobjinfo_t, weapon.sound_up)},
     // terminator
     {NULL}};
 
 // 'Ammo' attributes
-static const dec_attr_t attr_ammo[] = {
-    {"ammo.backpackamount", DT_U16, offsetof(mobjinfo_t, ammo.count)},
-    {"ammo.backpackmaxamount", DT_U16, offsetof(mobjinfo_t, ammo.max_count)},
-    // terminator
-    {NULL}};
+static const dec_attr_t attr_ammo[] = {{"ammo.backpackamount", DT_U16, offsetof(mobjinfo_t, ammo.count)},
+                                       {"ammo.backpackmaxamount", DT_U16, offsetof(mobjinfo_t, ammo.max_count)},
+                                       // terminator
+                                       {NULL}};
 
 // 'BasicArmorPickup' attributes
 static const dec_attr_t attr_armor[] = {
     {"armor.saveamount", DT_U16, offsetof(mobjinfo_t, armor.count)},
-    {"armor.maxsaveamount", DT_U16,
-     offsetof(mobjinfo_t, armor.max_count)}, // only for bonus, but MEH
+    {"armor.maxsaveamount", DT_U16, offsetof(mobjinfo_t, armor.max_count)}, // only for bonus, but MEH
     {"armor.savepercent", DT_U16, offsetof(mobjinfo_t, armor.percent)},
     // terminator
     {NULL}};
 
 // 'BasicArmorPickup' attributes
-static const dec_attr_t attr_powerup[] = {
-    {"powerup.duration", DT_S32, offsetof(mobjinfo_t, powerup.duration)},
-    {"powerup.type", DT_POWERUP_TYPE},
-    {"powerup.mode", DT_POWERUP_MODE},
-    {"powerup.color", DT_POWERUP_COLOR},
-    {"powerup.strength", DT_U8, offsetof(mobjinfo_t, powerup.strength)},
-    // terminator
-    {NULL}};
+static const dec_attr_t attr_powerup[] = {{"powerup.duration", DT_S32, offsetof(mobjinfo_t, powerup.duration)},
+                                          {"powerup.type", DT_POWERUP_TYPE},
+                                          {"powerup.mode", DT_POWERUP_MODE},
+                                          {"powerup.color", DT_POWERUP_COLOR},
+                                          {"powerup.strength", DT_U8, offsetof(mobjinfo_t, powerup.strength)},
+                                          // terminator
+                                          {NULL}};
 
 // player sound slots
 static const uint8_t* player_sound_slot[NUM_PLAYER_SOUNDS] = {
-    [PLR_SND_DEATH] = "*death",     [PLR_SND_XDEATH] = "*xdeath",
-    [PLR_SND_GIBBED] = "*gibbed",   [PLR_SND_PAIN25] = "*pain25",
-    [PLR_SND_PAIN50] = "*pain50",   [PLR_SND_PAIN75] = "*pain75",
-    [PLR_SND_PAIN100] = "*pain100", [PLR_SND_LAND] = "*land",
-    [PLR_SND_USEFAIL] = "*usefail", [PLR_SND_JUMP] = "*jump",
+    [PLR_SND_DEATH] = "*death",     [PLR_SND_XDEATH] = "*xdeath", [PLR_SND_GIBBED] = "*gibbed",
+    [PLR_SND_PAIN25] = "*pain25",   [PLR_SND_PAIN50] = "*pain50", [PLR_SND_PAIN75] = "*pain75",
+    [PLR_SND_PAIN100] = "*pain100", [PLR_SND_LAND] = "*land",     [PLR_SND_USEFAIL] = "*usefail",
+    [PLR_SND_JUMP] = "*jump",
 };
 
 // damage types
@@ -868,12 +834,8 @@ const dec_inherit_t inheritance[NUM_EXTRA_TYPES] = {
 	    .attr[0] = attr_powerup,
 	    .flag[0] = inventory_flags,
 	},
-    [ETYPE_PLAYERPAWN] = {.name = "PlayerPawn",
-                          .def = &default_player,
-                          .attr[0] = attr_player},
-    [ETYPE_PLAYERCHUNK] = {.name = "PlayerChunk",
-                           .def = &default_plrchunk,
-                           .attr[0] = attr_player},
+    [ETYPE_PLAYERPAWN] = {.name = "PlayerPawn", .def = &default_player, .attr[0] = attr_player},
+    [ETYPE_PLAYERCHUNK] = {.name = "PlayerChunk", .def = &default_plrchunk, .attr[0] = attr_player},
     [ETYPE_SWITCHABLE] = {.name = "SwitchableDecoration", .def = &default_mobj},
     [ETYPE_RANDOMSPAWN] = {.name = "RandomSpawner", .def = &default_mobj},
     [ETYPE_HEALTH] =
@@ -971,14 +933,10 @@ const dec_inherit_t inheritance[NUM_EXTRA_TYPES] = {
 // this only exists because original animations are all over the place in
 // 'mobjinfo_t'
 const uint16_t base_anim_offs[LAST_MOBJ_STATE_HACK] = {
-    [ANIM_SPAWN] = offsetof(mobjinfo_t, state_spawn),
-    [ANIM_SEE] = offsetof(mobjinfo_t, state_see),
-    [ANIM_PAIN] = offsetof(mobjinfo_t, state_pain),
-    [ANIM_MELEE] = offsetof(mobjinfo_t, state_melee),
-    [ANIM_MISSILE] = offsetof(mobjinfo_t, state_missile),
-    [ANIM_DEATH] = offsetof(mobjinfo_t, state_death),
-    [ANIM_XDEATH] = offsetof(mobjinfo_t, state_xdeath),
-    [ANIM_RAISE] = offsetof(mobjinfo_t, state_raise),
+    [ANIM_SPAWN] = offsetof(mobjinfo_t, state_spawn),     [ANIM_SEE] = offsetof(mobjinfo_t, state_see),
+    [ANIM_PAIN] = offsetof(mobjinfo_t, state_pain),       [ANIM_MELEE] = offsetof(mobjinfo_t, state_melee),
+    [ANIM_MISSILE] = offsetof(mobjinfo_t, state_missile), [ANIM_DEATH] = offsetof(mobjinfo_t, state_death),
+    [ANIM_XDEATH] = offsetof(mobjinfo_t, state_xdeath),   [ANIM_RAISE] = offsetof(mobjinfo_t, state_raise),
 };
 
 // internal states
@@ -1193,7 +1151,7 @@ static const mobjinfo_t internal_mobj_info[NUM_ACE_MOBJTYPES] = {
 // powerup names
 static const uint64_t powerup_alias[] = {
     0xEB35DAC7C0BF0946, // PowerInvulnerable
-    0, // 0x7BA5CB44F2975302, // PowerStrength // no implemented
+    0,                  // 0x7BA5CB44F2975302, // PowerStrength // no implemented
     0x9CE9DADBA00C525A, // PowerInvisibility
     0x51AEBF2272974F46, // PowerIronFeet
     0,                  // skipped
@@ -1220,14 +1178,12 @@ static const dec_powerup_t powerup_type[NUMPOWERS] = {
 };
 
 // powerup colors
-static const uint8_t* powerup_color[] = {"inversemap", "goldmap", "redmap",
-                                         "greenmap",   "bluemap", NULL};
+static const uint8_t* powerup_color[] = {"inversemap", "goldmap", "redmap", "greenmap", "bluemap", NULL};
 
 // render styles
 static const char* render_style[NUM_RENDER_STYLES] = {
-    [RS_NORMAL] = "normal", [RS_FUZZ] = "fuzzy",
-    [RS_SHADOW] = "shadow", [RS_TRANSLUCENT] = "translucent",
-    [RS_ADDITIVE] = "add",  [RS_INVISIBLE] = "none",
+    [RS_NORMAL] = "normal",           [RS_FUZZ] = "fuzzy",   [RS_SHADOW] = "shadow",
+    [RS_TRANSLUCENT] = "translucent", [RS_ADDITIVE] = "add", [RS_INVISIBLE] = "none",
 };
 
 // special inventory
@@ -1253,8 +1209,7 @@ static const doom_ammo_t doom_ammo[NUMAMMO] = {
     {63, 64, (uint8_t*)0x00022F74, (uint8_t*)0x00022F88}, // Clip, ClipBox
     {69, 70, (uint8_t*)0x00023010, (uint8_t*)0x0002302C}, // Shell, ShellBox
     {67, 68, (uint8_t*)0x00022FD4, (uint8_t*)0x00022FF0}, // Cell, CellPack
-    {65, 66, (uint8_t*)0x00022FA4,
-     (uint8_t*)0x00022FB8}, // RocketAmmo, RocketBox
+    {65, 66, (uint8_t*)0x00022FA4, (uint8_t*)0x00022FB8}, // RocketAmmo, RocketBox
 };
 
 // doom keys
@@ -1286,8 +1241,7 @@ static const doom_armor_t doom_armor[] = {
 
 // doom powerups
 static const doom_powerup_t doom_powerup[] = {
-    {56, MOBJ_IDX_POWER_INVULN, 0x0020,
-     (uint8_t*)0x00022EF0}, // InvulnerabilitySphere
+    {56, MOBJ_IDX_POWER_INVULN, 0x0020, (uint8_t*)0x00022EF0},   // InvulnerabilitySphere
     {58, MOBJ_IDX_POWER_INVIS, 0x0000, (uint8_t*)0x00022F10},    // BlurSphere
     {59, MOBJ_IDX_POWER_IRONFEET, 0x20F0, (uint8_t*)0x00022F28}, // RadSuit
     {61, MOBJ_IDX_POWER_INFRARED, 0x0001, (uint8_t*)0x00022F58}, // Infrared
@@ -1342,8 +1296,7 @@ static const uint16_t doom_slot_6[] = {76, 0};
 static const uint16_t doom_slot_7[] = {72, 0};
 static const uint16_t doom_slot_8[] = {74, 0};
 static const uint16_t* doom_weapon_slots[NUM_WPN_SLOTS] = {
-    NULL,        doom_slot_1, doom_slot_2, doom_slot_3, doom_slot_4,
-    doom_slot_5, doom_slot_6, doom_slot_7, doom_slot_8, NULL,
+    NULL, doom_slot_1, doom_slot_2, doom_slot_3, doom_slot_4, doom_slot_5, doom_slot_6, doom_slot_7, doom_slot_8, NULL,
 };
 
 // 'DoomPlayer' default inventory
@@ -1378,8 +1331,7 @@ const dec_anim_t* dec_find_animation(const uint8_t* name)
 
 	while (anim->name)
 	{
-		if ((anim->type == ETYPE_NONE ||
-		     parse_mobj_info->extra_type == anim->type) &&
+		if ((anim->type == ETYPE_NONE || parse_mobj_info->extra_type == anim->type) &&
 		    !strcmp(name, anim->name))
 			return anim;
 		anim++;
@@ -1391,8 +1343,7 @@ const dec_anim_t* dec_find_animation(const uint8_t* name)
 //
 // decorate states
 
-uint32_t dec_resolve_animation(mobjinfo_t* info, uint32_t offset, uint16_t anim,
-                               uint32_t limit)
+uint32_t dec_resolve_animation(mobjinfo_t* info, uint32_t offset, uint16_t anim, uint32_t limit)
 {
 	uint32_t state;
 
@@ -1405,8 +1356,7 @@ uint32_t dec_resolve_animation(mobjinfo_t* info, uint32_t offset, uint16_t anim,
 
 	state += offset;
 	if (state >= limit)
-		engine_error("MOBJ", "State jump '+%u' in '%s' is invalid!",
-		             offset, parse_actor_name);
+		engine_error("MOBJ", "State jump '+%u' in '%s' is invalid!", offset, parse_actor_name);
 
 	return state;
 }
@@ -1445,8 +1395,7 @@ uint32_t dec_mobj_custom_state(mobjinfo_t* info, uint32_t alias)
 	if (!info->custom_states)
 		return 0;
 
-	for (custom_state_t* cst = info->custom_states;
-	     cst < info->custom_st_end; cst++)
+	for (custom_state_t* cst = info->custom_states; cst < info->custom_st_end; cst++)
 	{
 		if (cst->alias == alias)
 			return cst->state;
@@ -1455,8 +1404,7 @@ uint32_t dec_mobj_custom_state(mobjinfo_t* info, uint32_t alias)
 	return 0;
 }
 
-uint32_t dec_reslove_state(mobjinfo_t* info, uint32_t current, uint32_t next,
-                           uint32_t extra)
+uint32_t dec_reslove_state(mobjinfo_t* info, uint32_t current, uint32_t next, uint32_t extra)
 {
 	// this is a limited version for weapons and custom inventory
 	switch (extra & STATE_CHECK_MASK)
@@ -1474,8 +1422,7 @@ uint32_t dec_reslove_state(mobjinfo_t* info, uint32_t current, uint32_t next,
 		break;
 	case STATE_SET_ANIMATION:
 		if (next == 0xFFFFFFFF)
-			next = dec_resolve_animation(
-			    info, 0, extra & STATE_EXTRA_MASK, num_states);
+			next = dec_resolve_animation(info, 0, extra & STATE_EXTRA_MASK, num_states);
 		break;
 	}
 
@@ -1495,8 +1442,7 @@ static void make_doom_weapon(uint32_t idx)
 	info->weapon = default_weapon.weapon;
 
 	if (def->type < NUMMOBJTYPES)
-		info->weapon.inventory.message =
-		    def->message + doom_data_segment;
+		info->weapon.inventory.message = def->message + doom_data_segment;
 
 	if (def->type == 74)
 	{
@@ -1530,8 +1476,7 @@ static void make_doom_ammo(uint32_t idx)
 
 	info = mobjinfo + ammo->clp;
 	info->extra_type = ETYPE_AMMO;
-	info->eflags =
-	    MFE_INVENTORY_KEEPDEPLETED; // hack for original status bar
+	info->eflags = MFE_INVENTORY_KEEPDEPLETED; // hack for original status bar
 	info->ammo = default_ammo.ammo;
 	info->ammo.inventory.count = tmp;
 	info->ammo.inventory.max_count = maxammo[idx];
@@ -1640,8 +1585,7 @@ int32_t check_internal_type(uint8_t* name)
 	// find this class
 	for (uint32_t etp = 1; etp < NUM_EXTRA_TYPES; etp++)
 	{
-		if (inheritance[etp].name &&
-		    !strcmp(name, inheritance[etp].name))
+		if (inheritance[etp].name && !strcmp(name, inheritance[etp].name))
 			return etp;
 	}
 
@@ -1683,14 +1627,12 @@ uint32_t dec_get_custom_damage(const uint8_t* name, const uint8_t* mmod)
 {
 	for (uint32_t i = 0; i < NUM_DAMAGE_TYPES; i++)
 	{
-		if (damage_type_config[i].name &&
-		    !strcmp(damage_type_config[i].name, name))
+		if (damage_type_config[i].name && !strcmp(damage_type_config[i].name, name))
 			return i;
 	}
 
 	if (!mmod)
-		engine_error("DECORATE", "Unknown damage type '%s' in '%s'!",
-		             name, parse_actor_name);
+		engine_error("DECORATE", "Unknown damage type '%s' in '%s'!", name, parse_actor_name);
 	else
 		engine_error(mmod, "Unknown damage type '%s'!", name);
 }
@@ -1885,9 +1827,7 @@ static uint32_t parse_attr(uint32_t type, void* dest)
 				break;
 		}
 		if (num.u32 >= NUM_RENDER_STYLES)
-			engine_error("DECORATE",
-			             "Unknown render style '%s' in '%s'!", kw,
-			             parse_actor_name);
+			engine_error("DECORATE", "Unknown render style '%s' in '%s'!", kw, parse_actor_name);
 		parse_mobj_info->render_style = num.u32;
 		break;
 	case DT_RENDER_ALPHA:
@@ -1915,11 +1855,9 @@ static uint32_t parse_attr(uint32_t type, void* dest)
 		kw = tp_get_keyword_lc();
 		if (!kw)
 			return 1;
-		if (doom_sscanf(kw, "%x %x %x", &r, &g, &b) != 3 ||
-		    (r | g | b) > 255)
+		if (doom_sscanf(kw, "%x %x %x", &r, &g, &b) != 3 || (r | g | b) > 255)
 			return 1;
-		*((uintptr_t*)&parse_mobj_info->blood_trns) =
-		    r_add_blood_color(r | (g << 8) | (b << 16));
+		*((uintptr_t*)&parse_mobj_info->blood_trns) = r_add_blood_color(r | (g << 8) | (b << 16));
 	}
 	break;
 	case DT_POWERUP_TYPE:
@@ -1928,9 +1866,7 @@ static uint32_t parse_attr(uint32_t type, void* dest)
 			return 1;
 		num.s32 = dec_get_powerup_type(kw);
 		if (num.s32 < 0)
-			engine_error("DECORATE",
-			             "Unknown powerup type '%s' in '%s'!", kw,
-			             parse_actor_name);
+			engine_error("DECORATE", "Unknown powerup type '%s' in '%s'!", kw, parse_actor_name);
 		// set type
 		parse_mobj_info->powerup.type = num.u32;
 		break;
@@ -1973,13 +1909,10 @@ static uint32_t parse_attr(uint32_t type, void* dest)
 			{
 				// color fade
 
-				if (doom_sscanf(kw, "%x %x %x", &rr, &gg,
-				                &bb) != 3)
+				if (doom_sscanf(kw, "%x %x %x", &rr, &gg, &bb) != 3)
 					return 1;
 
-				parse_mobj_info->powerup.colorstuff =
-				    (rr >> 4) | (gg & 0xF0) |
-				    ((bb << 4) & 0xF00);
+				parse_mobj_info->powerup.colorstuff = (rr >> 4) | (gg & 0xF0) | ((bb << 4) & 0xF00);
 
 				// optional part
 				kw = tp_get_keyword();
@@ -2002,21 +1935,17 @@ static uint32_t parse_attr(uint32_t type, void* dest)
 					aa >>= 12;
 
 					if (aa <= 0)
-						parse_mobj_info->powerup
-						    .colorstuff = 0x0000;
+						parse_mobj_info->powerup.colorstuff = 0x0000;
 					else if (aa > 15)
-						parse_mobj_info->powerup
-						    .colorstuff |= 0xF000;
+						parse_mobj_info->powerup.colorstuff |= 0xF000;
 					else
-						parse_mobj_info->powerup
-						    .colorstuff |= aa << 12;
+						parse_mobj_info->powerup.colorstuff |= aa << 12;
 				}
 				else
 				{
 					tp_push_keyword(kw);
 					// default alpha: 0.33333
-					parse_mobj_info->powerup.colorstuff |=
-					    0x5000;
+					parse_mobj_info->powerup.colorstuff |= 0x5000;
 				}
 			}
 			else
@@ -2028,13 +1957,11 @@ static uint32_t parse_attr(uint32_t type, void* dest)
 	}
 	break;
 	case DT_MONSTER:
-		((mobjinfo_t*)dest)->flags |=
-		    MF_SHOOTABLE | MF_COUNTKILL | MF_SOLID;
+		((mobjinfo_t*)dest)->flags |= MF_SHOOTABLE | MF_COUNTKILL | MF_SOLID;
 		((mobjinfo_t*)dest)->flags1 |= MF1_ISMONSTER;
 		break;
 	case DT_PROJECTILE:
-		((mobjinfo_t*)dest)->flags |=
-		    MF_NOBLOCKMAP | MF_NOGRAVITY | MF_DROPOFF | MF_MISSILE;
+		((mobjinfo_t*)dest)->flags |= MF_NOBLOCKMAP | MF_NOGRAVITY | MF_DROPOFF | MF_MISSILE;
 		((mobjinfo_t*)dest)->flags1 |= MF1_NOTELEPORT;
 		break;
 	case DT_MOBJTYPE:
@@ -2043,9 +1970,7 @@ static uint32_t parse_attr(uint32_t type, void* dest)
 			return 1;
 		num.s32 = mobj_check_type(tp_hash64(kw));
 		if (num.s32 < 0)
-			engine_error("DECORATE",
-			             "Unable to find ammo type '%s' in '%s'!",
-			             kw, parse_actor_name);
+			engine_error("DECORATE", "Unable to find ammo type '%s' in '%s'!", kw, parse_actor_name);
 		*((uint16_t*)dest) = num.s32;
 		break;
 	case DT_DAMAGE:
@@ -2058,10 +1983,7 @@ static uint32_t parse_attr(uint32_t type, void* dest)
 		break;
 	case DT_DROPITEM:
 		if (parse_mobj_info->extra_type == ETYPE_PLAYERPAWN)
-			engine_error(
-			    "DECORATE",
-			    "Attempt to add DropItem to player class '%s'!",
-			    parse_actor_name);
+			engine_error("DECORATE", "Attempt to add DropItem to player class '%s'!", parse_actor_name);
 		return parse_dropitem();
 		break;
 	case DT_PP_WPN_SLOT:
@@ -2129,8 +2051,7 @@ static int32_t check_add_sprite(uint8_t* text)
 	return spr_add_name(sprname.u32);
 }
 
-static uint32_t add_states(uint32_t sprite, uint8_t* frames, int32_t tics,
-                           uint16_t flags, int32_t ox, int32_t oy)
+static uint32_t add_states(uint32_t sprite, uint8_t* frames, int32_t tics, uint16_t flags, int32_t ox, int32_t oy)
 {
 	uint32_t tmp = num_states;
 
@@ -2143,8 +2064,7 @@ static uint32_t add_states(uint32_t sprite, uint8_t* frames, int32_t tics,
 		uint8_t frm;
 
 		if (*frames < 'A' || *frames > ']')
-			engine_error("DECORATE", "Invalid frame '%c' in '%s'!",
-			             *frames, parse_actor_name);
+			engine_error("DECORATE", "Invalid frame '%c' in '%s'!", *frames, parse_actor_name);
 
 		if (parse_next_state)
 		{
@@ -2187,9 +2107,7 @@ static uint32_t parse_args()
 			return 1;
 
 		if (doom_sscanf(kw, "%d", &value) != 1 || value > 255)
-			engine_error("DECORATE",
-			             "Unable to parse number '%s' in '%s'!", kw,
-			             parse_actor_name);
+			engine_error("DECORATE", "Unable to parse number '%s' in '%s'!", kw, parse_actor_name);
 
 		parse_mobj_info->args[0] = value;
 		parse_mobj_info->args[5] = i + 1;
@@ -2232,8 +2150,7 @@ static uint32_t parse_damage()
 	}
 
 	parse_mobj_info->damage_func = act_handle_arg(-1);
-	parse_mobj_info->damage =
-	    DAMAGE_IS_MATH_FUNC | (parse_mobj_info - mobjinfo);
+	parse_mobj_info->damage = DAMAGE_IS_MATH_FUNC | (parse_mobj_info - mobjinfo);
 
 	return 0;
 }
@@ -2270,10 +2187,7 @@ static uint32_t parse_dropitem()
 	if (extra_stuff_cur)
 	{
 		if (drop != extra_stuff_next)
-			engine_error(
-			    "DECORATE",
-			    "Drop item list is not contiguous in '%s'!",
-			    parse_actor_name);
+			engine_error("DECORATE", "Drop item list is not contiguous in '%s'!", parse_actor_name);
 	}
 	else
 		extra_stuff_cur = drop;
@@ -2293,9 +2207,7 @@ static uint32_t parse_dropitem()
 	if (tmp < 0)
 	{
 		if (strcmp(kw, "None"))
-			engine_error("DECORATE",
-			             "Unknown drop item '%s' in '%s'!", kw,
-			             parse_actor_name);
+			engine_error("DECORATE", "Unknown drop item '%s' in '%s'!", kw, parse_actor_name);
 		drop->type = 0; // HACK
 	}
 	else
@@ -2377,10 +2289,8 @@ static uint32_t parse_wpn_slot()
 
 		tmp = mobj_check_type(tp_hash64(kw));
 		if (tmp < 0)
-			engine_error(
-			    "DECORATE",
-			    "Unable to find '%s' in '%s' weapon slot %u!", kw,
-			    parse_actor_name, slot);
+			engine_error("DECORATE", "Unable to find '%s' in '%s' weapon slot %u!", kw, parse_actor_name,
+			             slot);
 
 		type = dec_es_alloc(sizeof(uint16_t));
 		*type = tmp;
@@ -2418,10 +2328,7 @@ static uint32_t parse_inv_slot()
 	if (extra_stuff_cur)
 	{
 		if (item != extra_stuff_next)
-			engine_error(
-			    "DECORATE",
-			    "Player start item list is not contiguous in '%s'!",
-			    parse_actor_name);
+			engine_error("DECORATE", "Player start item list is not contiguous in '%s'!", parse_actor_name);
 	}
 	else
 		extra_stuff_cur = item;
@@ -2437,9 +2344,7 @@ static uint32_t parse_inv_slot()
 		return 1;
 	tmp = mobj_check_type(tp_hash64(kw));
 	if (tmp < 0)
-		engine_error("DECORATE",
-		             "Unable to find '%s' start item for '%s'!", kw,
-		             parse_actor_name);
+		engine_error("DECORATE", "Unable to find '%s' start item for '%s'!", kw, parse_actor_name);
 
 	item->type = tmp;
 
@@ -2541,9 +2446,7 @@ static uint32_t parse_states()
 			parse_next_state = NULL;
 			continue;
 		}
-		else if (parse_mobj_info->extra_type ==
-		             ETYPE_INVENTORY_CUSTOM &&
-		         !strcmp(kw, "fail"))
+		else if (parse_mobj_info->extra_type == ETYPE_INVENTORY_CUSTOM && !strcmp(kw, "fail"))
 		{
 			if (!parse_next_state)
 				goto error_no_states;
@@ -2571,9 +2474,7 @@ static uint32_t parse_states()
 			anim = dec_find_animation(kw);
 			if (!anim)
 			{
-				if (parse_mobj_info->extra_type ==
-				        ETYPE_WEAPON &&
-				    !strcmp(kw, "lightdone"))
+				if (parse_mobj_info->extra_type == ETYPE_WEAPON && !strcmp(kw, "lightdone"))
 				{
 					// special state for weapons
 					*parse_next_extra = 0;
@@ -2606,8 +2507,7 @@ static uint32_t parse_states()
 				if (!kw)
 					return 1;
 
-				if (doom_sscanf(kw, "%u", &tics) != 1 ||
-				    tics < 0 || tics > STATE_EXTRA_MASK)
+				if (doom_sscanf(kw, "%u", &tics) != 1 || tics < 0 || tics > STATE_EXTRA_MASK)
 					engine_error("DECORATE",
 					             "Unable to parse number "
 					             "'%s' in '%s'!",
@@ -2646,9 +2546,7 @@ static uint32_t parse_states()
 			anim = mobj_anim;
 			while (anim->name)
 			{
-				if ((anim->type == ETYPE_NONE ||
-				     parse_mobj_info->extra_type ==
-				         anim->type) &&
+				if ((anim->type == ETYPE_NONE || parse_mobj_info->extra_type == anim->type) &&
 				    !strcmp(kw, anim->name))
 					break;
 				anim++;
@@ -2656,16 +2554,13 @@ static uint32_t parse_states()
 			if (anim->name)
 			{
 				// actual animation
-				parse_anim_slot =
-				    (uint16_t*)((void*)parse_mobj_info +
-				                anim->offset);
+				parse_anim_slot = (uint16_t*)((void*)parse_mobj_info + anim->offset);
 				*parse_anim_slot = num_states;
 			}
 			else
 			{
 				// custom state
-				parse_anim_slot = dec_make_custom_state(
-				    tp_hash32(kw), num_states);
+				parse_anim_slot = dec_make_custom_state(tp_hash32(kw), num_states);
 			}
 
 			parse_last_anim = num_states;
@@ -2679,10 +2574,7 @@ static uint32_t parse_states()
 		// it's a sprite
 		sprite = check_add_sprite(kw);
 		if (sprite < 0)
-			engine_error(
-			    "DECORATE",
-			    "Sprite name '%s' has wrong length in '%s'!", kw,
-			    parse_actor_name);
+			engine_error("DECORATE", "Sprite name '%s' has wrong length in '%s'!", kw, parse_actor_name);
 
 		// switch to line-based parsing
 		tp_enable_newline = 1;
@@ -2699,9 +2591,7 @@ static uint32_t parse_states()
 			return 1;
 
 		if (doom_sscanf(kw, "%d", &tics) != 1 || tics > 65000)
-			engine_error("DECORATE",
-			             "Unable to parse number '%s' in '%s'!", kw,
-			             parse_actor_name);
+			engine_error("DECORATE", "Unable to parse number '%s' in '%s'!", kw, parse_actor_name);
 
 		if (tics < 0)
 			tics = 0xFFFF;
@@ -2720,16 +2610,12 @@ static uint32_t parse_states()
 				if (!kw)
 					return 1;
 				if (kw[0] != '(')
-					engine_error(
-					    "DECORATE",
-					    "Expected '%c' found '%s'!", '(',
-					    kw);
+					engine_error("DECORATE", "Expected '%c' found '%s'!", '(', kw);
 				// X
 				kw = tp_get_keyword();
 				if (!kw)
 					return 1;
-				if (doom_sscanf(kw, "%d", &ox) != 1 ||
-				    ox < -32768 || ox > 32767)
+				if (doom_sscanf(kw, "%d", &ox) != 1 || ox < -32768 || ox > 32767)
 					engine_error("DECORATE",
 					             "Unable to parse number "
 					             "'%s' in '%s'!",
@@ -2739,16 +2625,12 @@ static uint32_t parse_states()
 				if (!kw)
 					return 1;
 				if (kw[0] != ',')
-					engine_error(
-					    "DECORATE",
-					    "Expected '%c' found '%s'!", ',',
-					    kw);
+					engine_error("DECORATE", "Expected '%c' found '%s'!", ',', kw);
 				// Y
 				kw = tp_get_keyword();
 				if (!kw)
 					return 1;
-				if (doom_sscanf(kw, "%d", &oy) != 1 ||
-				    oy < -32768 || oy > 32767)
+				if (doom_sscanf(kw, "%d", &oy) != 1 || oy < -32768 || oy > 32767)
 					engine_error("DECORATE",
 					             "Unable to parse number "
 					             "'%s' in '%s'!",
@@ -2758,10 +2640,7 @@ static uint32_t parse_states()
 				if (!kw)
 					return 1;
 				if (kw[0] != ')')
-					engine_error(
-					    "DECORATE",
-					    "Expected '%c' found '%s'!", ')',
-					    kw);
+					engine_error("DECORATE", "Expected '%c' found '%s'!", ')', kw);
 			}
 			else if (!strcmp(kw, "bright"))
 				flags |= FF_FULLBRIGHT;
@@ -2789,9 +2668,7 @@ static uint32_t parse_states()
 		add_states(sprite, wk, tics, flags, ox, oy);
 
 		if (kw[0] != '\n')
-			engine_error("DECORATE",
-			             "Expected newline, found '%s' in '%s'!",
-			             kw, parse_actor_name);
+			engine_error("DECORATE", "Expected newline, found '%s' in '%s'!", kw, parse_actor_name);
 
 		// next
 		tp_enable_newline = 0;
@@ -2799,8 +2676,7 @@ static uint32_t parse_states()
 
 	// sanity check
 	if (unfinished)
-		engine_error("DECORATE", "Unfinised animation in '%s'!",
-		             parse_actor_name);
+		engine_error("DECORATE", "Unfinised animation in '%s'!", parse_actor_name);
 
 	// state limit check
 	if (num_states >= 0x10000)
@@ -2817,15 +2693,13 @@ static uint32_t parse_states()
 	return 0;
 
 error_no_states:
-	engine_error("DECORATE", "Missing states for '%s' in '%s'!", kw,
-	             parse_actor_name);
+	engine_error("DECORATE", "Missing states for '%s' in '%s'!", kw, parse_actor_name);
 }
 
 //
 // flag parsing
 
-static uint32_t change_flag(uint8_t* kw, const dec_flag_t* flag,
-                            uint32_t offset)
+static uint32_t change_flag(uint8_t* kw, const dec_flag_t* flag, uint32_t offset)
 {
 	uint32_t* dest;
 
@@ -2870,8 +2744,7 @@ static void cb_count_actors(lumpinfo_t* li)
 
 		// must get 'actor'
 		if (strcmp(kw, "actor"))
-			engine_error("DECORATE", "Expected 'actor', got '%s'!",
-			             kw);
+			engine_error("DECORATE", "Expected 'actor', got '%s'!", kw);
 
 		// actor name, case sensitive
 		kw = tp_get_keyword();
@@ -2895,20 +2768,15 @@ static void cb_count_actors(lumpinfo_t* li)
 
 		// check for duplicate
 		alias = tp_hash64(parse_actor_name);
-		if (mobj_check_type(alias) >= 0 ||
-		    check_internal_type(parse_actor_name) >= 0)
-			engine_error("DECORATE",
-			             "Multiple definitions of '%s'!",
-			             parse_actor_name);
+		if (mobj_check_type(alias) >= 0 || check_internal_type(parse_actor_name) >= 0)
+			engine_error("DECORATE", "Multiple definitions of '%s'!", parse_actor_name);
 
 		// add new type
 		idx = num_mobj_types;
 		num_mobj_types++;
-		if (num_states >=
-		    0x8000) // 0x8000 is limitation of action parser
+		if (num_states >= 0x8000) // 0x8000 is limitation of action parser
 			engine_error("DECORATE", "So. Many. Actors.");
-		mobjinfo =
-		    ldr_realloc(mobjinfo, num_mobj_types * sizeof(mobjinfo_t));
+		mobjinfo = ldr_realloc(mobjinfo, num_mobj_types * sizeof(mobjinfo_t));
 		mobjinfo[idx].alias = alias;
 	}
 
@@ -2934,8 +2802,7 @@ static void cb_parse_actors(lumpinfo_t* li)
 
 		// must get 'actor'
 		if (strcmp(kw, "actor"))
-			engine_error("DECORATE", "Expected 'actor', got '%s'!",
-			             kw);
+			engine_error("DECORATE", "Expected 'actor', got '%s'!", kw);
 
 		// actor name, case sensitive
 		kw = tp_get_keyword();
@@ -2947,8 +2814,7 @@ static void cb_parse_actors(lumpinfo_t* li)
 		alias = tp_hash64(kw);
 		idx = mobj_check_type(alias);
 		if (idx < 0)
-			engine_error("DECORATE", "Loading mismatch for '%s'!",
-			             kw);
+			engine_error("DECORATE", "Loading mismatch for '%s'!", kw);
 		info = mobjinfo + idx;
 		parse_mobj_info = info;
 
@@ -2992,10 +2858,8 @@ static void cb_parse_actors(lumpinfo_t* li)
 
 				// copy custom states
 				num_custom_states = 0;
-				for (custom_state_t* cst = other->custom_states;
-				     cst < other->custom_st_end; cst++)
-					dec_make_custom_state(cst->alias,
-					                      cst->state);
+				for (custom_state_t* cst = other->custom_states; cst < other->custom_st_end; cst++)
+					dec_make_custom_state(cst->alias, cst->state);
 
 				// mark
 				etp = -1;
@@ -3019,8 +2883,7 @@ static void cb_parse_actors(lumpinfo_t* li)
 					if (*name)
 					{
 						etp = ETYPE_INV_SPECIAL;
-						default_inventory.inventory
-						    .special = extra;
+						default_inventory.inventory.special = extra;
 					}
 				}
 				if (etp < 0)
@@ -3049,8 +2912,7 @@ static void cb_parse_actors(lumpinfo_t* li)
 
 			rep = mobj_check_type(tp_hash64(kw));
 			if (rep <= 0)
-				engine_error("DECORATE",
-				             "Unable to replace '%s'!", kw);
+				engine_error("DECORATE", "Unable to replace '%s'!", kw);
 
 			mobjinfo[rep].replacement = idx;
 
@@ -3063,8 +2925,7 @@ static void cb_parse_actors(lumpinfo_t* li)
 		if (kw[0] != '{')
 		{
 			// editor number
-			if (doom_sscanf(kw, "%u", &idx) != 1 ||
-			    (uint32_t)idx > 65535)
+			if (doom_sscanf(kw, "%u", &idx) != 1 || (uint32_t)idx > 65535)
 				goto error_numeric;
 
 			// next keyword
@@ -3076,8 +2937,7 @@ static void cb_parse_actors(lumpinfo_t* li)
 			idx = -1;
 
 		if (kw[0] != '{')
-			engine_error("DECORATE", "Expected '%c' found '%s'!",
-			             '{', kw);
+			engine_error("DECORATE", "Expected '%c' found '%s'!", '{', kw);
 
 		// initialize mobj
 		if (etp >= 0)
@@ -3088,8 +2948,7 @@ static void cb_parse_actors(lumpinfo_t* li)
 			// default species
 			info->species = alias;
 			// default damage factors
-			memset(info->damage_factor, 0xFF,
-			       NUM_DAMAGE_TYPES * sizeof(uint16_t));
+			memset(info->damage_factor, 0xFF, NUM_DAMAGE_TYPES * sizeof(uint16_t));
 			// reset custom states
 			num_custom_states = 0;
 		}
@@ -3121,23 +2980,15 @@ static void cb_parse_actors(lumpinfo_t* li)
 			{
 				uint32_t tmp;
 
-				if (change_flag(kw, mobj_flags0,
-				                offsetof(mobjinfo_t, flags)) &&
-				    change_flag(kw, mobj_flags1,
-				                offsetof(mobjinfo_t, flags1)) &&
-				    change_flag(kw, mobj_flags2,
-				                offsetof(mobjinfo_t, flags2)) &&
+				if (change_flag(kw, mobj_flags0, offsetof(mobjinfo_t, flags)) &&
+				    change_flag(kw, mobj_flags1, offsetof(mobjinfo_t, flags1)) &&
+				    change_flag(kw, mobj_flags2, offsetof(mobjinfo_t, flags2)) &&
 				    (!inheritance[etp].flag[0] ||
-				     change_flag(
-					 kw, inheritance[etp].flag[0],
-					 offsetof(mobjinfo_t, eflags))) &&
+				     change_flag(kw, inheritance[etp].flag[0], offsetof(mobjinfo_t, eflags))) &&
 				    (!inheritance[etp].flag[1] ||
-				     change_flag(kw, inheritance[etp].flag[1],
-				                 offsetof(mobjinfo_t, eflags))))
-					engine_error(
-					    "DECORATE",
-					    "Unknown flag '%s' in '%s'!",
-					    kw + 1, parse_actor_name);
+				     change_flag(kw, inheritance[etp].flag[1], offsetof(mobjinfo_t, eflags))))
+					engine_error("DECORATE", "Unknown flag '%s' in '%s'!", kw + 1,
+					             parse_actor_name);
 			}
 			else
 			{
@@ -3176,14 +3027,11 @@ static void cb_parse_actors(lumpinfo_t* li)
 				}
 
 				if (!attr->name)
-					engine_error(
-					    "DECORATE",
-					    "Unknown attribute '%s' in '%s'!",
-					    kw, parse_actor_name);
+					engine_error("DECORATE", "Unknown attribute '%s' in '%s'!", kw,
+					             parse_actor_name);
 
 				// parse it
-				if (parse_attr(attr->type,
-				               (void*)info + attr->offset))
+				if (parse_attr(attr->type, (void*)info + attr->offset))
 					engine_error("DECORATE",
 					             "Unable to parse value of "
 					             "'%s' in '%s'!",
@@ -3194,11 +3042,9 @@ static void cb_parse_actors(lumpinfo_t* li)
 		// save custom states
 		if (num_custom_states)
 		{
-			uint32_t size =
-			    num_custom_states * sizeof(custom_state_t);
+			uint32_t size = num_custom_states * sizeof(custom_state_t);
 			info->custom_states = dec_es_alloc(size);
-			info->custom_st_end =
-			    info->custom_states + num_custom_states;
+			info->custom_st_end = info->custom_states + num_custom_states;
 			memcpy(info->custom_states, CUSTOM_STATE_STORAGE, size);
 		}
 
@@ -3214,31 +3060,23 @@ static void cb_parse_actors(lumpinfo_t* li)
 		{
 			uint32_t next;
 			state_t* st = states + i;
-			if ((st->next_extra & STATE_CHECK_MASK) ==
-			    STATE_SET_ANIMATION)
+			if ((st->next_extra & STATE_CHECK_MASK) == STATE_SET_ANIMATION)
 			{
 				// resolve animation jumps now, this emulates
 				// ZDoom behavior of inherited actors
-				next = dec_resolve_animation(
-				    info, st->next_extra & STATE_EXTRA_MASK,
-				    st->nextstate, num_states);
-				st->next_extra &=
-				    STATE_CHECK_MASK; // keep type, remove
-				                      // offset
-				st->next_extra |=
-				    st->nextstate; // add animation ID
-				st->nextstate =
-				    next; // set explicit state number
+				next = dec_resolve_animation(info, st->next_extra & STATE_EXTRA_MASK, st->nextstate,
+				                             num_states);
+				st->next_extra &= STATE_CHECK_MASK; // keep type, remove
+				                                    // offset
+				st->next_extra |= st->nextstate;    // add animation ID
+				st->nextstate = next;               // set explicit state number
 			}
-			else if ((st->next_extra & STATE_CHECK_MASK) ==
-			         STATE_SET_CUSTOM)
+			else if ((st->next_extra & STATE_CHECK_MASK) == STATE_SET_CUSTOM)
 			{
 				// resolve custom jumps now, same reason
-				next = dec_reslove_state(info, 0, st->nextstate,
-				                         st->next_extra);
-				st->nextstate =
-				    next;           // set explicit state number
-				st->next_extra = 0; // no extra action
+				next = dec_reslove_state(info, 0, st->nextstate, st->next_extra);
+				st->nextstate = next; // set explicit state number
+				st->next_extra = 0;   // no extra action
 			}
 		}
 	}
@@ -3246,8 +3084,7 @@ static void cb_parse_actors(lumpinfo_t* li)
 error_end:
 	engine_error("DECORATE", "Incomplete definition!");
 error_numeric:
-	engine_error("DECORATE", "Unable to parse number '%s' in '%s'!", kw,
-	             parse_actor_name);
+	engine_error("DECORATE", "Unable to parse number '%s' in '%s'!", kw, parse_actor_name);
 }
 
 //
@@ -3279,19 +3116,15 @@ static void parse_keyconf()
 		else if (!strcmp("addplayerclass", kw))
 		{
 			if (num_player_classes >= MAX_PLAYER_CLASSES)
-				engine_error("KEYCONF",
-				             "Too many player classes!");
+				engine_error("KEYCONF", "Too many player classes!");
 
 			kw = tp_get_keyword();
 			if (!kw)
-				engine_error("KEYCONF",
-				             "Incomplete definition!");
+				engine_error("KEYCONF", "Incomplete definition!");
 
 			lump = mobj_check_type(tp_hash64(kw));
-			if (lump < 0 ||
-			    mobjinfo[lump].extra_type != ETYPE_PLAYERPAWN)
-				engine_error("KEYCONF",
-				             "Invalid player class '%s'!", kw);
+			if (lump < 0 || mobjinfo[lump].extra_type != ETYPE_PLAYERPAWN)
+				engine_error("KEYCONF", "Invalid player class '%s'!", kw);
 
 			player_class[num_player_classes] = lump;
 
@@ -3344,20 +3177,15 @@ void init_decorate()
 	{
 		if (damage_type_config[i].name)
 		{
-			doom_sprintf(file_buffer, "pain.%s",
-			             damage_type_config[i].name);
+			doom_sprintf(file_buffer, "pain.%s", damage_type_config[i].name);
 			damage_type_config[i].pain = tp_hash32(file_buffer);
-			doom_sprintf(file_buffer, "death.%s",
-			             damage_type_config[i].name);
+			doom_sprintf(file_buffer, "death.%s", damage_type_config[i].name);
 			damage_type_config[i].death = tp_hash32(file_buffer);
-			doom_sprintf(file_buffer, "xdeath.%s",
-			             damage_type_config[i].name);
+			doom_sprintf(file_buffer, "xdeath.%s", damage_type_config[i].name);
 			damage_type_config[i].xdeath = tp_hash32(file_buffer);
-			doom_sprintf(file_buffer, "crash.%s",
-			             damage_type_config[i].name);
+			doom_sprintf(file_buffer, "crash.%s", damage_type_config[i].name);
 			damage_type_config[i].crash = tp_hash32(file_buffer);
-			doom_sprintf(file_buffer, "crash.extreme.%s",
-			             damage_type_config[i].name);
+			doom_sprintf(file_buffer, "crash.extreme.%s", damage_type_config[i].name);
 			damage_type_config[i].xcrash = tp_hash32(file_buffer);
 		}
 	}
@@ -3398,11 +3226,9 @@ void init_decorate()
 		mobjinfo[i].mass = deh_mobjinfo[i].mass;
 		mobjinfo[i].damage = deh_mobjinfo[i].damage;
 		mobjinfo[i].activesound = deh_mobjinfo[i].activesound;
-		mobjinfo[i].flags =
-		    (deh_mobjinfo[i].flags & 0x7FFFFFFF) | MF_MOBJ_IS_DEFINED;
+		mobjinfo[i].flags = (deh_mobjinfo[i].flags & 0x7FFFFFFF) | MF_MOBJ_IS_DEFINED;
 		mobjinfo[i].state_raise = deh_mobjinfo[i].raisestate;
-		mobjinfo[i].painchance[DAMAGE_NORMAL] =
-		    deh_mobjinfo[i].painchance;
+		mobjinfo[i].painchance[DAMAGE_NORMAL] = deh_mobjinfo[i].painchance;
 
 		mobjinfo[i].alias = doom_actor_name[i];
 		mobjinfo[i].spawnid = doom_spawn_id[i];
@@ -3432,21 +3258,16 @@ void init_decorate()
 			mobjinfo[i].render_style = RS_FUZZ;
 
 		// default damage factors
-		memset(mobjinfo[i].damage_factor, 0xFF,
-		       NUM_DAMAGE_TYPES * sizeof(uint16_t));
+		memset(mobjinfo[i].damage_factor, 0xFF, NUM_DAMAGE_TYPES * sizeof(uint16_t));
 
 		// set translation
 		if (mobjinfo[i].flags & MF_TRANSLATION)
 			mobjinfo[i].translation =
-			    render_translation +
-			    ((mobjinfo[i].flags & MF_TRANSLATION) >>
-			     (MF_TRANSSHIFT - 8)) -
-			    256;
+			    render_translation + ((mobjinfo[i].flags & MF_TRANSLATION) >> (MF_TRANSSHIFT - 8)) - 256;
 	}
 
 	// copy internal stuff
-	memcpy(mobjinfo + NUMMOBJTYPES, internal_mobj_info,
-	       sizeof(internal_mobj_info));
+	memcpy(mobjinfo + NUMMOBJTYPES, internal_mobj_info, sizeof(internal_mobj_info));
 
 	// generate powerups
 	for (uint32_t i = 0, ii = 0; i < NUM_MOBJTYPE_POWERS; i++)
@@ -3473,11 +3294,9 @@ void init_decorate()
 	mobjinfo[0].extra_type = ETYPE_PLAYERPAWN;
 	memcpy(&mobjinfo[0].player, &ei_player, sizeof(ei_player_t));
 	for (uint32_t i = 0; i < NUM_WPN_SLOTS; i++)
-		mobjinfo[0].player.wpn_slot[i] =
-		    (uint16_t*)doom_weapon_slots[i];
+		mobjinfo[0].player.wpn_slot[i] = (uint16_t*)doom_weapon_slots[i];
 	mobjinfo[0].start_item.start = (void*)doom_start_items;
-	mobjinfo[0].start_item.end =
-	    (void*)doom_start_items + sizeof(doom_start_items);
+	mobjinfo[0].start_item.end = (void*)doom_start_items + sizeof(doom_start_items);
 	if (!mobjinfo[0].speed)
 		mobjinfo[0].speed = FRACUNIT;
 
@@ -3580,13 +3399,10 @@ void init_decorate()
 		if (states[i].action)
 			for (uint32_t j = 0; j < NUM_CODEPTR_MODS; j++)
 			{
-				if (doom_codeptr[j].codeptr +
-				        doom_code_segment ==
-				    states[i].action)
+				if (doom_codeptr[j].codeptr + doom_code_segment == states[i].action)
 				{
 					states[i].action = doom_codeptr[j].func;
-					states[i].arg =
-					    (void*)doom_codeptr[j].arg;
+					states[i].arg = (void*)doom_codeptr[j].arg;
 				}
 			}
 	}
@@ -3604,8 +3420,7 @@ void init_decorate()
 
 	// copy extra storage
 	es_size = dec_es_ptr - EXTRA_STORAGE_PTR;
-	doom_printf("[DECORATE] %uB / %uB extra storage\n", es_size,
-	            EXTRA_STORAGE_SIZE);
+	doom_printf("[DECORATE] %uB / %uB extra storage\n", es_size, EXTRA_STORAGE_SIZE);
 	if (es_size)
 	{
 		es_ptr = ldr_malloc(es_size);
@@ -3628,10 +3443,8 @@ void init_decorate()
 		info->custom_st_end = dec_reloc_es(es_ptr, info->custom_st_end);
 
 		// drop item list / start inventory list
-		info->extra_stuff[0] =
-		    dec_reloc_es(es_ptr, info->extra_stuff[0]);
-		info->extra_stuff[1] =
-		    dec_reloc_es(es_ptr, info->extra_stuff[1]);
+		info->extra_stuff[0] = dec_reloc_es(es_ptr, info->extra_stuff[0]);
+		info->extra_stuff[1] = dec_reloc_es(es_ptr, info->extra_stuff[1]);
 
 		// damage function
 		info->damage_func = dec_reloc_es(es_ptr, info->damage_func);
@@ -3640,13 +3453,11 @@ void init_decorate()
 		if (info->extra_type == ETYPE_PLAYERPAWN)
 		{
 			// custom damage animations
-			info->player.name =
-			    dec_reloc_es(es_ptr, info->player.name);
+			info->player.name = dec_reloc_es(es_ptr, info->player.name);
 
 			// weapon slots
 			for (uint32_t i = 0; i < NUM_WPN_SLOTS; i++)
-				info->player.wpn_slot[i] = dec_reloc_es(
-				    es_ptr, info->player.wpn_slot[i]);
+				info->player.wpn_slot[i] = dec_reloc_es(es_ptr, info->player.wpn_slot[i]);
 		}
 
 		// RandomSpawner
@@ -3654,8 +3465,7 @@ void init_decorate()
 		{
 			// count randomization
 			uint32_t weight = 0;
-			for (mobj_dropitem_t* drop = info->dropitem.start;
-			     drop < (mobj_dropitem_t*)info->dropitem.end;
+			for (mobj_dropitem_t* drop = info->dropitem.start; drop < (mobj_dropitem_t*)info->dropitem.end;
 			     drop++)
 			{
 				if (drop->amount)
@@ -3665,16 +3475,13 @@ void init_decorate()
 			}
 			info->random_weight = weight;
 			if (!weight)
-				engine_error("DECORATE",
-				             "Empty RandomSpawner!");
+				engine_error("DECORATE", "Empty RandomSpawner!");
 		}
 
 		// Inventory stuff
-		if (inventory_is_valid(info) ||
-		    info->extra_type == ETYPE_HEALTH ||
+		if (inventory_is_valid(info) || info->extra_type == ETYPE_HEALTH ||
 		    info->extra_type == ETYPE_INV_SPECIAL)
-			info->inventory.message =
-			    dec_reloc_es(es_ptr, info->inventory.message);
+			info->inventory.message = dec_reloc_es(es_ptr, info->inventory.message);
 	}
 
 	// extra stuff
@@ -3697,27 +3504,20 @@ void init_decorate()
 				while (*ptr)
 				{
 					uint16_t type = *ptr++;
-					if (mobjinfo[type].extra_type !=
-					    ETYPE_WEAPON)
-						engine_error("DECORATE",
-						             "Non-weapon in "
-						             "weapon slot!");
+					if (mobjinfo[type].extra_type != ETYPE_WEAPON)
+						engine_error("DECORATE", "Non-weapon in "
+						                         "weapon slot!");
 				}
 			}
 			break;
 		case ETYPE_WEAPON:
 			if ((info->weapon.ammo_type[0] &&
-			     mobjinfo[info->weapon.ammo_type[0]].extra_type !=
-			         ETYPE_AMMO &&
-			     mobjinfo[info->weapon.ammo_type[0]].extra_type !=
-			         ETYPE_AMMO_LINK) ||
+			     mobjinfo[info->weapon.ammo_type[0]].extra_type != ETYPE_AMMO &&
+			     mobjinfo[info->weapon.ammo_type[0]].extra_type != ETYPE_AMMO_LINK) ||
 			    (info->weapon.ammo_type[1] &&
-			     mobjinfo[info->weapon.ammo_type[1]].extra_type !=
-			         ETYPE_AMMO &&
-			     mobjinfo[info->weapon.ammo_type[1]].extra_type !=
-			         ETYPE_AMMO_LINK))
-				engine_error("DECORATE",
-				             "Invalid weapon ammo!");
+			     mobjinfo[info->weapon.ammo_type[1]].extra_type != ETYPE_AMMO &&
+			     mobjinfo[info->weapon.ammo_type[1]].extra_type != ETYPE_AMMO_LINK))
+				engine_error("DECORATE", "Invalid weapon ammo!");
 			info->eflags &= ~MFE_INVENTORY_INVBAR;
 			break;
 		case ETYPE_AMMO:
@@ -3731,8 +3531,7 @@ void init_decorate()
 			mobjinfo_t* ofni = mobjinfo + info->inventory.special;
 
 			if (ofni->extra_type != ETYPE_AMMO)
-				engine_error("DECORATE",
-				             "Invalid inheritted ammo!");
+				engine_error("DECORATE", "Invalid inheritted ammo!");
 
 			// copy only max amounts, for faster access later
 			info->inventory.max_count = ofni->inventory.max_count;
@@ -3754,8 +3553,7 @@ void init_decorate()
 			mobjinfo_t* ofni = mobjinfo + info->powerup.type;
 			// check powerup base
 			if (ofni->extra_type != ETYPE_POWERUP_BASE)
-				engine_error("DECORATE",
-				             "Invalid powerup base!");
+				engine_error("DECORATE", "Invalid powerup base!");
 			// apply default duration if unspecified
 			if (!info->powerup.duration)
 				info->powerup.duration = ofni->powerup.duration;
@@ -3763,15 +3561,13 @@ void init_decorate()
 			info->eflags &= ~MFE_INVENTORY_HUBPOWER;
 			info->eflags &= ~MFE_INVENTORY_PERSISTENTPOWER;
 			info->eflags &= ~MFE_INVENTORY_NOSCREENBLINK;
-			ofni->eflags &= MFE_INVENTORY_HUBPOWER |
-			                MFE_INVENTORY_PERSISTENTPOWER |
-			                MFE_INVENTORY_NOSCREENBLINK;
+			ofni->eflags &=
+			    MFE_INVENTORY_HUBPOWER | MFE_INVENTORY_PERSISTENTPOWER | MFE_INVENTORY_NOSCREENBLINK;
 			info->eflags |= ofni->eflags;
 			if (info->powerup.strength < 0)
 				info->powerup.strength = ofni->powerup.strength;
 			if (info->powerup.colorstuff == 0x0FFF)
-				info->powerup.colorstuff =
-				    ofni->powerup.colorstuff;
+				info->powerup.colorstuff = ofni->powerup.colorstuff;
 			if (info->powerup.mode < 0)
 				info->powerup.mode = ofni->powerup.mode;
 			// set powerup type
@@ -3789,12 +3585,10 @@ void init_decorate()
 			if (info->painchance[i] & 0x8000)
 				info->painchance[i] &= 0x01FF;
 			else
-				info->painchance[i] =
-				    info->painchance[DAMAGE_NORMAL];
+				info->painchance[i] = info->painchance[DAMAGE_NORMAL];
 
 			if (info->damage_factor[i] == 0xFFFF)
-				info->damage_factor[i] =
-				    info->damage_factor[DAMAGE_NORMAL];
+				info->damage_factor[i] = info->damage_factor[DAMAGE_NORMAL];
 		}
 
 		// resolve replacements
@@ -3805,8 +3599,7 @@ void init_decorate()
 			while (mobjinfo[type].replacement)
 			{
 				if (!tmp)
-					engine_error("DECORATE",
-					             "Too many replacements!");
+					engine_error("DECORATE", "Too many replacements!");
 				type = mobjinfo[type].replacement;
 				tmp--;
 			}
@@ -3817,8 +3610,7 @@ void init_decorate()
 
 		// blood translations
 		if (info->blood_trns)
-			info->blood_trns =
-			    r_get_blood_color((uintptr_t)info->blood_trns);
+			info->blood_trns = r_get_blood_color((uintptr_t)info->blood_trns);
 	}
 
 	//
@@ -3842,8 +3634,7 @@ void init_decorate()
 //
 // hooks
 
-__attribute((regparm(2), no_caller_saved_registers)) static uint32_t
-check_step_height(fixed_t floorz, mobj_t* mo)
+__attribute((regparm(2), no_caller_saved_registers)) static uint32_t check_step_height(fixed_t floorz, mobj_t* mo)
 {
 	if (mo->flags & MF_MISSILE)
 	{
@@ -3858,21 +3649,18 @@ check_step_height(fixed_t floorz, mobj_t* mo)
 		return 1;
 
 	// dropoff
-	if (!(mo->flags & (MF_DROPOFF | MF_FLOAT)) &&
-	    floorz - tmdropoffz > mo->info->dropoff)
+	if (!(mo->flags & (MF_DROPOFF | MF_FLOAT)) && floorz - tmdropoffz > mo->info->dropoff)
 		return 1;
 
 	return 0;
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-sound_noway(mobj_t* mo)
+__attribute((regparm(2), no_caller_saved_registers)) static void sound_noway(mobj_t* mo)
 {
 	S_StartSound(mo, mo->info->player.sound.usefail);
 }
 
-__attribute((regparm(2), no_caller_saved_registers)) static void
-sound_oof(mobj_t* mo)
+__attribute((regparm(2), no_caller_saved_registers)) static void sound_oof(mobj_t* mo)
 {
 	if (mo->health <= 0)
 		return;
@@ -3886,8 +3674,7 @@ static hook_t hook_states[NUM_STATE_HOOKS] = {
     {0x000315D9, CODE_HOOK | HOOK_UINT32, 0}, // P_SpawnMobj
 };
 
-static const hook_t hooks[] __attribute__((used, section(".hooks"),
-                                           aligned(4))) = {
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
     // hook step height check in 'P_TryMove'
     {0x0002B27C, CODE_HOOK | HOOK_UINT16, 0xF289},
     {0x0002B27E, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)check_step_height},
@@ -3898,12 +3685,10 @@ static const hook_t hooks[] __attribute__((used, section(".hooks"),
     {0x000313D7, CODE_HOOK | HOOK_UINT16, 0x08EB}, // P_NightmareRespawn
     {0x000313FC, CODE_HOOK | HOOK_UINT16, 0x08EB}, // P_NightmareRespawn
     // use 'MF1_ISMONSTER' in 'P_MobjThinker'
-    {0x000314FC, CODE_HOOK | HOOK_UINT16,
-     offsetof(mobj_t, flags1) | (MF1_ISMONSTER << 8)},
+    {0x000314FC, CODE_HOOK | HOOK_UINT16, offsetof(mobj_t, flags1) | (MF1_ISMONSTER << 8)},
     // use 'MF1_TELESTOMP' in 'PIT_StompThing'
     {0x0002ABC7, CODE_HOOK | HOOK_UINT16, 0x43F6},
-    {0x0002ABC9, CODE_HOOK | HOOK_UINT16,
-     offsetof(mobj_t, flags1) | (MF1_TELESTOMP << 8)},
+    {0x0002ABC9, CODE_HOOK | HOOK_UINT16, offsetof(mobj_t, flags1) | (MF1_TELESTOMP << 8)},
     {0x0002ABCB, CODE_HOOK | HOOK_SET_NOPS, 3},
     // change damage in 'PIT_StompThing'
     {0x0002ABDE, CODE_HOOK | HOOK_UINT32, 1000000},

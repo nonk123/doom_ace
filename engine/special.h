@@ -23,7 +23,5 @@ extern uint_fast8_t spec_autosave;
 void spec_activate(line_t*, mobj_t*, uint32_t);
 
 // hooks
-void spec_line_cross(uint32_t lidx, uint32_t side)
-    __attribute((regparm(2), no_caller_saved_registers));
-uint32_t spec_line_use(mobj_t* mo, line_t* ln)
-    __attribute((regparm(2), no_caller_saved_registers));
+void spec_line_cross(uint32_t lidx, uint32_t side) __attribute((regparm(2), no_caller_saved_registers));
+uint32_t spec_line_use(mobj_t* mo, line_t* ln) __attribute((regparm(2), no_caller_saved_registers));

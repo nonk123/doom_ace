@@ -50,8 +50,7 @@ const uint8_t* ctrl_group[NUM_CTRL_GROUPS] = {
 };
 
 int32_t* const ctrl_mouse_ptr[NUM_MOUSE_CTRL] = {
-    &mouseb_fire,    &mouseb_fire_alt, &mouseb_use,
-    &mouseb_inv_use, &mouseb_strafe,
+    &mouseb_fire, &mouseb_fire_alt, &mouseb_use, &mouseb_inv_use, &mouseb_strafe,
 };
 
 static const uint8_t* mouse_btn[NUM_MOUSE_BTNS + 1] = {
@@ -69,8 +68,7 @@ void control_setup()
 	// check mouse
 	for (uint32_t i = 1; i < NUM_MOUSE_CTRL; i++)
 	{
-		if (*ctrl_mouse_ptr[i] < -1 ||
-		    *ctrl_mouse_ptr[i] >= NUM_MOUSE_BTNS)
+		if (*ctrl_mouse_ptr[i] < -1 || *ctrl_mouse_ptr[i] >= NUM_MOUSE_BTNS)
 			*ctrl_mouse_ptr[i] = -1;
 	}
 	// check keys
@@ -154,17 +152,12 @@ uint8_t* control_key_name(uint8_t id)
 	return name_tmp;
 }
 
-uint8_t* control_btn_name(uint8_t id)
-{
-	return (uint8_t*)mouse_btn[*ctrl_mouse_ptr[id] + 1];
-}
+uint8_t* control_btn_name(uint8_t id) { return (uint8_t*)mouse_btn[*ctrl_mouse_ptr[id] + 1]; }
 
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// original keys
-	{0x0003BA1B, CODE_HOOK | HOOK_IMPORT,
-         (uint32_t)&control_list[ctrl_key_cheats].ptr},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // original keys
+    {0x0003BA1B, CODE_HOOK | HOOK_IMPORT, (uint32_t)&control_list[ctrl_key_cheats].ptr},
 };

@@ -315,8 +315,7 @@ uint32_t scale_range(uint32_t value)
 	return 1 + value;
 }
 
-void generate_range(uint32_t first, uint32_t last, const uint8_t* src,
-                    uint8_t* dst)
+void generate_range(uint32_t first, uint32_t last, const uint8_t* src, uint8_t* dst)
 {
 	uint32_t count;
 	fixed_t vr, vg, vb;
@@ -382,11 +381,9 @@ static bmf_char_t* find_char(void* ptr, uint32_t count, uint8_t code)
 void change_color(uint8_t color)
 {
 	if (color >= 'a' && color < 'l')
-		font_color =
-		    &render_tables->fmap[FONT_COLOR_COUNT * (color - 'a')];
+		font_color = &render_tables->fmap[FONT_COLOR_COUNT * (color - 'a')];
 	else if (color > 'l' && color <= 'z')
-		font_color =
-		    &render_tables->fmap[FONT_COLOR_COUNT * (color - 'b')];
+		font_color = &render_tables->fmap[FONT_COLOR_COUNT * (color - 'b')];
 	else
 		font_color = NULL;
 }
@@ -448,9 +445,7 @@ static void font_draw_char(int32_t x, int32_t y, bmf_char_t* bc)
 			for (int32_t i = 0; i < xx; i++)
 			{
 				if (src[i])
-					*dst = font_color
-					    [font_palidx[(uint32_t)src[i] * 2 +
-					                 1]];
+					*dst = font_color[font_palidx[(uint32_t)src[i] * 2 + 1]];
 				dst++;
 			}
 			src += bc->width;
@@ -464,8 +459,7 @@ static void font_draw_char(int32_t x, int32_t y, bmf_char_t* bc)
 			for (int32_t i = 0; i < xx; i++)
 			{
 				if (src[i])
-					*dst =
-					    font_palidx[(uint32_t)src[i] * 2];
+					*dst = font_palidx[(uint32_t)src[i] * 2];
 				dst++;
 			}
 			src += bc->width;
@@ -474,8 +468,7 @@ static void font_draw_char(int32_t x, int32_t y, bmf_char_t* bc)
 	}
 }
 
-void font_center_text(int32_t x, int32_t y, const uint8_t* text, void* font,
-                      uint32_t linecount)
+void font_center_text(int32_t x, int32_t y, const uint8_t* text, void* font, uint32_t linecount)
 {
 	font_head_t* head = font;
 	bmf_char_t* bc;
@@ -507,8 +500,7 @@ void font_center_text(int32_t x, int32_t y, const uint8_t* text, void* font,
 			}
 			else
 			{
-				bc = find_char(font + head->offset,
-				               head->num_chars, *ptr);
+				bc = find_char(font + head->offset, head->num_chars, *ptr);
 				if (bc)
 					xx += bc->space;
 				xx += head->space;
@@ -531,8 +523,7 @@ void font_center_text(int32_t x, int32_t y, const uint8_t* text, void* font,
 			}
 			else
 			{
-				bc = find_char(font + head->offset,
-				               head->num_chars, *ptr);
+				bc = find_char(font + head->offset, head->num_chars, *ptr);
 				if (bc)
 				{
 					font_draw_char(xx, y, bc);
@@ -700,14 +691,12 @@ uint32_t font_message_to_print()
 	}
 
 	font_color = NULL;
-	font_center_text(SCREENWIDTH / 2, SCREENHEIGHT / 2, messageString,
-	                 smallfont, linecount);
+	font_center_text(SCREENWIDTH / 2, SCREENHEIGHT / 2, messageString, smallfont, linecount);
 
 	skip_menu_draw();
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-hu_draw_text_line(hu_textline_t* l, uint32_t cursor)
+static __attribute((regparm(2), no_caller_saved_registers)) void hu_draw_text_line(hu_textline_t* l, uint32_t cursor)
 {
 	int32_t x;
 	bmf_char_t* bc;
@@ -732,8 +721,7 @@ font_menu_text(int32_t x, int32_t y, const uint8_t* text)
 	if (menu_font_color < 0)
 		font_color = NULL;
 	else
-		font_color =
-		    &render_tables->fmap[FONT_COLOR_COUNT * menu_font_color];
+		font_color = &render_tables->fmap[FONT_COLOR_COUNT * menu_font_color];
 	font_draw_text(x, y, text, smallfont);
 }
 
@@ -777,8 +765,7 @@ static __attribute((regparm(2), no_caller_saved_registers)) void hud_font_init()
 		head->space = 4;
 		head->height = 12;
 		head->num_chars = count;
-		head->offset =
-		    sizeof(bmf_head_t) + 255 * 2; // index zero is skipped
+		head->offset = sizeof(bmf_head_t) + 255 * 2; // index zero is skipped
 
 		ptr = smallfont + sizeof(bmf_head_t);
 
@@ -885,40 +872,34 @@ static __attribute((regparm(2), no_caller_saved_registers)) void finale_text()
 	*ptr = bkup;
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) void
-cast_text(uint8_t* text)
+static __attribute((regparm(2), no_caller_saved_registers)) void cast_text(uint8_t* text)
 {
 	font_color = NULL;
 	font_center_text(SCREENWIDTH / 2, 180, text, smallfont, 0);
 }
 
-static __attribute((regparm(2), no_caller_saved_registers)) uint32_t
-dummy_string_width()
-{
-	return 0;
-}
+static __attribute((regparm(2), no_caller_saved_registers)) uint32_t dummy_string_width() { return 0; }
 
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// replace font loading in 'HU_Init'
-	{0x0003B4D5, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)hud_font_init},
-	{0x0003B4DA, CODE_HOOK | HOOK_JMP_DOOM, 0x0003B50D},
-	// replace 'HUlib_drawTextLine'
-	{0x0003BDA0, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)hu_draw_text_line},
-	// replace 'M_WriteText'
-	{0x00022FA1, CODE_HOOK | HOOK_UINT16, 0xD989},
-	{0x00022FA3, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)font_menu_text},
-	{0x00022FA8, CODE_HOOK | HOOK_UINT16, 0xC359},
-	// dummy 'M_StringWidth'
-	{0x00022F00, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)dummy_string_width},
-	// fix 'F_TextWrite'
-	{0x0001C645, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)finale_text},
-	{0x0001C64A, CODE_HOOK | HOOK_JMP_DOOM, 0x0001C6DA},
-	// replace call to 'F_CastPrint'
-	{0x0001CD3B, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)cast_text},
-	// move automap levelname
-	{0x0003B5B9, CODE_HOOK | HOOK_UINT16, SCREENHEIGHT - 2},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // replace font loading in 'HU_Init'
+    {0x0003B4D5, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)hud_font_init},
+    {0x0003B4DA, CODE_HOOK | HOOK_JMP_DOOM, 0x0003B50D},
+    // replace 'HUlib_drawTextLine'
+    {0x0003BDA0, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)hu_draw_text_line},
+    // replace 'M_WriteText'
+    {0x00022FA1, CODE_HOOK | HOOK_UINT16, 0xD989},
+    {0x00022FA3, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)font_menu_text},
+    {0x00022FA8, CODE_HOOK | HOOK_UINT16, 0xC359},
+    // dummy 'M_StringWidth'
+    {0x00022F00, CODE_HOOK | HOOK_JMP_ACE, (uint32_t)dummy_string_width},
+    // fix 'F_TextWrite'
+    {0x0001C645, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)finale_text},
+    {0x0001C64A, CODE_HOOK | HOOK_JMP_DOOM, 0x0001C6DA},
+    // replace call to 'F_CastPrint'
+    {0x0001CD3B, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)cast_text},
+    // move automap levelname
+    {0x0003B5B9, CODE_HOOK | HOOK_UINT16, SCREENHEIGHT - 2},
 };

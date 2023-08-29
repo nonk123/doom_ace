@@ -7,10 +7,10 @@
 
 typedef struct
 {
-	uint32_t signature; // must be "VESA" to indicate valid VBE support
-	uint16_t version;   // VBE version; high byte is major version, low byte
-	                    // is minor version
-	uint32_t oem;       // segment:offset pointer to OEM
+	uint32_t signature;    // must be "VESA" to indicate valid VBE support
+	uint16_t version;      // VBE version; high byte is major version, low byte
+	                       // is minor version
+	uint32_t oem;          // segment:offset pointer to OEM
 	uint32_t capabilities; // bitfield that describes card capabilities
 	uint32_t video_modes;  // segment:offset pointer to list of supported
 	                       // video modes
@@ -25,11 +25,11 @@ typedef struct
 
 typedef struct
 {
-	uint16_t attributes; // deprecated, only bit 7 should be of interest to
-	                     // you, and it indicates the mode supports a linear
-	                     // frame buffer.
-	uint8_t window_a;    // deprecated
-	uint8_t window_b;    // deprecated
+	uint16_t attributes;  // deprecated, only bit 7 should be of interest to
+	                      // you, and it indicates the mode supports a linear
+	                      // frame buffer.
+	uint8_t window_a;     // deprecated
+	uint8_t window_b;     // deprecated
 	uint16_t granularity; // deprecated; used while calculating bank numbers
 	uint16_t window_size;
 	uint16_t segment_a;
@@ -45,9 +45,9 @@ typedef struct
 	uint8_t bpp;           // 8		// bits per pixel in this mode
 	uint8_t banks;         // deprecated; total number of banks in this mode
 	uint8_t memory_model;  // 4?
-	uint8_t bank_size;   // deprecated; size of a bank, almost always 64 KB
-	                     // but may be 16 KB...
-	uint8_t image_pages; // double-buffer (0 = single screen)
+	uint8_t bank_size;     // deprecated; size of a bank, almost always 64 KB
+	                       // but may be 16 KB...
+	uint8_t image_pages;   // double-buffer (0 = single screen)
 	uint8_t reserved0;
 	uint8_t red_mask;
 	uint8_t red_position;
@@ -139,16 +139,12 @@ static uint32_t check_mode_info(uint16_t mode_id, uint32_t do_list)
 	if (dpmiregs.eax.x == 0x004F)
 	{
 		if (do_list)
-			doom_printf(
-			    "[VESA] mode 0x%04X: %ux%ux%u %u 0x%04X 0x%08X\n",
-			    mode_id, mode->width, mode->height, mode->bpp,
-			    mode->image_pages, mode->attributes,
-			    (uint32_t)mode->framebuffer);
+			doom_printf("[VESA] mode 0x%04X: %ux%ux%u %u 0x%04X 0x%08X\n", mode_id, mode->width,
+			            mode->height, mode->bpp, mode->image_pages, mode->attributes,
+			            (uint32_t)mode->framebuffer);
 
-		if (mode->width == SCREENWIDTH &&
-		    mode->height == SCREENHEIGHT && mode->bpp == 8 &&
-		    mode->memory_model == 4 && mode->image_pages > 0 &&
-		    (mode->attributes & 0x90) == 0x90)
+		if (mode->width == SCREENWIDTH && mode->height == SCREENHEIGHT && mode->bpp == 8 &&
+		    mode->memory_model == 4 && mode->image_pages > 0 && (mode->attributes & 0x90) == 0x90)
 		{
 			framebase = mode->framebuffer;
 			vesa_offset = mode_id;
@@ -193,8 +189,7 @@ void vesa_check()
 
 	if (dpmiregs.eax.x == 0x004F && info->signature == 0x41534556)
 	{
-		doom_printf("[VESA] version %u.%u\n", info->version >> 8,
-		            info->version & 0xFF);
+		doom_printf("[VESA] version %u.%u\n", info->version >> 8, info->version & 0xFF);
 
 		vesa_fb_size = (uint32_t)info->video_memory * 64 * 1024;
 
@@ -203,9 +198,7 @@ void vesa_check()
 			uint16_t last_mode = 0xFFFF;
 
 			mode_list =
-			    (uint16_t*)(((info->video_modes & 0xFFFF0000) >>
-			                 12) +
-			                (info->video_modes & 0xFFFF));
+			    (uint16_t*)(((info->video_modes & 0xFFFF0000) >> 12) + (info->video_modes & 0xFFFF));
 			while (1)
 			{
 				if (*mode_list == 0xFFFF)
@@ -230,8 +223,7 @@ void vesa_check()
 
 			if (last_mode == 0xFFFF)
 			{
-				doom_printf(
-				    "[VESA] using fallback mode detection\n");
+				doom_printf("[VESA] using fallback mode detection\n");
 				for (uint32_t i = 0x0100; i < 0x0300; i++)
 				{
 					if (check_mode_info(i, do_vesa & 2))
@@ -259,8 +251,7 @@ void vesa_init()
 		x86regs.esi.x = vesa_fb_size >> 16;
 		x86regs.edi.x = vesa_fb_size;
 		int386(0x31); // TODO: check status
-		framebase =
-		    (void*)(((uint32_t)x86regs.ebx.x << 16) | (x86regs.ecx.x));
+		framebase = (void*)(((uint32_t)x86regs.ebx.x << 16) | (x86regs.ecx.x));
 
 		// set VESA mode
 		dpmiregs.eax.x = 0x4F02; // set mode
@@ -300,8 +291,7 @@ void vesa_copy()
 	if (wipebuffer == (void*)0x000A0000)
 		return;
 
-	dwcopy(framebuffer, wipebuffer,
-	       (SCREENWIDTH * SCREENHEIGHT) / sizeof(uint32_t));
+	dwcopy(framebuffer, wipebuffer, (SCREENWIDTH * SCREENHEIGHT) / sizeof(uint32_t));
 }
 
 void vesa_update()

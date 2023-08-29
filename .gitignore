@@ -2,6 +2,8 @@
 *.zip
 code_dev/
 
+ACE_CONF.conf
+
 \#*\#
 .\#*
 *~

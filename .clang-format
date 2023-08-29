@@ -5,3 +5,4 @@ UseTab: AlignWithSpaces
 DerivePointerAlignment: false
 PointerAlignment: Left  
 SortIncludes: Never
+ColumnLimit: 120

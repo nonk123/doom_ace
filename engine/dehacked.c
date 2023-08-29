@@ -107,84 +107,79 @@ static void handle_u8(uint8_t*, void*);
 static void handle_species(uint8_t*, void*);
 
 // section 'thing' values
-static const deh_value_t deh_value_thing[] = {
-    {"ID #", offsetof(deh_mobjinfo_t, doomednum), handle_u32},
-    {"Initial frame", offsetof(deh_mobjinfo_t, spawnstate), handle_u32},
-    {"Hit points", offsetof(deh_mobjinfo_t, spawnhealth), handle_u32},
-    {"First moving frame", offsetof(deh_mobjinfo_t, seestate), handle_u32},
-    {"Alert sound", offsetof(deh_mobjinfo_t, seesound), handle_u32},
-    {"Reaction time", offsetof(deh_mobjinfo_t, reactiontime), handle_u32},
-    {"Attack sound", offsetof(deh_mobjinfo_t, attacksound), handle_u32},
-    {"Injury frame", offsetof(deh_mobjinfo_t, painstate), handle_u32},
-    {"Pain chance", offsetof(deh_mobjinfo_t, painchance), handle_u32},
-    {"Pain sound", offsetof(deh_mobjinfo_t, painsound), handle_u32},
-    {"Close attack frame", offsetof(deh_mobjinfo_t, meleestate), handle_u32},
-    {"Far attack frame", offsetof(deh_mobjinfo_t, missilestate), handle_u32},
-    {"Death frame", offsetof(deh_mobjinfo_t, deathstate), handle_u32},
-    {"Exploding frame", offsetof(deh_mobjinfo_t, xdeathstate), handle_u32},
-    {"Death sound", offsetof(deh_mobjinfo_t, deathsound), handle_u32},
-    {"Speed", offsetof(deh_mobjinfo_t, speed), handle_u32},
-    {"Width", offsetof(deh_mobjinfo_t, radius), handle_u32},
-    {"Height", offsetof(deh_mobjinfo_t, height), handle_u32},
-    {"Mass", offsetof(deh_mobjinfo_t, mass), handle_u32},
-    {"Missile damage", offsetof(deh_mobjinfo_t, damage), handle_u32},
-    {"Action sound", offsetof(deh_mobjinfo_t, activesound), handle_u32},
-    {"Bits", offsetof(deh_mobjinfo_t, flags), handle_u32},
-    {"Respawn frame", offsetof(deh_mobjinfo_t, raisestate), handle_u32},
-    // terminator
-    {NULL}};
+static const deh_value_t deh_value_thing[] = {{"ID #", offsetof(deh_mobjinfo_t, doomednum), handle_u32},
+                                              {"Initial frame", offsetof(deh_mobjinfo_t, spawnstate), handle_u32},
+                                              {"Hit points", offsetof(deh_mobjinfo_t, spawnhealth), handle_u32},
+                                              {"First moving frame", offsetof(deh_mobjinfo_t, seestate), handle_u32},
+                                              {"Alert sound", offsetof(deh_mobjinfo_t, seesound), handle_u32},
+                                              {"Reaction time", offsetof(deh_mobjinfo_t, reactiontime), handle_u32},
+                                              {"Attack sound", offsetof(deh_mobjinfo_t, attacksound), handle_u32},
+                                              {"Injury frame", offsetof(deh_mobjinfo_t, painstate), handle_u32},
+                                              {"Pain chance", offsetof(deh_mobjinfo_t, painchance), handle_u32},
+                                              {"Pain sound", offsetof(deh_mobjinfo_t, painsound), handle_u32},
+                                              {"Close attack frame", offsetof(deh_mobjinfo_t, meleestate), handle_u32},
+                                              {"Far attack frame", offsetof(deh_mobjinfo_t, missilestate), handle_u32},
+                                              {"Death frame", offsetof(deh_mobjinfo_t, deathstate), handle_u32},
+                                              {"Exploding frame", offsetof(deh_mobjinfo_t, xdeathstate), handle_u32},
+                                              {"Death sound", offsetof(deh_mobjinfo_t, deathsound), handle_u32},
+                                              {"Speed", offsetof(deh_mobjinfo_t, speed), handle_u32},
+                                              {"Width", offsetof(deh_mobjinfo_t, radius), handle_u32},
+                                              {"Height", offsetof(deh_mobjinfo_t, height), handle_u32},
+                                              {"Mass", offsetof(deh_mobjinfo_t, mass), handle_u32},
+                                              {"Missile damage", offsetof(deh_mobjinfo_t, damage), handle_u32},
+                                              {"Action sound", offsetof(deh_mobjinfo_t, activesound), handle_u32},
+                                              {"Bits", offsetof(deh_mobjinfo_t, flags), handle_u32},
+                                              {"Respawn frame", offsetof(deh_mobjinfo_t, raisestate), handle_u32},
+                                              // terminator
+                                              {NULL}};
 
 // section 'frame' values
-static const deh_value_t deh_value_frame[] = {
-    {"Sprite number", offsetof(deh_state_t, sprite), handle_u32},
-    {"Sprite subnumber", offsetof(deh_state_t, frame), handle_u32},
-    {"Duration", offsetof(deh_state_t, tics), handle_u32},
-    //	{"Codep frame", offsetof(deh_state_t, action), handle_u32},
-    {"Next frame", offsetof(deh_state_t, nextstate), handle_u32},
-    {"Unknown 1", offsetof(deh_state_t, misc1), handle_u32},
-    {"Unknown 2", offsetof(deh_state_t, misc2), handle_u32},
-    // terminator
-    {NULL}};
+static const deh_value_t deh_value_frame[] = {{"Sprite number", offsetof(deh_state_t, sprite), handle_u32},
+                                              {"Sprite subnumber", offsetof(deh_state_t, frame), handle_u32},
+                                              {"Duration", offsetof(deh_state_t, tics), handle_u32},
+                                              //	{"Codep frame", offsetof(deh_state_t, action), handle_u32},
+                                              {"Next frame", offsetof(deh_state_t, nextstate), handle_u32},
+                                              {"Unknown 1", offsetof(deh_state_t, misc1), handle_u32},
+                                              {"Unknown 2", offsetof(deh_state_t, misc2), handle_u32},
+                                              // terminator
+                                              {NULL}};
 
 // section 'weapon' values
-static const deh_value_t deh_value_weapon[] = {
-    {"Ammo type", offsetof(weaponinfo_t, ammo), handle_u32},
-    {"Deselect frame", offsetof(weaponinfo_t, upstate), handle_u32},
-    {"Select frame", offsetof(weaponinfo_t, downstate), handle_u32},
-    {"Bobbing frame", offsetof(weaponinfo_t, readystate), handle_u32},
-    {"Shooting frame", offsetof(weaponinfo_t, atkstate), handle_u32},
-    {"Firing frame", offsetof(weaponinfo_t, flashstate), handle_u32},
-    // terminator
-    {NULL}};
+static const deh_value_t deh_value_weapon[] = {{"Ammo type", offsetof(weaponinfo_t, ammo), handle_u32},
+                                               {"Deselect frame", offsetof(weaponinfo_t, upstate), handle_u32},
+                                               {"Select frame", offsetof(weaponinfo_t, downstate), handle_u32},
+                                               {"Bobbing frame", offsetof(weaponinfo_t, readystate), handle_u32},
+                                               {"Shooting frame", offsetof(weaponinfo_t, atkstate), handle_u32},
+                                               {"Firing frame", offsetof(weaponinfo_t, flashstate), handle_u32},
+                                               // terminator
+                                               {NULL}};
 
 // section 'ammo' values
-static const deh_value_t deh_value_ammo[] = {
-    {"Max ammo", 0, handle_u32},
-    {"Per ammo", 0x00012D80 - 0x00012D70, handle_u32},
-    // terminator
-    {NULL}};
+static const deh_value_t deh_value_ammo[] = {{"Max ammo", 0, handle_u32},
+                                             {"Per ammo", 0x00012D80 - 0x00012D70, handle_u32},
+                                             // terminator
+                                             {NULL}};
 
 // section 'misc' values
-static const deh_value_t deh_value_misc[] = {
-    {"Initial Health", (uint32_t)&dehacked.start_health, handle_u32},
-    {"Initial Bullets", (uint32_t)&dehacked.start_bullets, handle_u32},
-    {"Max Health", (uint32_t)&dehacked.max_bonus_health, handle_u32},
-    {"Max Armor", (uint32_t)&dehacked.max_bonus_armor, handle_u32},
-    //	{"Green Armor Class", },
-    //	{"Blue Armor Class", },
-    {"Max Soulsphere", (uint32_t)&dehacked.max_soulsphere, handle_u32},
-    {"Soulsphere Health", (uint32_t)&dehacked.hp_soulsphere, handle_u32},
-    {"Megasphere Health", (uint32_t)&dehacked.hp_megasphere, handle_u32},
-    //	{"God Mode Health", },
-    //	{"IDFA Armor", },
-    //	{"IDFA Armor Class", },
-    //	{"IDKFA Armor", },
-    //	{"IDKFA Armor Class", },
-    {"BFG Cells/Shot", (uint32_t)&dehacked.bfg_cells, handle_u32},
-    {"Monsters Infight", (uint32_t)&dehacked.no_species, handle_species},
-    {"Monsters Ignore Each Other", (uint32_t)&dehacked.no_infight, handle_u8},
-    // terminator
-    {NULL}};
+static const deh_value_t deh_value_misc[] = {{"Initial Health", (uint32_t)&dehacked.start_health, handle_u32},
+                                             {"Initial Bullets", (uint32_t)&dehacked.start_bullets, handle_u32},
+                                             {"Max Health", (uint32_t)&dehacked.max_bonus_health, handle_u32},
+                                             {"Max Armor", (uint32_t)&dehacked.max_bonus_armor, handle_u32},
+                                             //	{"Green Armor Class", },
+                                             //	{"Blue Armor Class", },
+                                             {"Max Soulsphere", (uint32_t)&dehacked.max_soulsphere, handle_u32},
+                                             {"Soulsphere Health", (uint32_t)&dehacked.hp_soulsphere, handle_u32},
+                                             {"Megasphere Health", (uint32_t)&dehacked.hp_megasphere, handle_u32},
+                                             //	{"God Mode Health", },
+                                             //	{"IDFA Armor", },
+                                             //	{"IDFA Armor Class", },
+                                             //	{"IDKFA Armor", },
+                                             //	{"IDKFA Armor Class", },
+                                             {"BFG Cells/Shot", (uint32_t)&dehacked.bfg_cells, handle_u32},
+                                             {"Monsters Infight", (uint32_t)&dehacked.no_species, handle_species},
+                                             {"Monsters Ignore Each Other", (uint32_t)&dehacked.no_infight, handle_u8},
+                                             // terminator
+                                             {NULL}};
 
 //
 // functions
@@ -475,8 +470,7 @@ static void parser_pointer(uint8_t* line)
 			continue;
 
 		// parse value
-		if (doom_sscanf(vtxt, "%i", &src_state) == 1 &&
-		    src_state < NUMSTATES)
+		if (doom_sscanf(vtxt, "%i", &src_state) == 1 && src_state < NUMSTATES)
 			deh_states[ptr_state].action = ptrtable[src_state];
 	}
 }
@@ -586,8 +580,7 @@ void init_dehacked()
 	if (lump < 0)
 		return;
 
-	syst = doom_malloc(POINTER_COUNT * sizeof(uint16_t) +
-	                   NUMSTATES * sizeof(void*));
+	syst = doom_malloc(POINTER_COUNT * sizeof(uint16_t) + NUMSTATES * sizeof(void*));
 	if (!syst)
 		return;
 

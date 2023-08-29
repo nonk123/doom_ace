@@ -292,8 +292,7 @@ typedef struct
 
 //
 
-typedef uint32_t (*line_func_t)(line_t*)
-    __attribute((regparm(2), no_caller_saved_registers));
+typedef uint32_t (*line_func_t)(line_t*) __attribute((regparm(2), no_caller_saved_registers));
 
 //
 
@@ -342,8 +341,7 @@ void map_setup_old(uint32_t skill, uint32_t episode, uint32_t level);
 map_cluster_t* map_find_cluster(uint32_t num);
 
 // thinker
-void think_line_scroll(line_scroll_t* ls)
-    __attribute((regparm(2), no_caller_saved_registers));
+void think_line_scroll(line_scroll_t* ls) __attribute((regparm(2), no_caller_saved_registers));
 
 // blockmap
 uint32_t P_BlockLinesIterator(int32_t x, int32_t y, line_func_t func)

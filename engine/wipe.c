@@ -85,9 +85,7 @@ static uint32_t wipe_melt()
 			done = 0;
 
 			// old frame covers entire column
-			copy_column(screen_buffer + x +
-			                (SCREENWIDTH * SCREENHEIGHT),
-			            x, offset, SCREENHEIGHT);
+			copy_column(screen_buffer + x + (SCREENWIDTH * SCREENHEIGHT), x, offset, SCREENHEIGHT);
 		}
 		else if (offset < SCREENHEIGHT)
 		{
@@ -99,9 +97,7 @@ static uint32_t wipe_melt()
 			copy_column(screen_buffer + x, x, 0, offset);
 
 			// old frame melts
-			copy_column(screen_buffer + x +
-			                (SCREENWIDTH * SCREENHEIGHT),
-			            x, offset, SCREENHEIGHT);
+			copy_column(screen_buffer + x + (SCREENWIDTH * SCREENHEIGHT), x, offset, SCREENHEIGHT);
 		}
 	}
 
@@ -122,9 +118,8 @@ static uint32_t wipe_left()
 		copy_column(screen_buffer + (x - offs), x, 0, SCREENHEIGHT);
 	offs--;
 	for (int32_t x = offs; x >= 0; x--)
-		copy_column(screen_buffer + (SCREENWIDTH - 1 + (x - offs)) +
-		                (SCREENWIDTH * SCREENHEIGHT),
-		            x, 0, SCREENHEIGHT);
+		copy_column(screen_buffer + (SCREENWIDTH - 1 + (x - offs)) + (SCREENWIDTH * SCREENHEIGHT), x, 0,
+		            SCREENHEIGHT);
 
 	return ++wipe_tick >= 28;
 }
@@ -141,13 +136,10 @@ static uint32_t wipe_right()
 	offs = (SCREENWIDTH - 1) - offs;
 
 	for (int32_t x = offs; x < SCREENWIDTH; x++)
-		copy_column(screen_buffer + (x - offs) +
-		                (SCREENWIDTH * SCREENHEIGHT),
-		            x, 0, SCREENHEIGHT);
+		copy_column(screen_buffer + (x - offs) + (SCREENWIDTH * SCREENHEIGHT), x, 0, SCREENHEIGHT);
 	offs--;
 	for (int32_t x = offs; x >= 0; x--)
-		copy_column(screen_buffer + (SCREENWIDTH - 1 + (x - offs)), x,
-		            0, SCREENHEIGHT);
+		copy_column(screen_buffer + (SCREENWIDTH - 1 + (x - offs)), x, 0, SCREENHEIGHT);
 
 	return ++wipe_tick >= 28;
 }
@@ -163,9 +155,7 @@ static uint32_t wipe_up()
 	offs >>= (FRACBITS + 1);
 	offs = (SCREENHEIGHT - 1) - offs;
 
-	dwcopy(wipebuffer,
-	       screen_buffer + offs * SCREENWIDTH +
-	           (SCREENWIDTH * SCREENHEIGHT),
+	dwcopy(wipebuffer, screen_buffer + offs * SCREENWIDTH + (SCREENWIDTH * SCREENHEIGHT),
 	       (SCREENHEIGHT - offs) * (SCREENWIDTH / sizeof(uint32_t)));
 	dwcopy(wipebuffer + (SCREENHEIGHT - offs) * SCREENWIDTH, screen_buffer,
 	       offs * (SCREENWIDTH / sizeof(uint32_t)));
@@ -185,8 +175,7 @@ static uint32_t wipe_down()
 
 	dwcopy(wipebuffer, screen_buffer + offs * SCREENWIDTH,
 	       (SCREENHEIGHT - offs) * (SCREENWIDTH / sizeof(uint32_t)));
-	dwcopy(wipebuffer + (SCREENHEIGHT - offs) * SCREENWIDTH,
-	       screen_buffer + (SCREENWIDTH * SCREENHEIGHT),
+	dwcopy(wipebuffer + (SCREENHEIGHT - offs) * SCREENWIDTH, screen_buffer + (SCREENWIDTH * SCREENHEIGHT),
 	       offs * (SCREENWIDTH / sizeof(uint32_t)));
 
 	return ++wipe_tick >= 28;
@@ -208,13 +197,11 @@ static uint32_t wipe_horiz()
 	for (int32_t x = offs; x < stop; x++)
 		copy_column(screen_buffer + x, x, 0, SCREENHEIGHT);
 	for (int32_t x = 0; x < offs; x++)
-		copy_column(screen_buffer + x + ((SCREENWIDTH / 2) - 1 - offs) +
-		                (SCREENWIDTH * SCREENHEIGHT),
-		            x, 0, SCREENHEIGHT);
+		copy_column(screen_buffer + x + ((SCREENWIDTH / 2) - 1 - offs) + (SCREENWIDTH * SCREENHEIGHT), x, 0,
+		            SCREENHEIGHT);
 	for (int32_t x = stop; x < SCREENWIDTH; x++)
-		copy_column(screen_buffer + (x - stop) + (SCREENWIDTH / 2) +
-		                (SCREENWIDTH * SCREENHEIGHT),
-		            x, 0, SCREENHEIGHT);
+		copy_column(screen_buffer + (x - stop) + (SCREENWIDTH / 2) + (SCREENWIDTH * SCREENHEIGHT), x, 0,
+		            SCREENHEIGHT);
 
 	return ++wipe_tick >= 28;
 }
@@ -232,16 +219,12 @@ static uint32_t wipe_vert()
 	offs -= SCREENHEIGHT / 2;
 	stop = SCREENHEIGHT - offs;
 
-	dwcopy(wipebuffer + offs * SCREENWIDTH,
-	       screen_buffer + offs * SCREENWIDTH,
+	dwcopy(wipebuffer + offs * SCREENWIDTH, screen_buffer + offs * SCREENWIDTH,
 	       (stop - offs) * (SCREENWIDTH / sizeof(uint32_t)));
-	dwcopy(wipebuffer,
-	       screen_buffer + ((SCREENHEIGHT / 2) - 1 - offs) * SCREENWIDTH +
-	           (SCREENWIDTH * SCREENHEIGHT),
+	dwcopy(wipebuffer, screen_buffer + ((SCREENHEIGHT / 2) - 1 - offs) * SCREENWIDTH + (SCREENWIDTH * SCREENHEIGHT),
 	       offs * (SCREENWIDTH / sizeof(uint32_t)));
 	dwcopy(wipebuffer + stop * SCREENWIDTH,
-	       screen_buffer + (SCREENHEIGHT / 2) * SCREENWIDTH +
-	           (SCREENWIDTH * SCREENHEIGHT),
+	       screen_buffer + (SCREENHEIGHT / 2) * SCREENWIDTH + (SCREENWIDTH * SCREENHEIGHT),
 	       offs * (SCREENWIDTH / sizeof(uint32_t)));
 
 	return ++wipe_tick >= 28;
@@ -257,9 +240,8 @@ static uint32_t wipe_fade()
 	}
 
 	uint8_t* dst = wipebuffer;
-	uint8_t* src0 =
-	    screen_buffer + (SCREENWIDTH * SCREENHEIGHT); // old screen
-	uint8_t* src1 = screen_buffer;                    // new screen
+	uint8_t* src0 = screen_buffer + (SCREENWIDTH * SCREENHEIGHT); // old screen
+	uint8_t* src1 = screen_buffer;                                // new screen
 
 	for (uint32_t y = 0; y < SCREENHEIGHT; y++)
 	{
@@ -325,8 +307,7 @@ static __attribute((regparm(2), no_caller_saved_registers)) uint32_t wipe_draw()
 
 	if (!wipe_tick && wipebuffer != (void*)0x000A0000)
 		// save new screen
-		dwcopy(screen_buffer, framebuffer,
-		       (SCREENWIDTH * SCREENHEIGHT) / sizeof(uint32_t));
+		dwcopy(screen_buffer, framebuffer, (SCREENWIDTH * SCREENHEIGHT) / sizeof(uint32_t));
 
 	switch (wipe_type)
 	{
@@ -367,16 +348,15 @@ static __attribute((regparm(2), no_caller_saved_registers)) uint32_t wipe_draw()
 //
 // hooks
 
-static const hook_t hooks[]
-    __attribute__((used, section(".hooks"), aligned(4))) = {
-	// replace call to 'wipe_StartScreen' in 'D_Display'
-	{0x0001D239, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)wipe_start},
-	// disable 'wipe_EndScreen'
-	{0x0001D4BB, CODE_HOOK | HOOK_SET_NOPS, 5},
-	// replace call to 'wipe_ScreenWipe' in 'D_Display'; disable call to
-	// 'I_UpdateNoBlit' and 'M_Drawer'
-	{0x0001D4D5, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)wipe_draw},
-	{0x0001D4DA, CODE_HOOK | HOOK_UINT32, 0x25EBC085},
-	// disable wipe delay (it uses VBlank now)
-	{0x0001D4CA, CODE_HOOK | HOOK_UINT32, 0x09EB},
+static const hook_t hooks[] __attribute__((used, section(".hooks"), aligned(4))) = {
+    // replace call to 'wipe_StartScreen' in 'D_Display'
+    {0x0001D239, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)wipe_start},
+    // disable 'wipe_EndScreen'
+    {0x0001D4BB, CODE_HOOK | HOOK_SET_NOPS, 5},
+    // replace call to 'wipe_ScreenWipe' in 'D_Display'; disable call to
+    // 'I_UpdateNoBlit' and 'M_Drawer'
+    {0x0001D4D5, CODE_HOOK | HOOK_CALL_ACE, (uint32_t)wipe_draw},
+    {0x0001D4DA, CODE_HOOK | HOOK_UINT32, 0x25EBC085},
+    // disable wipe delay (it uses VBlank now)
+    {0x0001D4CA, CODE_HOOK | HOOK_UINT32, 0x09EB},
 };

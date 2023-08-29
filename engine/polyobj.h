@@ -82,10 +82,8 @@ void poly_update_position(polyobj_t* poly);
 
 uint32_t poly_BlockLinesIterator(int32_t x, int32_t y, line_func_t func);
 
-void think_poly_move(poly_move_t* pm)
-    __attribute((regparm(2), no_caller_saved_registers));
-void think_poly_rotate(poly_rotate_t* pr)
-    __attribute((regparm(2), no_caller_saved_registers));
+void think_poly_move(poly_move_t* pm) __attribute((regparm(2), no_caller_saved_registers));
+void think_poly_rotate(poly_rotate_t* pr) __attribute((regparm(2), no_caller_saved_registers));
 
 poly_move_t* poly_mover(polyobj_t* poly);
 poly_rotate_t* poly_rotater(polyobj_t* poly);
